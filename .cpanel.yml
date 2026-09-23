@@ -6,4 +6,5 @@ deployment:
     - /bin/cp -R * $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH/
     - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env
-    - cd $DEPLOYPATH && /usr/local/bin/ea-php81 /usr/local/bin/composer install --no-dev --no-interaction 2>/dev/null || cd $DEPLOYPATH && composer install --no-dev --no-interaction
+    - cd $DEPLOYPATH && (test -f composer.phar || /usr/local/bin/ea-php81 -r "copy('https://getcomposer.org/installer','composer-setup.php');" && /usr/local/bin/ea-php81 composer-setup.php --install-dir=. --filename=composer.phar && rm -f composer-setup.php)
+    - cd $DEPLOYPATH && /usr/local/bin/ea-php81 composer.phar install --no-dev --no-interaction 2>/dev/null || true

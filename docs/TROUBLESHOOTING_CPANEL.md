@@ -8,14 +8,52 @@
 
 ### 1. Pasta `vendor/` ausente
 
-O Git **não** envia `vendor/`. No Terminal cPanel:
+O Git **não** envia `vendor/`. Muitos planos cPanel **não têm** `/usr/local/bin/composer`.
+
+**Opção A — cPanel → “Composer” (Software)**  
+Se existir no painel, abra o gerenciador Composer na pasta `app.xd360.com.br` e clique em Install.
+
+**Opção B — `composer.phar` na pasta do projeto (Terminal / jailshell)**
+
+Descubra o PHP CLI (teste na ordem):
+
+```bash
+php -v
+/usr/local/bin/ea-php81 -v
+/usr/local/bin/ea-php82 -v
+```
+
+Use o que mostrar **PHP 8.1+** (ex.: `PHP=/usr/local/bin/ea-php81` ou `PHP=php`).
 
 ```bash
 cd ~/app.xd360.com.br
-/usr/local/bin/ea-php81 /usr/local/bin/composer install --no-dev
+
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+$PHP composer-setup.php --install-dir=. --filename=composer.phar
+rm -f composer-setup.php
+
+$PHP composer.phar install --no-dev --no-interaction
 ```
 
-(Se `composer` estiver no PATH, use `composer install --no-dev`.)
+Exemplo com PHP 8.1:
+
+```bash
+cd ~/app.xd360.com.br
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+/usr/local/bin/ea-php81 composer-setup.php --install-dir=. --filename=composer.phar
+rm -f composer-setup.php
+/usr/local/bin/ea-php81 composer.phar install --no-dev --no-interaction
+```
+
+**Opção C — caminhos alternativos (alguns hosts)**
+
+```bash
+/opt/cpanel/composer/bin/composer install --no-dev
+php /usr/local/cpanel/3rdparty/bin/composer install --no-dev
+~/bin/composer install --no-dev
+```
+
+Depois confira: `ls -la vendor/autoload.php`
 
 ### 2. Arquivo `.env` ausente ou inválido
 
