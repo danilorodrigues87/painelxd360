@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home1/dncurs82/admin.ctieducacional.com.br/
+    - export DEPLOYPATH=/home1/dncurs82/app.xd360.com.br/
     - /bin/cp -R * $DEPLOYPATH
