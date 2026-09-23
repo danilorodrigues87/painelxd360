@@ -36,6 +36,12 @@ DOCEFLOW_PUBLIC_URL=https://doceflow.xd360.com.br
 XD360_MASTER_URL=https://app.xd360.com.br
 JWT_KEY e PRODUCT_LAUNCH_SECRET iguais ao doceflow.
 
+## cPanel Git deploy
+
+- Ajuste `DEPLOYPATH` em `.cpanel.yml` (somente este domínio).
+- `.env` manual no servidor; rode `composer install --no-dev`.
+- Erro 500: `docs/TROUBLESHOOTING_CPANEL.md` e `scripts/verificar-instalacao.php`.
+
 ## Testes
 
 Login + Produtos → Abrir app

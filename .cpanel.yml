@@ -1,5 +1,9 @@
 ---
+# Git → cPanel: confira DEPLOYPATH (só esta app!). Não aponte para pasta de outro site.
 deployment:
   tasks:
     - export DEPLOYPATH=/home1/dncurs82/app.xd360.com.br/
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH/
+    - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env
+    - cd $DEPLOYPATH && /usr/local/bin/ea-php81 /usr/local/bin/composer install --no-dev --no-interaction 2>/dev/null || cd $DEPLOYPATH && composer install --no-dev --no-interaction
