@@ -1,0 +1,162 @@
+<h1 class="mt-4"><i class="fab fa-whatsapp text-success"></i> Fluxos do bot</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/whatsapp">WhatsApp — Inbox</a></li>
+	<li class="breadcrumb-item active">Automações</li>
+</ol>
+
+<p class="text-muted small">
+	Crie fluxos por palavra-chave ou na primeira mensagem. Opções por número (1, 2, 3…).
+	Variáveis: <code>{{nome}}</code>, <code>{{ultima_resposta}}</code>. Digite <em>sair</em> encerra o bot; <em>menu</em> volta ao menu de setores.
+	Se nenhum fluxo casar, o menu de setores continua valendo.
+</p>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+	<button type="button" class="btn btn-primary" id="btn-novo-fluxo"><i class="fas fa-plus me-1"></i> Novo fluxo</button>
+	<a href="{{URL}}/painel/whatsapp" class="btn btn-outline-secondary">Voltar ao inbox</a>
+</div>
+
+<div class="card shadow mb-3" id="card-templates">
+	<div class="card-header py-2"><strong>Templates prontos</strong></div>
+	<div class="card-body" id="lista-templates">
+		<p class="text-muted small mb-0">Carregando…</p>
+	</div>
+</div>
+
+<div class="card shadow mb-4">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Gatilho</th>
+						<th>Prioridade</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="tbody-fluxos">
+					<tr><td colspan="5" class="text-muted text-center py-4">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<nav class="p-2" id="paginacao-fluxos"></nav>
+	</div>
+</div>
+
+<div class="modal fade" id="modalFluxo" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalFluxoTitulo">Fluxo</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="fluxo_id" value="">
+				<div class="row g-3 mb-3">
+					<div class="col-md-5">
+						<label class="form-label">Nome</label>
+						<input type="text" class="form-control" id="fluxo_nome" maxlength="120">
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">Prioridade</label>
+						<input type="number" class="form-control" id="fluxo_prioridade" value="100" title="Menor número = maior prioridade">
+					</div>
+					<div class="col-md-2 d-flex align-items-end">
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="fluxo_ativo" checked>
+							<label class="form-check-label" for="fluxo_ativo">Ativo</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="card mb-3">
+					<div class="card-header py-2">Gatilho</div>
+					<div class="card-body row g-2">
+						<div class="col-md-3">
+							<label class="form-label">Tipo</label>
+							<select class="form-select" id="tr_tipo">
+								<option value="keyword">Palavra-chave</option>
+								<option value="primeira_msg">Primeira mensagem</option>
+								<option value="saudacao">Saudação (oi / olá…)</option>
+							</select>
+						</div>
+						<div class="col-md-3" id="wrap-tr-modo">
+							<label class="form-label">Modo</label>
+							<select class="form-select" id="tr_modo">
+								<option value="contem">Contém</option>
+								<option value="exato">Exato</option>
+								<option value="inicia">Começa com</option>
+							</select>
+						</div>
+						<div class="col-md-6" id="wrap-tr-palavra">
+							<label class="form-label">Palavra / frase</label>
+							<input type="text" class="form-control" id="tr_palavra" placeholder="ex: preço, matrícula">
+						</div>
+					</div>
+				</div>
+
+				<div class="card mb-3">
+					<div class="card-header py-2">Timeout (sem resposta)</div>
+					<div class="card-body row g-2">
+						<div class="col-md-4">
+							<label class="form-label">Horas sem resposta</label>
+							<input type="number" min="0" max="168" class="form-control" id="st_timeout_horas" value="24" title="0 = desligado">
+							<div class="form-text">0 desliga o timeout.</div>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">Ação ao expirar</label>
+							<select class="form-select" id="st_timeout_acao">
+								<option value="humano">Encaminhar para atendente</option>
+								<option value="encerrar">Encerrar bot</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+					<strong>Passos</strong>
+					<div class="btn-group btn-group-sm flex-wrap">
+						<button type="button" class="btn btn-outline-primary" data-add="send_text">+ Texto</button>
+						<button type="button" class="btn btn-outline-primary" data-add="send_media">+ Mídia</button>
+						<button type="button" class="btn btn-outline-primary" data-add="ask_options">+ Pergunta/opções</button>
+						<button type="button" class="btn btn-outline-primary" data-add="ask_text">+ Pergunta livre</button>
+						<button type="button" class="btn btn-outline-secondary" data-add="condition">+ Condição</button>
+						<button type="button" class="btn btn-outline-secondary" data-add="delay">+ Delay</button>
+						<button type="button" class="btn btn-outline-info" data-add="criar_lead">+ Lead CRM</button>
+						<button type="button" class="btn btn-outline-info" data-add="set_var">+ Variável</button>
+						<button type="button" class="btn btn-outline-success" data-add="goto_setor">+ Setor</button>
+						<button type="button" class="btn btn-outline-success" data-add="goto_humano">+ Fila humana</button>
+						<button type="button" class="btn btn-outline-dark" data-add="end">+ Encerrar</button>
+					</div>
+				</div>
+				<div id="lista-passos" class="vstack gap-2 mb-4"></div>
+
+				<div class="card border-secondary">
+					<div class="card-header py-2 d-flex justify-content-between align-items-center">
+						<strong>Simulador</strong>
+						<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-sim-reiniciar">Reiniciar</button>
+					</div>
+					<div class="card-body">
+						<p class="text-muted small">Testa o fluxo atual (sem enviar WhatsApp nem gravar lead real). Digite como o contato responderia.</p>
+						<div id="sim-chat" class="border rounded p-2 mb-2 bg-light" style="min-height:140px;max-height:280px;overflow:auto;font-size:.9rem"></div>
+						<div class="input-group">
+							<input type="text" class="form-control" id="sim-input" placeholder="Mensagem do contato…" maxlength="500">
+							<button type="button" class="btn btn-success" id="btn-sim-enviar">Enviar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-salvar-fluxo">Salvar fluxo</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.WA_SETORES_FLUXO = {{setores_json}};
+window.WA_TEMPLATES_FLUXO = {{templates_json}};
+</script>
+<script src="{{URL}}/resources/js/whatsapp-fluxos.js?v=20260729d"></script>

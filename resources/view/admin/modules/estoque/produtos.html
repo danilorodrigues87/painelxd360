@@ -1,0 +1,48 @@
+<h1 class="mt-4">Estoque</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel">Início</a></li>
+	<li class="breadcrumb-item active">Produtos</li>
+</ol>
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+	<div class="input-group" style="max-width:360px">
+		<input type="search" id="stq-busca" class="form-control" placeholder="Buscar nome ou SKU…" data-anti-autofill autocomplete="off">
+		<button type="button" id="btn-stq-buscar" class="btn btn-outline-secondary">Buscar</button>
+	</div>
+	<div class="d-flex gap-2 flex-wrap">
+		<button type="button" id="btn-nova-cat" class="btn btn-sm btn-outline-primary">
+			<i class="fa-solid fa-tags"></i> Categorias
+		</button>
+		<button type="button" id="btn-novo-prod" class="btn btn-sm btn-primary">
+			<i class="fa-solid fa-plus"></i> Novo produto
+		</button>
+		<a href="{{URL}}/painel/estoque/pdv" class="btn btn-sm btn-success">
+			<i class="fa-solid fa-cash-register"></i> Ir ao PDV
+		</a>
+	</div>
+</div>
+
+<div class="card mb-4">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0 align-middle">
+				<thead class="table-light">
+					<tr>
+						<th>Produto</th>
+						<th>SKU</th>
+						<th>Categoria</th>
+						<th class="text-end">Estoque</th>
+						<th class="text-end">Custo</th>
+						<th class="text-end">Venda</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="stq-tbody">
+					<tr><td colspan="7" class="text-muted p-3">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/estoque-produtos.js?v=20260722b"></script>

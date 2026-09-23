@@ -1,0 +1,135 @@
+<h1 class="mt-4">Inadimplentes</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+	<li class="breadcrumb-item active">Inadimplentes</li>
+</ol>
+
+<ul class="nav nav-tabs mb-3" id="tabs-inadimplentes" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="tab-inad-btn" data-bs-toggle="tab" data-bs-target="#tab-inadimplentes" type="button" role="tab" data-aba="inadimplentes">Inadimplentes</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="tab-abandono-btn" data-bs-toggle="tab" data-bs-target="#tab-abandono" type="button" role="tab" data-aba="abandono">Abandono</button>
+	</li>
+</ul>
+
+<div class="tab-content" id="tabs-inadimplentes-content">
+	<div class="tab-pane fade show active" id="tab-inadimplentes" role="tabpanel">
+		<div class="card shadow-sm mb-3">
+			<div class="card-body py-3">
+				<form id="form-filtros-inad" class="row g-2 align-items-end" onsubmit="return false;">
+					<div class="col-md-3">
+						<label class="form-label small mb-1" for="inad-status">Status contrato</label>
+						<select class="form-select form-select-sm" id="inad-status" name="status_matricula">
+							<option value="ativa">Ativa</option>
+							<option value="encerrada">Encerrada</option>
+							<option value="cancelada">Cancelada</option>
+							<option value="inativa">Inativa (encerrada ou cancelada)</option>
+							<option value="todas">Todas</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label small mb-1" for="inad-dias">Dias de atraso (mín.)</label>
+						<input type="number" class="form-control form-control-sm" id="inad-dias" name="dias_atraso_min" min="1" max="365" value="1">
+					</div>
+					<div class="col-md-2">
+						<label class="form-label small mb-1" for="inad-parcelas">Parcelas atraso (mín.)</label>
+						<input type="number" class="form-control form-control-sm" id="inad-parcelas" name="parcelas_atraso_min" min="1" max="6" value="1">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label small mb-1" for="inad-curso">Curso</label>
+						<select class="form-select form-select-sm" id="inad-curso" name="id_trilha">
+							{{trilhas_options}}
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label small mb-1" for="inad-busca">Busca</label>
+						<input type="search" class="form-control form-control-sm" id="inad-busca" name="busca" placeholder="Nome, e-mail, CPF…">
+					</div>
+					<div class="col-12 d-flex flex-wrap gap-2 mt-1">
+						<button type="button" class="btn btn-sm btn-primary" id="btn-filtrar-inad"><i class="fas fa-search"></i> Filtrar</button>
+						<button type="button" class="btn btn-sm btn-outline-secondary btn-limpar-inad">Limpar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-pane fade" id="tab-abandono" role="tabpanel">
+		<div class="card shadow-sm mb-3">
+			<div class="card-body py-3">
+				<form id="form-filtros-abandono" class="row g-2 align-items-end" onsubmit="return false;">
+					<div class="col-md-2">
+						<label class="form-label small mb-1" for="abd-meses">Meses sem presença</label>
+						<input type="number" class="form-control form-control-sm" id="abd-meses" name="meses_sem_presenca" min="1" max="12" value="3">
+					</div>
+					<div class="col-md-2">
+						<label class="form-label small mb-1" for="abd-status">Status contrato</label>
+						<select class="form-select form-select-sm" id="abd-status" name="status_matricula">
+							<option value="ativa">Ativa</option>
+							<option value="encerrada">Encerrada</option>
+							<option value="cancelada">Cancelada</option>
+							<option value="inativa">Inativa (encerrada ou cancelada)</option>
+							<option value="todas">Todas</option>
+						</select>
+					</div>
+					<div class="col-md-2 d-flex align-items-end pb-1">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="abd-debito" name="somente_com_debito" value="1">
+							<label class="form-check-label small" for="abd-debito">Somente com débito</label>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label small mb-1" for="abd-curso">Curso</label>
+						<select class="form-select form-select-sm" id="abd-curso" name="id_trilha">
+							{{trilhas_options}}
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label small mb-1" for="abd-busca">Busca</label>
+						<input type="search" class="form-control form-control-sm" id="abd-busca" name="busca" placeholder="Nome, e-mail, CPF…">
+					</div>
+					<div class="col-12 d-flex flex-wrap gap-2 mt-1">
+						<button type="button" class="btn btn-sm btn-primary" id="btn-filtrar-abd"><i class="fas fa-search"></i> Filtrar</button>
+						<button type="button" class="btn btn-sm btn-outline-secondary btn-limpar-abd">Limpar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+	<div id="inad-resumo-totais" class="small text-muted">—</div>
+	<div class="d-flex gap-2">
+		<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-export-csv"><i class="fas fa-file-csv"></i> Exportar CSV</button>
+		<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-export-pdf"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-body p-0">
+		<div id="inad-lista-wrap" class="table-responsive">
+			<table class="table table-hover table-sm mb-0" id="tabela-inadimplentes">
+				<thead class="table-light" id="inad-thead"></thead>
+				<tbody id="inad-tbody">
+					<tr><td colspan="10" class="text-center text-muted py-4">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="p-2" id="inad-paginacao"></div>
+	</div>
+</div>
+
+<div id="inad-pdf-area" class="d-none"></div>
+
+<script>
+	var INADIMPLENTES_URL = 'painel/financeiro/inadimplentes';
+	var cancelar = 'painel/matriculas/cancelar';
+	var cancelarSimular = 'painel/matriculas/cancelar/simular';
+	var regularizar = 'painel/matriculas/regularizar';
+	var regularizarSimular = 'painel/matriculas/regularizar/simular';
+</script>
+<script src="{{URL}}/resources/js/encargos-cancelamento.js?v=20260908c"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="{{URL}}/resources/js/inadimplentes.js?v=20260908e"></script>

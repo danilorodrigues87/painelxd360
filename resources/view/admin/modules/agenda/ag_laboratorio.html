@@ -1,0 +1,76 @@
+<h1 class="mt-4">Agenda e Horários</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item active">Agendamentos</li>
+</ol> 
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 mt-2">
+  <label class="form-label mb-0 me-1" for="filtro_laboratorio">Laboratório:</label>
+  <select id="filtro_laboratorio" class="form-select form-select-sm" style="max-width:280px" onchange="listar(getFiltroDiaAtivo(), 1)">
+    {{labs_options}}
+  </select>
+</div>
+
+<ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link bg-success text-light" href="#" onclick="editar('','novo')" >Adicionar ao plano</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link bg-warning text-dark" href="#" onclick="abrirAvulso()">Reposição / avulso</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-1" onclick="listar(1,1)" href="#">Segunda</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-2" onclick="listar(2,1)" href="#">Terça</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-3" onclick="listar(3,1)" href="#">Quarta</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-4" onclick="listar(4,1)" href="#">Quinta</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-5" onclick="listar(5,1)" href="#">Sexta</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="fil-6" onclick="listar(6,1)" href="#">Sábado</a>
+        </li>
+    </ul>
+    <div class="card shadow mb-4">
+
+	<div id="listar"></div>
+
+	<nav class="container mt-3" aria-label="Paginação">
+		<div id="pagination"></div>
+	</nav>
+</div>
+
+
+<!-- Modal formulario -->
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="listar-dados">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Detalhes do agendamento -->
+<div class="modal fade" id="formAgendamento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="body_agendamento">
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listaAgenda = 'painel/agenda/laboratorio';
+	let formulario = 'painel/agenda/laboratorio/form';
+	let edicao = 'painel/agenda/laboratorio/editar';
+	let salvar = 'painel/agenda/laboratorio/salvar';
+	let deletar = 'painel/agenda/laboratorio/excluir';
+</script>
+<script src="{{URL}}/resources/js/agenda.js?v=20260817excl"></script>

@@ -1,0 +1,55 @@
+<h1 class="mt-4">Funcionários</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+  <li class="breadcrumb-item active">Funcionários</li>
+</ol>
+
+<ul class="nav nav-tabs mb-3">
+	<li class="nav-item">
+		<a class="nav-link bg-success text-light" href="#" onclick="list_itens('','novo'); return false;">Novo</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link active" id="fil-todos" href="#" onclick="listar('',1); return false;">Todos</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-diretor" href="#" onclick="listar('Diretor',1); return false;">Diretor</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-secretario" href="#" onclick="listar('Secretario',1); return false;">Secretário</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-financeiro" href="#" onclick="listar('Financeiro',1); return false;">Financeiro</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-comercial" href="#" onclick="listar('Comercial',1); return false;">Comercial</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link bg-primary text-light" id="fil-inativo" href="#" onclick="listar('inativo',1); return false;">Inativos</a>
+	</li>
+</ul>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-body p-0">
+		<div id="listar" class="p-3 text-muted small">Carregando…</div>
+		<nav class="px-3 pb-3" aria-label="Paginação">
+			<ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+		</nav>
+	</div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="listar-dados"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/user';
+	let formulario = 'painel/user/form';
+	let edicao = 'painel/user/save';
+	let exclusao = 'painel/user/exclusao';
+	let deletar = 'painel/user/excluir';
+</script>
+<script src="{{URL}}/resources/js/ajax.js?v=20260717n"></script>

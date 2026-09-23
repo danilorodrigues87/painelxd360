@@ -1,0 +1,95 @@
+<h1 class="mt-4">Relatórios CRM</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/crm">CRM</a></li>
+	<li class="breadcrumb-item active">Relatórios</li>
+</ol>
+
+<p class="text-muted small">Visão gerencial de leads e funis (somente Diretor). Filtre pelo período de cadastro.</p>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-3">
+				<label class="form-label small">De</label>
+				<input type="date" class="form-control" id="rel-de">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small">Até</label>
+				<input type="date" class="form-control" id="rel-ate">
+			</div>
+			<div class="col-md-3">
+				<button type="button" class="btn btn-primary" id="btn-rel-filtrar"><i class="fas fa-filter me-1"></i> Filtrar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="rel-periodo" class="text-muted small mb-2"></div>
+
+<div class="row g-3 mb-3" id="rel-kpis">
+	<div class="col-6 col-lg-3"><div class="card shadow-sm h-100"><div class="card-body"><div class="text-muted small">Leads no período</div><div class="fs-4 fw-semibold" id="kpi-total">—</div></div></div></div>
+	<div class="col-6 col-lg-3"><div class="card shadow-sm h-100"><div class="card-body"><div class="text-muted small">Matriculados</div><div class="fs-4 fw-semibold text-success" id="kpi-mat">—</div><div class="small" id="kpi-conv">—</div></div></div></div>
+	<div class="col-6 col-lg-3"><div class="card shadow-sm h-100"><div class="card-body"><div class="text-muted small">Perdidos</div><div class="fs-4 fw-semibold text-danger" id="kpi-perd">—</div><div class="small" id="kpi-perda">—</div></div></div></div>
+	<div class="col-6 col-lg-3"><div class="card shadow-sm h-100"><div class="card-body"><div class="text-muted small">Valor estimado</div><div class="fs-4 fw-semibold" id="kpi-valor">—</div></div></div></div>
+</div>
+
+<div class="row g-3 mb-3">
+	<div class="col-lg-6">
+		<div class="card shadow-sm h-100">
+			<div class="card-header">Por status</div>
+			<div class="card-body p-0">
+				<table class="table table-sm mb-0">
+					<thead><tr><th>Status</th><th class="text-end">Qtd</th><th class="text-end">Valor est.</th></tr></thead>
+					<tbody id="tb-status"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="card shadow-sm h-100">
+			<div class="card-header">Motivos de perda</div>
+			<div class="card-body p-0">
+				<table class="table table-sm mb-0">
+					<thead><tr><th>Motivo</th><th class="text-end">Qtd</th></tr></thead>
+					<tbody id="tb-motivos"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-header">Por funil</div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th>Funil</th>
+						<th class="text-end">Total</th>
+						<th class="text-end">Novo</th>
+						<th class="text-end">Atendimento</th>
+						<th class="text-end">Matriculado</th>
+						<th class="text-end">Perdido</th>
+						<th class="text-end">Conv. %</th>
+					</tr>
+				</thead>
+				<tbody id="tb-funis"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-header">Origens (top 15)</div>
+	<div class="card-body p-0">
+		<table class="table table-sm mb-0">
+			<thead><tr><th>Origem</th><th class="text-end">Qtd</th></tr></thead>
+			<tbody id="tb-origens"></tbody>
+		</table>
+	</div>
+</div>
+
+<div class="alert alert-secondary small" id="rel-tarefas-nota"></div>
+
+<script src="{{URL}}/resources/js/crm-relatorios.js?v=20260729a"></script>

@@ -1,0 +1,213 @@
+<h1 class="mt-4">Redes sociais</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+	<li class="breadcrumb-item active">Calendário editorial</li>
+</ol>
+
+<div id="alert-sql-social" class="alert alert-warning d-none">
+	As redes sociais ainda não estão liberadas nesta escola. Fale com o <strong>suporte</strong> para ativar.
+</div>
+<div id="alert-meta-off" class="alert alert-info d-none">
+	Conecte Facebook/Instagram em <a href="{{URL}}/painel/config/social">Configurações → Redes sociais</a> antes de publicar.
+</div>
+<div id="alert-worker" class="alert alert-secondary small py-2 mb-3">
+	<strong>Publicação automática:</strong> <span id="worker-status-txt">carregando…</span>
+	<div class="text-muted mt-1" id="cron-hint"></div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+	<a href="{{URL}}/painel/social/mensagens" class="btn btn-sm btn-outline-primary">
+		<i class="fas fa-comments me-1"></i> Mensagens (Messenger / Instagram)
+	</a>
+</div>
+
+<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+	<div class="btn-group btn-group-sm" role="group">
+		<button type="button" class="btn btn-outline-secondary active" id="btn-view-semana">Semana</button>
+		<button type="button" class="btn btn-outline-secondary" id="btn-view-mes">Mês</button>
+	</div>
+	<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-nav-prev">←</button>
+	<strong id="label-periodo"></strong>
+	<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-nav-next">→</button>
+	<select class="form-select form-select-sm" id="filtro-status" style="width:auto">
+		<option value="">Todos status</option>
+		<option value="agendado">Agendado</option>
+		<option value="publicado">Publicado</option>
+		<option value="erro">Erro</option>
+		<option value="rascunho">Rascunho</option>
+	</select>
+	<select class="form-select form-select-sm" id="filtro-formato" style="width:auto">
+		<option value="">Todos formatos</option>
+		<option value="feed">Feed</option>
+		<option value="story">Story</option>
+		<option value="reel">Reel</option>
+		<option value="carousel">Carrossel</option>
+	</select>
+	<button type="button" class="btn btn-primary btn-sm ms-auto" id="btn-novo-post">Novo post</button>
+	<button type="button" class="btn btn-outline-dark btn-sm" id="btn-worker">Rodar worker</button>
+	<a class="btn btn-outline-secondary btn-sm" href="{{URL}}/painel/config/social">Config Meta</a>
+	<a class="btn btn-outline-primary btn-sm" href="{{URL}}/painel/marketing/biblioteca">
+		<i class="fas fa-photo-video"></i> Biblioteca de mídias
+	</a>
+</div>
+
+<ul class="nav nav-tabs mb-3" id="tabs-social">
+	<li class="nav-item"><button class="nav-link active" data-tab="agenda" type="button">Agenda</button></li>
+	<li class="nav-item"><button class="nav-link" data-tab="historico" type="button">Histórico</button></li>
+</ul>
+
+<div id="pane-agenda">
+	<div class="row g-3">
+		<div class="col-xl-8">
+			<div class="card shadow">
+				<div class="card-header">Calendário editorial</div>
+				<div class="card-body p-0">
+					<div class="table-responsive" id="wrap-semana">
+						<table class="table table-bordered mb-0 align-middle" id="tbl-semana">
+							<thead class="table-light"><tr id="thead-dias"></tr></thead>
+							<tbody id="tbody-semana"></tbody>
+						</table>
+					</div>
+					<div class="table-responsive d-none" id="wrap-mes">
+						<table class="table table-bordered mb-0 align-top" id="tbl-mes">
+							<thead class="table-light"><tr id="thead-mes"></tr></thead>
+							<tbody id="tbody-mes"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-4">
+			<div class="card shadow mb-3">
+				<div class="card-header">Detalhe</div>
+				<div class="card-body" id="painel-detalhe">
+					<p class="text-muted small mb-0">Selecione um post.</p>
+				</div>
+			</div>
+			<div class="card shadow">
+				<div class="card-header">Lista do período</div>
+				<div class="card-body p-0">
+					<ul class="list-group list-group-flush" id="lista-posts"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalBibPreview" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header py-2">
+				<h5 class="modal-title" id="bib-preview-titulo">Visualizar</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body text-center p-2" id="bib-preview-body"></div>
+		</div>
+	</div>
+</div>
+
+<div id="pane-historico" class="d-none">
+	<div class="row g-3">
+		<div class="col-lg-6">
+			<div class="card shadow">
+				<div class="card-header">Posts</div>
+				<div class="card-body p-0">
+					<ul class="list-group list-group-flush small" id="hist-posts"></ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card shadow">
+				<div class="card-header">Log de publicações</div>
+				<div class="card-body p-0">
+					<ul class="list-group list-group-flush small" id="hist-logs"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalPost" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Agendar publicação</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="post_id" value="">
+				<div class="row g-2 mb-2">
+					<div class="col-md-6">
+						<label class="form-label">Formato</label>
+						<select class="form-select" id="post_formato">
+							<option value="feed">Feed (imagem)</option>
+							<option value="story">Story (IG)</option>
+							<option value="reel">Reel (IG · vídeo)</option>
+							<option value="carousel">Carrossel (2–10)</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<label class="form-label">Canais</label>
+						<select class="form-select" id="post_canais">
+							<option value="ambos">Facebook + Instagram</option>
+							<option value="facebook">Só Facebook</option>
+							<option value="instagram">Só Instagram</option>
+						</select>
+					</div>
+				</div>
+				<div id="aviso-formato-ig" class="alert alert-warning small py-2 d-none">
+					Story e Reel publicam apenas no Instagram.
+				</div>
+				<div class="mb-2">
+					<label class="form-label">Legenda</label>
+					<textarea class="form-control" id="post_caption" rows="3" maxlength="2200"></textarea>
+					<div class="form-text"><span id="caption_count">0</span>/2200</div>
+				</div>
+				<div class="mb-2">
+					<label class="form-label">Data/hora</label>
+					<input type="datetime-local" class="form-control" id="post_agendado">
+				</div>
+				<div class="mb-2">
+					<label class="form-label">Horários extras (lote)</label>
+					<textarea class="form-control" id="post_lote" rows="2" placeholder="2026-07-28T10:00"></textarea>
+				</div>
+				<div class="mb-2">
+					<label class="form-label">Mídia (upload ou biblioteca)</label>
+					<input type="file" class="form-control" id="post_arquivo" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" multiple>
+					<button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="btn-abrir-bib">Escolher da biblioteca</button>
+					<div id="post_preview_list" class="d-flex flex-wrap gap-2 mt-2"></div>
+				</div>
+				<div class="mb-0">
+					<label class="form-label">Ou URL HTTPS</label>
+					<input type="url" class="form-control" id="post_url" placeholder="https://...">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-success" id="btn-salvar-post">Agendar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalBibPick" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Biblioteca</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<ul class="nav nav-pills nav-sm mb-3" id="bib-pick-filtro">
+					<li class="nav-item"><button type="button" class="nav-link active" data-formato="feed">Quadrado</button></li>
+					<li class="nav-item"><button type="button" class="nav-link" data-formato="story">Story</button></li>
+					<li class="nav-item"><button type="button" class="nav-link" data-formato="">Todos</button></li>
+				</ul>
+				<div id="bib-pick-grid" class="row g-2"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/social-biblioteca-shared.js?v=20260909c"></script>
+<script src="{{URL}}/resources/js/social-agenda.js?v=20260909c"></script>

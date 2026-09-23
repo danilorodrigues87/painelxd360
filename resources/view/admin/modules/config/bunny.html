@@ -1,0 +1,67 @@
+<h1 class="mt-4">Bunny Stream</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Vídeos protegidos das aulas (conta Bunny da escola)</li>
+</ol>
+
+<div id="alert-sql-bunny" class="alert alert-warning d-none">
+	A integração de vídeos ainda não está liberada nesta escola. Fale com o <strong>suporte</strong> para ativar.
+</div>
+
+<div class="card mb-4">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span><i class="fa-solid fa-film me-1"></i> Credenciais Bunny desta escola</span>
+		<span id="badge-bunny-status" class="badge bg-secondary">—</span>
+	</div>
+	<div class="card-body">
+		<p class="text-muted small">
+			Cada escola usa a <strong>própria</strong> conta <a href="https://bunny.net/" target="_blank" rel="noopener">Bunny.net</a>.
+			As chaves ficam criptografadas e <strong>nunca</strong> vão para o portal do aluno.
+			Sem Bunny ativo, o editor EAD continua só com YouTube.
+		</p>
+		<div class="form-check form-switch mb-3">
+			<input class="form-check-input" type="checkbox" id="bunny_ativo">
+			<label class="form-check-label" for="bunny_ativo">Ativar Bunny nesta escola</label>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="bunny_library_id">Video Library ID</label>
+			<input type="text" class="form-control" id="bunny_library_id" placeholder="ex: 123456">
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="bunny_cdn_hostname">CDN Hostname (Pull Zone)</label>
+			<input type="text" class="form-control" id="bunny_cdn_hostname" placeholder="ex: vz-xxx.b-cdn.net">
+			<div class="form-text">Em Stream → Library → CDN / hostname (sem https://).</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="bunny_api_key">API AccessKey</label>
+			<input type="password" class="form-control" id="bunny_api_key" autocomplete="new-password" placeholder="Cole a AccessKey da conta">
+			<div class="form-text" id="bunny_api_hint">Deixe em branco para manter a chave já salva.</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="bunny_token_key">Token Authentication Key</label>
+			<input type="password" class="form-control" id="bunny_token_key" autocomplete="new-password" placeholder="Security key da library">
+			<div class="form-text" id="bunny_token_hint">Library → Security → Token authentication. Deixe em branco para manter.</div>
+		</div>
+		<div class="d-flex flex-wrap gap-2">
+			<button type="button" class="btn btn-primary" id="btn-salvar-bunny">Salvar</button>
+			<button type="button" class="btn btn-outline-secondary" id="btn-testar-bunny">Testar conexão</button>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4">
+	<div class="card-header">Checklist de segurança (painel Bunny)</div>
+	<div class="card-body small text-muted">
+		<ol class="mb-0">
+			<li>Ativar <strong>Token Authentication</strong> na Video Library.</li>
+			<li>Ativar <strong>Block Direct URL File Access</strong>.</li>
+			<li>Em <strong>Allowed Domains / Allowed Referrers</strong>, cadastre:
+				<code>admin.ctieducacional.com.br</code> (painel) e
+				<code>aluno.ctieducacional.com.br</code> (portal do aluno).</li>
+			<li>Use a <strong>Token Authentication Key</strong> da área Security da library (não use a API AccessKey).</li>
+			<li>Se o plano Bunny permitir, ative <strong>MediaCage DRM</strong> (protege contra download).</li>
+			<li>No player, desative velocidades extras de reprodução (o portal do aluno também bloqueia acelerar e pular o vídeo).</li>
+		</ol>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/config-bunny.js?v=20260723a"></script>

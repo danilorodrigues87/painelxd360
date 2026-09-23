@@ -1,0 +1,30 @@
+<h1 class="mt-4">Categorias de cursos</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+  <li class="breadcrumb-item active">Categorias</li>
+</ol>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-body p-0">
+		<div id="listar" class="p-3 text-muted small">Carregando…</div>
+		<nav class="px-3 pb-3" aria-label="Paginação">
+			<ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+		</nav>
+	</div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="listar-dados"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/categoria/cursos';
+	let formulario = 'painel/categoria/cursos/form';
+	let edicao = 'painel/categoria/cursos/save';
+	let deletar = 'painel/categoria/cursos/excluir';
+</script>
+<script src="{{URL}}/resources/js/ajax.js?v=20260717n"></script>

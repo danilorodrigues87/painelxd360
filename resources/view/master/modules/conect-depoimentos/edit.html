@@ -1,0 +1,157 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect-depoimentos">Depoimentos</a></li>
+		<li class="breadcrumb-item active">Editar</li>
+	</ol>
+</nav>
+
+<form id="form-depoimento" enctype="multipart/form-data" onsubmit="return false;">
+	<input type="hidden" name="id" value="{{id}}">
+	<input type="hidden" name="id_candidato" id="id_candidato" value="{{id_candidato}}">
+	<input type="hidden" name="id_empresa" id="id_empresa" value="{{id_empresa}}">
+
+	<div class="row g-3">
+		<div class="col-lg-8">
+			<div class="mb-3">
+				<label class="form-label">Depoimento *</label>
+				<textarea class="form-control" name="texto" rows="4" required maxlength="5000">{{texto}}</textarea>
+			</div>
+			<div class="row g-3">
+				<div class="col-md-6">
+					<label class="form-label">Nome exibido *</label>
+					<input type="text" class="form-control" name="nome_exibicao" id="nome_exibicao" value="{{nome_exibicao}}" required maxlength="120">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label">Cargo / função</label>
+					<input type="text" class="form-control" name="cargo" id="cargo" value="{{cargo}}" maxlength="191">
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card mb-3">
+				<div class="card-body">
+					<label class="form-label">Origem</label>
+					<select class="form-select mb-3" name="tipo_autor" id="tipo_autor">
+						<option value="manual" {{tipo_manual}}>Pessoa não cadastrada</option>
+						<option value="candidato" {{tipo_candidato}}>Candidato cadastrado</option>
+						<option value="empresa" {{tipo_empresa}}>Empresa parceira</option>
+					</select>
+
+					<div id="box-busca-candidato" class="mb-3" style="display:none">
+						<label class="form-label">Buscar candidato</label>
+						<input type="text" class="form-control mb-2" id="busca_candidato" placeholder="Nome ou e-mail">
+						<div id="result_candidato" class="list-group small"></div>
+					</div>
+					<div id="box-busca-empresa" class="mb-3" style="display:none">
+						<label class="form-label">Buscar empresa</label>
+						<input type="text" class="form-control mb-2" id="busca_empresa" placeholder="Nome fantasia">
+						<div id="result_empresa" class="list-group small"></div>
+					</div>
+
+					<div id="box-avatar-manual">
+						<label class="form-label">Foto (opcional)</label>
+						<div class="mb-2" id="avatar-preview-wrap" style="{{avatar_style}}">
+							<img id="preview-avatar" src="{{avatar_preview}}" alt="" class="rounded-circle border" style="width:64px;height:64px;object-fit:cover">
+						</div>
+						<input type="file" class="form-control mb-2" name="avatar" accept="image/*" id="depo_avatar">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="remover_avatar" value="1" id="remover_avatar">
+							<label class="form-check-label" for="remover_avatar">Remover foto</label>
+						</div>
+						<p class="text-muted small mt-2">Sem foto, o site usa um avatar com a inicial do nome.</p>
+					</div>
+
+					<label class="form-label mt-3">Ordem</label>
+					<input type="number" class="form-control mb-3" name="ordem" value="{{ordem}}" min="0">
+
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="checkbox" name="ativo" value="1" id="ativo" {{ativo}}>
+						<label class="form-check-label" for="ativo">Ativo (visível no site)</label>
+					</div>
+
+					<button type="button" class="btn btn-primary w-100" id="btn-salvar-depoimento">
+						<i class="fas fa-save me-1"></i> Salvar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script>
+(function(){
+	const urlBase = typeof url_base !== 'undefined' ? url_base : '{{URL}}/';
+	const $tipo = $('#tipo_autor');
+
+	function toggleTipo(){
+		const t = $tipo.val();
+		$('#box-busca-candidato').toggle(t === 'candidato');
+		$('#box-busca-empresa').toggle(t === 'empresa');
+		$('#box-avatar-manual').toggle(t === 'manual');
+		if (t !== 'candidato') $('#id_candidato').val('0');
+		if (t !== 'empresa') $('#id_empresa').val('0');
+	}
+	$tipo.on('change', toggleTipo);
+	toggleTipo();
+
+	function bindBusca(inputId, resultId, tipo){
+		let timer = null;
+		$('#'+inputId).on('input', function(){
+			clearTimeout(timer);
+			const q = $(this).val();
+			timer = setTimeout(function(){
+				$.post(urlBase + 'master/conect-depoimentos/buscar', { tipo: tipo, q: q }, function(res){
+					const $box = $('#'+resultId).empty();
+					if (!res || !res.success || !res.items) return;
+					res.items.forEach(function(it){
+						$('<button type="button" class="list-group-item list-group-item-action"></button>')
+							.text(it.label)
+							.on('click', function(){
+								if (tipo === 'candidato') {
+									$('#id_candidato').val(it.id);
+									$('#id_empresa').val('0');
+								} else {
+									$('#id_empresa').val(it.id);
+									$('#id_candidato').val('0');
+								}
+								$('#nome_exibicao').val(it.nome || '');
+								$('#cargo').val(it.cargo || '');
+								if (it.avatarUrl) {
+									$('#avatar-preview-wrap').show();
+									$('#preview-avatar').attr('src', it.avatarUrl);
+								}
+								$box.empty();
+							})
+							.appendTo($box);
+					});
+				}, 'json');
+			}, 300);
+		});
+	}
+	bindBusca('busca_candidato', 'result_candidato', 'candidato');
+	bindBusca('busca_empresa', 'result_empresa', 'empresa');
+
+	$('#depo_avatar').on('change', function(e){
+		const f = e.target.files && e.target.files[0];
+		if (!f) return;
+		$('#avatar-preview-wrap').show();
+		$('#preview-avatar').attr('src', URL.createObjectURL(f));
+	});
+
+	$('#btn-salvar-depoimento').on('click', function(){
+		const fd = new FormData(document.getElementById('form-depoimento'));
+		$.ajax({
+			url: urlBase + 'master/conect-depoimentos/salvar',
+			type: 'POST', data: fd, processData: false, contentType: false, dataType: 'json'
+		}).done(function(res){
+			if (res && res.success) {
+				Swal.fire('Salvo', res.message || 'Depoimento salvo.', 'success').then(function(){
+					if (res.redirect) window.location = res.redirect;
+				});
+			} else {
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+			}
+		}).fail(function(){ Swal.fire('Erro', 'Falha ao salvar.', 'error'); });
+	});
+})();
+</script>

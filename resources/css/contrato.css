@@ -1,0 +1,73 @@
+.bto {
+    padding: 1%;
+    background: #dedede;
+    margin-bottom: 1%;
+    border-bottom: 1px solid #ccc;
+ }
+ .bto a,
+ .bto button {
+    padding: 9px;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1em;
+ }
+ .bto .btn-impress {
+    color: #fff;
+    background: green;
+ }
+ .bto .btn {
+    color: #555;
+    background: transparent;
+ }
+
+ bto {
+    padding: 1%;
+    background: #dedede;
+    margin-bottom: 1%;
+    border-bottom: 1px solid #ccc;
+ }
+ .bto a,
+ .bto button {
+    padding: 9px;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1em;
+ }
+ .bto .btn-impress {
+    color: #fff;
+    background: green;
+ }
+ .bto .btn {
+    color: #555;
+    background: transparent;
+ }
+
+ @media print {
+    .bto { display: none; }
+    .quebra-pagina { page-break-after: always; }
+ }
+
+.contrato-preview-wrap {
+    min-height: 520px;
+    overflow: hidden;
+}
+.contrato-preview-frame {
+    width: 100%;
+    height: 520px;
+    border: 0;
+    background: #fff;
+}
+.contrato-editor-textarea {
+    min-height: 520px;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+@media (max-width: 991.98px) {
+    .contrato-preview-frame,
+    .contrato-editor-textarea {
+        min-height: 360px;
+        height: 360px;
+    }
+}

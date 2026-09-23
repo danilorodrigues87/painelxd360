@@ -1,0 +1,137 @@
+<h1 class="mt-4">Configurações de IA</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Uma chave compartilhada · recursos conforme o plano da escola</li>
+</ol>
+
+<p class="mb-3"><a href="{{URL}}/painel/config/ia/uso" class="btn btn-outline-secondary btn-sm"><i class="fas fa-chart-bar me-1"></i> Relatório de uso da API</a></p>
+
+<div id="alert-sql-ia" class="alert alert-warning d-none">
+	As colunas de IA ainda não estão no banco. Fale com o <strong>suporte</strong> ou execute o SQL de IA no phpMyAdmin.
+</div>
+
+<div class="alert alert-warning {{alert_agent_sql_class}}">
+	Para o Assistente IA, execute <code>database/agent_escola_config.sql</code> no phpMyAdmin.
+</div>
+
+<div class="card mb-4">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span><i class="fa-solid fa-key me-1"></i> Credenciais compartilhadas</span>
+		<span id="badge-credencial" class="badge bg-secondary">—</span>
+	</div>
+	<div class="card-body">
+		<p class="text-muted small mb-3">
+			Provedor, modelo e API key servem para todos os recursos liberados no plano
+			(portal EAD, Assistente no Telegram e variação de textos WhatsApp).
+			A chave fica criptografada e <strong>nunca</strong> é enviada ao portal do aluno.
+		</p>
+		<div class="mb-3">
+			<label class="form-label" for="ai_provider">Provedor</label>
+			<select class="form-select" id="ai_provider">
+				<option value="">—</option>
+				<option value="openai">OpenAI (ChatGPT)</option>
+				<option value="gemini">Google Gemini</option>
+				<option value="outro">Outro (compatível OpenAI)</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="ai_model">Modelo</label>
+			<input type="text" class="form-control" id="ai_model" placeholder="ex: gpt-4o-mini, gemini-2.0-flash">
+			<div class="form-text">Gemini: prefira <code>gemini-2.0-flash</code>.</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="ai_api_key">API Key</label>
+			<input type="password" class="form-control" id="ai_api_key" autocomplete="new-password" placeholder="Cole a chave">
+			<div class="form-text" id="ai_key_hint">Deixe em branco para manter a chave já salva.</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4 {{card_ead_class}}" id="card-toggle-ead" data-show="{{show_ead}}">
+	<div class="card-header">IA Pedagógica (portal do aluno)</div>
+	<div class="card-body">
+		<p class="text-muted small">Tutor e role play no EAD. Sem ativar, o portal usa respostas stub.</p>
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="ai_ativo">
+			<label class="form-check-label" for="ai_ativo">Ativar IA Pedagógica</label>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4 {{card_assistente_class}}" id="card-toggle-assistente" data-show="{{show_assistente}}">
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span>Assistente IA (Telegram nativo)</span>
+		<span id="badge-assistente" class="badge bg-secondary">—</span>
+	</div>
+	<div class="card-body">
+		<p class="small mb-2">
+			O bot nativo consulta o painel em modo somente leitura. Por padrão responde com <strong>palavras-chave</strong> (sem gastar tokens).
+			A IA compartilhada é opcional para perguntas em linguagem natural.
+		</p>
+		<ul class="small text-muted mb-3" id="status-assistente-list">
+			<li>Assistente: <span id="st-nativo">—</span></li>
+			<li>Bot Telegram: <span id="st-tg">—</span></li>
+		</ul>
+		<div id="alert-tg-historico-sql" class="alert alert-warning small d-none">
+			Execute <code>database/telegram_agent_nativo.sql</code> (e, se já tinha rodado antes, <code>database/telegram_agent_ia_opcional.sql</code>) no phpMyAdmin.
+		</div>
+		<div class="form-check form-switch mb-2">
+			<input class="form-check-input" type="checkbox" id="assistente_ativo">
+			<label class="form-check-label" for="assistente_ativo">Ativar Assistente no Telegram</label>
+		</div>
+		<div class="form-check form-switch mb-3">
+			<input class="form-check-input" type="checkbox" id="telegram_ia_ativo">
+			<label class="form-check-label" for="telegram_ia_ativo">Usar IA em perguntas livres</label>
+			<div class="form-text">Desligado = só palavras-chave (/resumo, /agenda…). Ligado = também responde com a IA compartilhada (gasta tokens).</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="telegram_bot_token">Bot token</label>
+			<input type="password" class="form-control" id="telegram_bot_token" autocomplete="new-password" placeholder="123456:AAH...">
+			<div class="form-text" id="tg_token_hint">Deixe em branco para manter o token já salvo. Crie o bot no @BotFather.</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="telegram_bot_username">Username do bot</label>
+			<input type="text" class="form-control" id="telegram_bot_username" placeholder="escola_xyz_bot">
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="telegram_chat_id">Chat ID autorizado *</label>
+			<input type="text" class="form-control" id="telegram_chat_id" placeholder="ex: 123456789">
+			<div class="form-text">Obrigatório. Só esses chats recebem resposta (vários IDs separados por vírgula). Descubra o ID falando com @userinfobot.</div>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="telegram_notas">Observações</label>
+			<input type="text" class="form-control" id="telegram_notas" maxlength="255" placeholder="ex: bot do diretor">
+		</div>
+		<div class="border rounded p-3 bg-light">
+			<div class="small mb-2"><strong>Conexão Telegram</strong></div>
+			<div class="small text-muted mb-2 text-break">Webhook: <code id="tg-webhook-url">—</code></div>
+			<div class="small text-muted mb-3" id="tg-webhook-hint">Em produção (HTTPS) ative o webhook. Em XAMPP local use o worker.</div>
+			<div class="d-flex flex-wrap gap-2">
+				<button type="button" class="btn btn-outline-primary btn-sm" id="btn-tg-webhook-on">Ativar webhook</button>
+				<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-tg-webhook-off">Remover webhook</button>
+				<button type="button" class="btn btn-outline-success btn-sm" id="btn-tg-testar">Enviar teste</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4 {{card_whatsapp_class}}" id="card-toggle-whatsapp" data-show="{{show_whatsapp}}">
+	<div class="card-header">WhatsApp — campanhas</div>
+	<div class="card-body">
+		<p class="text-muted small">
+			Quando ativo, cada mensagem de campanha 1:1/grupo recebe uma variação leve do texto
+			(IA compartilhada; se falhar, variação local). Reduz padrão de template.
+			Limites de intervalo ficam em <a href="{{URL}}/painel/config/comunicacao">Comunicação</a>.
+		</p>
+		<div id="alert-variar-sql" class="alert alert-warning small d-none">
+			Execute <code>database/whatsapp_anti_ban.sql</code> para liberar este recurso.
+		</div>
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="whatsapp_variar_texto">
+			<label class="form-check-label" for="whatsapp_variar_texto">Variar textos das campanhas WhatsApp</label>
+		</div>
+	</div>
+</div>
+
+<button type="button" class="btn btn-primary mb-4" id="btn-salvar-ia">Salvar</button>
+
+<script src="{{URL}}/resources/js/config-ia.js?v=20260731g"></script>

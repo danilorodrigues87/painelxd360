@@ -1,0 +1,26 @@
+<h1 class="mt-4">Planos</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">SQL pendente</li>
+</ol>
+
+<div class="alert alert-warning">
+	<strong>Execute no phpMyAdmin</strong> o SQL abaixo e recarregue esta página.
+</div>
+
+<pre class="bg-light border rounded p-3 small" style="white-space:pre-wrap;">CREATE TABLE IF NOT EXISTS planos_assinatura (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(120) NOT NULL,
+  descricao VARCHAR(255) DEFAULT NULL,
+  modulos JSON DEFAULT NULL COMMENT 'NULL = todos os módulos',
+  ativo TINYINT(1) NOT NULL DEFAULT 1,
+  ordem INT NOT NULL DEFAULT 0,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE clientes_assinantes
+  ADD COLUMN plan_id INT UNSIGNED NULL AFTER modulos_liberados;
+
+INSERT INTO planos_assinatura (nome, descricao, modulos, ativo, ordem) VALUES
+('Básico', 'CRM + pedagógico essencial', '["leads","tarefas","alunos","matriculas","trilhas","responsaveis","funcionarios"]', 1, 1),
+('Completo', 'Todos os módulos liberados', NULL, 1, 2);</pre>

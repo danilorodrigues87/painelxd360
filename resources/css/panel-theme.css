@@ -1,0 +1,676 @@
+/* Tema escuro — contraste e paleta para painéis escola e Master
+ * Problemas corrigidos: dash-value #212529, text-dark em tabelas,
+ * kanban/timeline/trello claros herdando cor clara do .card pai.
+ */
+
+html[data-bs-theme="dark"] {
+  color-scheme: dark;
+  --bs-body-color: #e8ecf1;
+  --bs-body-color-rgb: 232, 236, 241;
+  --bs-body-bg: #12151a;
+  --bs-body-bg-rgb: 18, 21, 26;
+  --bs-emphasis-color: #ffffff;
+  --bs-emphasis-color-rgb: 255, 255, 255;
+  --bs-secondary-color: #b0b8c4;
+  --bs-secondary-color-rgb: 176, 184, 196;
+  --bs-tertiary-color: #8b95a5;
+  --bs-tertiary-bg: #1e2430;
+  --bs-tertiary-bg-rgb: 30, 36, 48;
+  --bs-heading-color: #f3f5f7;
+  --bs-border-color: #3a4250;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.12);
+  --bs-link-color: #6ea8fe;
+  --bs-link-hover-color: #9ec0ff;
+  --painel-surface: #1a1f27;
+  --painel-surface-2: #222833;
+  --painel-text: #e8ecf1;
+  --painel-text-muted: #a8b0bd;
+}
+
+html[data-bs-theme="dark"] body.sb-nav-fixed {
+  background-color: var(--bs-body-bg);
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] #layoutSidenav_content,
+html[data-bs-theme="dark"] #layoutSidenav_content main {
+  background-color: var(--bs-body-bg);
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] h1,
+html[data-bs-theme="dark"] h2,
+html[data-bs-theme="dark"] h3,
+html[data-bs-theme="dark"] h4,
+html[data-bs-theme="dark"] h5,
+html[data-bs-theme="dark"] h6,
+html[data-bs-theme="dark"] .h1,
+html[data-bs-theme="dark"] .h2,
+html[data-bs-theme="dark"] .h3,
+html[data-bs-theme="dark"] .h4,
+html[data-bs-theme="dark"] .h5,
+html[data-bs-theme="dark"] .h6 {
+  color: var(--bs-heading-color);
+}
+
+html[data-bs-theme="dark"] .breadcrumb {
+  background: transparent;
+}
+
+html[data-bs-theme="dark"] .breadcrumb-item,
+html[data-bs-theme="dark"] .breadcrumb-item a {
+  color: var(--painel-text-muted);
+}
+
+html[data-bs-theme="dark"] .breadcrumb-item.active {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
+  color: #6c757d;
+}
+
+html[data-bs-theme="dark"] .card {
+  background-color: var(--painel-surface);
+  border-color: var(--bs-border-color);
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .card-header,
+html[data-bs-theme="dark"] .card-footer {
+  background-color: var(--painel-surface-2);
+  border-color: var(--bs-border-color);
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .card-title,
+html[data-bs-theme="dark"] .card-subtitle,
+html[data-bs-theme="dark"] .card-text {
+  color: var(--painel-text);
+}
+
+/* Utilitários que forçavam texto quase invisível no fundo escuro */
+html[data-bs-theme="dark"] .text-dark,
+html[data-bs-theme="dark"] .text-black,
+html[data-bs-theme="dark"] .text-body {
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .text-muted,
+html[data-bs-theme="dark"] .text-secondary,
+html[data-bs-theme="dark"] .small.text-muted {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .text-black-50 {
+  color: rgba(232, 236, 241, 0.55) !important;
+}
+
+/* Badges / fundos claros: manter texto escuro legível */
+html[data-bs-theme="dark"] .bg-warning,
+html[data-bs-theme="dark"] .bg-warning.text-dark,
+html[data-bs-theme="dark"] .badge.bg-warning,
+html[data-bs-theme="dark"] .badge.bg-info,
+html[data-bs-theme="dark"] .badge.bg-light,
+html[data-bs-theme="dark"] .bg-info.text-dark,
+html[data-bs-theme="dark"] .bg-light.text-dark {
+  color: #212529 !important;
+}
+
+html[data-bs-theme="dark"] .bg-white,
+html[data-bs-theme="dark"] .bg-light {
+  background-color: var(--painel-surface) !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .form-label,
+html[data-bs-theme="dark"] label {
+  color: var(--painel-text);
+}
+
+/* ——— Dashboard (cores hardcoded no home) ——— */
+html[data-bs-theme="dark"] .dash-section-title {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-bs-theme="dark"] .dash-section-title h5 {
+  color: #d5dbe3 !important;
+}
+
+html[data-bs-theme="dark"] .dash-label {
+  color: #a8b0bd !important;
+}
+
+html[data-bs-theme="dark"] .dash-value {
+  color: #f3f5f7 !important;
+}
+
+html[data-bs-theme="dark"] .dash-sub {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .card.border-left-primary,
+html[data-bs-theme="dark"] .card.border-left-success,
+html[data-bs-theme="dark"] .card.border-left-info,
+html[data-bs-theme="dark"] .card.border-left-warning,
+html[data-bs-theme="dark"] .card.border-left-danger,
+html[data-bs-theme="dark"] .dash-card {
+  background-color: var(--painel-surface);
+}
+
+/* ——— Tabelas ——— */
+html[data-bs-theme="dark"] .table {
+  --bs-table-bg: var(--painel-surface);
+  --bs-table-color: var(--painel-text);
+  --bs-table-border-color: var(--bs-border-color);
+  --bs-table-striped-bg: #1e2430;
+  --bs-table-striped-color: var(--painel-text);
+  --bs-table-hover-bg: #2a3140;
+  --bs-table-hover-color: #ffffff;
+  --bs-table-active-bg: #2a3140;
+  --bs-table-active-color: #ffffff;
+  color: var(--painel-text);
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .table > :not(caption) > * > *,
+html[data-bs-theme="dark"] .table td,
+html[data-bs-theme="dark"] .table th,
+html[data-bs-theme="dark"] .table thead th,
+html[data-bs-theme="dark"] .table tbody td {
+  color: var(--painel-text) !important;
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .table-light,
+html[data-bs-theme="dark"] .table > :not(caption) > * > .table-light,
+html[data-bs-theme="dark"] thead.table-light th {
+  --bs-table-bg: var(--painel-surface-2);
+  --bs-table-color: var(--painel-text);
+  color: var(--painel-text) !important;
+  background-color: var(--painel-surface-2) !important;
+}
+
+html[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+  color: var(--painel-text) !important;
+}
+
+/* Diário de classe — aula em andamento, presença aguardando */
+.table-striped > tbody > tr.diario-row-pendente > * {
+  --bs-table-bg: rgba(255, 193, 7, 0.16);
+  --bs-table-color: inherit;
+  box-shadow: inset 3px 0 0 #ffc107;
+}
+
+html[data-bs-theme="dark"] .table-striped > tbody > tr.diario-row-pendente > * {
+  --bs-table-bg: rgba(230, 168, 0, 0.12);
+  --bs-table-color: var(--painel-text);
+  color: var(--painel-text) !important;
+  box-shadow: inset 3px 0 0 #c99200;
+}
+
+html[data-bs-theme="dark"] .table-striped > tbody > tr.diario-row-pendente .form-select,
+html[data-bs-theme="dark"] .table-striped > tbody > tr.diario-row-pendente .form-control {
+  background-color: var(--painel-surface-2);
+  color: var(--painel-text);
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .list-group-item {
+  background-color: var(--painel-surface);
+  border-color: var(--bs-border-color);
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .list-group-item-action:hover,
+html[data-bs-theme="dark"] .list-group-item-action:focus {
+  background-color: #2a3140;
+  color: #fff;
+}
+
+/* ——— Forms ——— */
+html[data-bs-theme="dark"] .form-control,
+html[data-bs-theme="dark"] .form-select,
+html[data-bs-theme="dark"] .form-floating > .form-control,
+html[data-bs-theme="dark"] .form-floating > .form-select {
+  background-color: #12151a;
+  border-color: #4a5568;
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .form-control:focus,
+html[data-bs-theme="dark"] .form-select:focus {
+  background-color: #12151a;
+  border-color: #6ea8fe;
+  color: var(--painel-text);
+  box-shadow: 0 0 0 0.2rem rgba(110, 168, 254, 0.25);
+}
+
+html[data-bs-theme="dark"] .form-control::placeholder,
+html[data-bs-theme="dark"] .form-control::-webkit-input-placeholder {
+  color: #8b95a5;
+  opacity: 1;
+}
+
+html[data-bs-theme="dark"] .form-control:disabled,
+html[data-bs-theme="dark"] .form-select:disabled {
+  background-color: #1e2430;
+  color: #8b95a5;
+}
+
+html[data-bs-theme="dark"] .form-floating > label {
+  color: #8b95a5;
+}
+
+html[data-bs-theme="dark"] .form-check-label {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .input-group-text {
+  background-color: var(--painel-surface-2);
+  border-color: #4a5568;
+  color: #ced4da;
+}
+
+/* ——— Modals / dropdowns / nav ——— */
+html[data-bs-theme="dark"] .modal-content {
+  background-color: var(--painel-surface);
+  color: var(--painel-text);
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .modal-header,
+html[data-bs-theme="dark"] .modal-footer {
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .btn-close {
+  filter: invert(1) grayscale(100%);
+  opacity: 0.75;
+}
+
+/* SweetAlert2 — mesmo contraste dos modals Bootstrap */
+html[data-bs-theme="dark"] .swal2-popup {
+  background-color: var(--painel-surface);
+  color: var(--painel-text);
+  border: 1px solid var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .swal2-title {
+  color: var(--bs-heading-color);
+}
+
+html[data-bs-theme="dark"] .swal2-html-container,
+html[data-bs-theme="dark"] .swal2-content {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .swal2-popup .form-label,
+html[data-bs-theme="dark"] .swal2-popup label:not(.form-check-label) {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .swal2-popup .form-control,
+html[data-bs-theme="dark"] .swal2-popup .form-select,
+html[data-bs-theme="dark"] .swal2-popup textarea.form-control,
+html[data-bs-theme="dark"] .swal2-input,
+html[data-bs-theme="dark"] .swal2-textarea,
+html[data-bs-theme="dark"] .swal2-select {
+  background-color: var(--painel-surface-2);
+  color: var(--painel-text);
+  border-color: #4a5568;
+}
+
+html[data-bs-theme="dark"] .swal2-popup .form-control:focus,
+html[data-bs-theme="dark"] .swal2-popup .form-select:focus,
+html[data-bs-theme="dark"] .swal2-input:focus,
+html[data-bs-theme="dark"] .swal2-textarea:focus,
+html[data-bs-theme="dark"] .swal2-select:focus {
+  background-color: var(--painel-surface-2);
+  color: var(--painel-text);
+  border-color: #6ea8fe;
+  box-shadow: 0 0 0 0.2rem rgba(110, 168, 254, 0.25);
+}
+
+html[data-bs-theme="dark"] .swal2-popup .form-control::placeholder,
+html[data-bs-theme="dark"] .swal2-input::placeholder,
+html[data-bs-theme="dark"] .swal2-textarea::placeholder {
+  color: #8b95a5;
+}
+
+html[data-bs-theme="dark"] .swal2-popup .text-muted,
+html[data-bs-theme="dark"] .swal2-popup .text-secondary {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .swal2-popup strong {
+  color: var(--bs-heading-color);
+}
+
+html[data-bs-theme="dark"] .swal2-validation-message {
+  background-color: #3d2020;
+  color: #f8d7da;
+}
+
+html[data-bs-theme="dark"] .swal2-close {
+  color: var(--painel-text-muted);
+}
+
+html[data-bs-theme="dark"] .swal2-close:hover {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .swal2-footer {
+  border-top-color: var(--bs-border-color);
+  color: var(--painel-text-muted);
+}
+
+html[data-bs-theme="dark"] .dropdown-menu {
+  background-color: var(--painel-surface);
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .dropdown-item {
+  color: var(--painel-text);
+}
+
+html[data-bs-theme="dark"] .dropdown-item:hover,
+html[data-bs-theme="dark"] .dropdown-item:focus {
+  background-color: #2a3140;
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .dropdown-divider {
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .nav-tabs {
+  border-color: var(--bs-border-color);
+}
+
+html[data-bs-theme="dark"] .nav-tabs .nav-link {
+  color: var(--painel-text-muted);
+}
+
+html[data-bs-theme="dark"] .nav-tabs .nav-link.active {
+  background-color: var(--painel-surface);
+  border-color: var(--bs-border-color) var(--bs-border-color) var(--painel-surface);
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .nav-link:not(.navbar-dark .nav-link):not(.sb-sidenav .nav-link) {
+  color: var(--painel-text-muted);
+}
+
+html[data-bs-theme="dark"] .alert-secondary,
+html[data-bs-theme="dark"] .alert-light {
+  background-color: var(--painel-surface-2);
+  border-color: var(--bs-border-color);
+  color: #ced4da;
+}
+
+html[data-bs-theme="dark"] .border,
+html[data-bs-theme="dark"] .border-bottom,
+html[data-bs-theme="dark"] .border-top,
+html[data-bs-theme="dark"] .border-start,
+html[data-bs-theme="dark"] .border-end {
+  border-color: var(--bs-border-color) !important;
+}
+
+html[data-bs-theme="dark"] .shadow,
+html[data-bs-theme="dark"] .shadow-sm {
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.45) !important;
+}
+
+html[data-bs-theme="dark"] .page-link {
+  background-color: var(--painel-surface);
+  border-color: var(--bs-border-color);
+  color: #adb5bd;
+}
+
+html[data-bs-theme="dark"] .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+html[data-bs-theme="dark"] .page-item.disabled .page-link {
+  background-color: #1e2430;
+  color: #6c757d;
+}
+
+/* ——— CRM Kanban: cards claros herdavam texto do .card escuro ——— */
+html[data-bs-theme="dark"] .kanban-card {
+  background: var(--painel-surface-2) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+html[data-bs-theme="dark"] .kanban-card.lead-esquecido {
+  background: #2a1f22 !important;
+  border-left-color: #dc3545 !important;
+}
+
+html[data-bs-theme="dark"] .kanban-card .lead-nome {
+  color: #f3f5f7 !important;
+}
+
+html[data-bs-theme="dark"] .kanban-card .lead-meta {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .kanban-card .lead-valor {
+  color: #75b798 !important;
+}
+
+html[data-bs-theme="dark"] .kanban-ghost {
+  background: #2a3140 !important;
+}
+
+/* ——— CRM histórico (timeline): cards claros herdavam texto claro ——— */
+html[data-bs-theme="dark"] .timeline-list::before {
+  background: #3a4250;
+}
+
+html[data-bs-theme="dark"] .timeline-icon {
+  background: var(--painel-surface-2) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .timeline-content {
+  background: var(--painel-surface-2) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .timeline-content strong,
+html[data-bs-theme="dark"] .timeline-content p {
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .timeline-content .text-muted {
+  color: var(--painel-text-muted) !important;
+}
+
+/* ——— CRM Tarefas (Trello): colunas/cards claros herdavam texto claro ——— */
+html[data-bs-theme="dark"] .trello-coluna {
+  background: #1e2430 !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .trello-coluna-titulo,
+html[data-bs-theme="dark"] .trello-coluna-titulo:focus {
+  color: #f3f5f7 !important;
+  background: transparent !important;
+}
+
+html[data-bs-theme="dark"] .trello-coluna-titulo:focus {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+html[data-bs-theme="dark"] .trello-card {
+  background: var(--painel-surface-2) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+html[data-bs-theme="dark"] .trello-card-titulo {
+  color: #f3f5f7 !important;
+}
+
+html[data-bs-theme="dark"] .trello-card-meta {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .trello-card-badge {
+  color: #75b798 !important;
+  background: rgba(25, 135, 84, 0.2) !important;
+}
+
+html[data-bs-theme="dark"] .trello-btn-add-card {
+  color: var(--painel-text-muted) !important;
+}
+
+html[data-bs-theme="dark"] .trello-btn-add-card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .trello-ghost {
+  background: #2a3140 !important;
+}
+
+html[data-bs-theme="dark"] .tarefa-sidebar {
+  background: var(--painel-surface) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .tarefa-comentario-item {
+  background: var(--painel-surface-2) !important;
+  border-color: #3a4250 !important;
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .checklist-item {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-bs-theme="dark"] .checklist-item label {
+  color: var(--painel-text) !important;
+}
+
+html[data-bs-theme="dark"] .checklist-item.concluido label {
+  color: var(--painel-text-muted) !important;
+}
+
+/* Links genéricos no conteúdo */
+html[data-bs-theme="dark"] main a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.navbar-brand) {
+  color: var(--bs-link-color);
+}
+
+html[data-bs-theme="dark"] main a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):hover {
+  color: var(--bs-link-hover-color);
+}
+
+/* Notificações staff (navbar) */
+.staff-notif-menu {
+  min-width: 300px;
+  max-width: 380px;
+  max-height: min(70vh, 420px);
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
+}
+.staff-notif-lista {
+  max-height: min(60vh, 360px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.staff-notif-item {
+  white-space: normal;
+}
+.staff-notif-item .staff-notif-titulo,
+.staff-notif-item .staff-notif-msg {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.staff-notif-item.staff-notif-unread {
+  background: rgba(13, 110, 253, 0.08);
+}
+html[data-bs-theme="dark"] .staff-notif-item.staff-notif-unread {
+  background: rgba(13, 110, 253, 0.15);
+}
+#nav-notif-wrap .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+}
+.staff-notif-badge {
+  font-size: 10px;
+  min-width: 18px;
+  line-height: 1.2;
+  padding: 2px 5px;
+}
+
+/* Mobile: painel fixo, largura total, sem corte */
+.staff-notif-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 767.98px) {
+  .sb-nav-fixed .sb-topnav {
+    overflow: visible !important;
+  }
+  #nav-notif-wrap .staff-notif-menu {
+    position: fixed !important;
+    inset: auto 8px auto 8px !important;
+    top: calc(56px + env(safe-area-inset-top, 0px)) !important;
+    transform: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: calc(100vh - 72px - env(safe-area-inset-top, 0px)) !important;
+    margin: 0 !important;
+    z-index: 1055 !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  }
+  .staff-notif-lista {
+    max-height: calc(100vh - 140px - env(safe-area-inset-top, 0px));
+  }
+  .staff-notif-marcar-btn {
+    font-size: 0.875rem;
+  }
+}
+
+/* Banner instalar PWA */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1080;
+  background: linear-gradient(135deg, #1a3a5c 0%, #212529 100%);
+  color: #fff;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+  padding: 12px 16px;
+}
+.pwa-install-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 575.98px) {
+  .pwa-install-inner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}

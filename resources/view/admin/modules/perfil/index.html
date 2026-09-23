@@ -1,0 +1,100 @@
+<h1 class="mt-4">Meu perfil</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Dados pessoais e foto</li>
+</ol>
+
+{{alert_sql}}
+
+<div class="card shadow-sm">
+	<div class="card-body">
+		<form id="form-perfil-page" method="post" enctype="multipart/form-data" onsubmit="return false;">
+			<input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="email_antigo" value="{{email_antigo}}">
+			<div class="row g-3">
+				{{foto_html}}
+				<div class="col-md-6">
+					<label class="form-label">Nome</label>
+					<input type="text" name="nome" class="form-control" value="{{nome}}" required>
+				</div>
+				<div class="col-md-6">
+					<label class="form-label">E-mail</label>
+					<input type="email" name="email" class="form-control" value="{{email}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">WhatsApp</label>
+					<input type="text" name="whatsapp" class="form-control mascara-celular" value="{{whatsapp}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">CPF</label>
+					<input type="text" name="cpf" class="form-control mascara-cpf" value="{{cpf}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">RG</label>
+					<input type="text" name="rg" class="form-control mascara-rg" value="{{rg}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">Nascimento</label>
+					<input type="date" name="nascimento" class="form-control" value="{{nascimento}}" required>
+				</div>
+				<div class="col-md-6">
+					<label class="form-label">Endereço</label>
+					<input type="text" name="endereco" class="form-control" value="{{endereco}}" required>
+				</div>
+				<div class="col-md-2">
+					<label class="form-label">Número</label>
+					<input type="text" name="numero" class="form-control" value="{{numero}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">Bairro</label>
+					<input type="text" name="bairro" class="form-control" value="{{bairro}}" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">Estado</label>
+					<select class="form-control" id="estado" name="estado" onchange="selectEstado({{cidade_id}})">
+						{{opt_estado}}
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label">Cidade</label>
+					<div id="cidades"></div>
+				</div>
+				<div class="col-12">
+					<button type="button" class="btn btn-primary" id="btn-salvar-perfil">
+						<i class="fas fa-save"></i> Salvar
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+$(function(){
+	selectEstado({{cidade_id}});
+	$('#btn-salvar-perfil').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		const fd = new FormData(document.getElementById('form-perfil-page'));
+		$.ajax({
+			url: url_base + 'painel/perfil/salvar',
+			method: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			$btn.prop('disabled', false);
+			if(!res || !res.success){
+				Swal.fire('Erro', (res && res.message) || 'Não foi possível salvar.', 'error');
+				return;
+			}
+			if(res.foto_url){
+				$('#nav-user-foto').attr('src', res.foto_url);
+			}
+			Swal.fire('OK', res.message, 'success');
+		}).fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha ao salvar perfil.', 'error');
+		});
+	});
+});
+</script>

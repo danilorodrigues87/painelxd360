@@ -1,0 +1,99 @@
+<h1 class="mt-4">Entrada</h1>
+
+<ul class="nav nav-tabs">
+
+	<li class="nav-item">
+		<a class="nav-link bg-success text-light" onclick="list_itens('','novo')" data-toggle="modal" href="#">Nova Movimentação</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link active" id="fil-hoje" onclick="listar('hoje',1)" href="#">Hoje</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-semana" onclick="listar('semana',1)" href="#">Essa semana</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-mes" onclick="listar('mes',1)" href="#">Esse mês</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="fil-atraso" onclick="listar('atraso',1)" href="#">Em atraso</a>
+	</li>
+</ul>
+<hr>
+
+
+<div class="card shadow mb-4">
+	<div id="listar"></div>
+
+	<nav class="container mt-3" aria-label="Paginação">
+		<div id="pagination"></div>
+	</nav>
+
+</div>
+
+<!-- Modal formulario -->
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="listar-dados">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	let listagem = 'painel/caixa/entrada';
+	let formulario = 'painel/caixa/entrada/form';
+	let edicao = 'painel/caixa/entrada/save';
+</script>
+<script src="{{URL}}/resources/js/ajax.js?v=20260817cx"></script>
+<script src="{{URL}}/resources/js/encargos-financeiro.js?v=20260905"></script>
+
+<script>
+	function ativarAbaCaixa(filtro) {
+		$('#fil-hoje, #fil-semana, #fil-mes, #fil-atraso').removeClass('active');
+		if (filtro === 'semana') {
+			$('#fil-semana').addClass('active');
+		} else if (filtro === 'mes') {
+			$('#fil-mes').addClass('active');
+		} else if (filtro === 'atraso') {
+			$('#fil-atraso').addClass('active');
+		} else {
+			$('#fil-hoje').addClass('active');
+		}
+	}
+
+	function listar(filtro, page) {
+		page = page || 1;
+		if (arguments.length >= 1) {
+			_ultimoFiltroLista = filtro;
+		}
+		var filtroEnvio = (_ultimoFiltroLista !== null && _ultimoFiltroLista !== undefined && _ultimoFiltroLista !== '')
+			? _ultimoFiltroLista
+			: (filtro || 'hoje');
+
+		$.ajax({
+			url: url_base + listagem,
+			method: 'post',
+			data: { filtro: filtroEnvio, page: page },
+			dataType: 'json',
+			success: function(result) {
+				if (!result || typeof result.itens === 'undefined') {
+					$('#listar').html('<div class="alert alert-warning m-3">Não foi possível carregar a lista.</div>');
+					return;
+				}
+				$('#listar').html(result.itens);
+				$('#pagination').html(result.pagination || '');
+				ativarAbaCaixa(filtroEnvio);
+			},
+			error: function() {
+				$('#listar').html('<div class="alert alert-danger m-3">Erro ao carregar entradas.</div>');
+			}
+		});
+	}
+
+	$(document).ready(function() {
+		listar('hoje', 1);
+	});
+</script>

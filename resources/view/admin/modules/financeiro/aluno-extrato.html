@@ -1,0 +1,38 @@
+<h1 class="mt-4">Extrato financeiro</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/clientes">Alunos</a></li>
+	<li class="breadcrumb-item active">{{nome_aluno}}</li>
+</ol>
+
+<div class="alert alert-light border mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+	<div>
+		<strong>{{nome_aluno}}</strong> · {{email_aluno}}
+		<span class="text-muted"> — todas as matrículas e acordos</span>
+	</div>
+	<div class="d-flex gap-2 flex-wrap">
+		<a href="{{URL}}/painel/caixa/entrada" class="btn btn-sm btn-outline-primary" title="Parcelas de acordo também aparecem em Entrada">
+			<i class="fa-solid fa-cash-register"></i> Caixa → Entrada
+		</a>
+		<button type="button" id="btn-baixa-lote" class="btn btn-sm btn-success">
+			<i class="fa-solid fa-check-double"></i> Dar baixa nas selecionadas
+		</button>
+		<button type="button" id="btn-pdf" class="btn btn-sm btn-outline-secondary">
+			<i class="fa-solid fa-file-pdf"></i> Baixar PDF
+		</button>
+		<button type="button" id="btn-renegociar" class="btn btn-sm btn-primary d-none">
+			<i class="fa-solid fa-handshake"></i> Renegociar débitos
+		</button>
+	</div>
+</div>
+
+<div id="alert-extrato" class="alert alert-warning d-none"></div>
+<div id="totais-extrato" class="row g-2 mb-3"></div>
+<div id="box-extrato"><p class="text-muted">Carregando…</p></div>
+
+<script>
+window.EXTRATO_ALUNO_ID = {{id_aluno}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="{{URL}}/resources/js/recibo-acoes.js"></script>
+<script src="{{URL}}/resources/js/encargos-financeiro.js?v=20260905"></script>
+<script src="{{URL}}/resources/js/aluno-extrato.js?v=20260908"></script>

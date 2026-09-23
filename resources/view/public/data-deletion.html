@@ -1,0 +1,89 @@
+<div class="col-lg-10 col-xl-9">
+	<div class="card shadow-lg border-0 rounded-lg mt-3 mb-4">
+		<div class="text-center my-3">
+			<img src="{{logo_url}}" width="140" alt="CTI Educacional">
+		</div>
+		<div class="card-header">
+			<h1 class="h3 text-center font-weight-light mb-0">Exclusão de dados do usuário</h1>
+			<p class="text-center text-muted small mb-0 mt-2">Painel CTI Educacional · Meta / Facebook / Instagram</p>
+		</div>
+		<div class="card-body" style="line-height:1.55;font-size:0.95rem;">
+			{{status}}
+
+			<p>
+				Esta página explica como solicitar a <strong>exclusão dos seus dados</strong>
+				relacionados ao Painel CTI e à integração com a Meta (Facebook e Instagram),
+				conforme exigências da plataforma Meta e da LGPD.
+			</p>
+			<p class="small text-muted">
+				URL pública:
+				<a href="{{url_exclusao}}">{{url_exclusao}}</a>
+				·
+				<a href="{{url_privacidade}}">Política de Privacidade</a>
+			</p>
+
+			<h2 class="h5 mt-4">1. O que pode ser excluído</h2>
+			<ul>
+				<li>Tokens e vínculo da conta Facebook/Instagram conectada ao painel da escola;</li>
+				<li>Posts e mídias agendados pela integração social (quando aplicável);</li>
+				<li>Dados de conta de usuário do painel (mediante solicitação e validação);</li>
+				<li>Outros dados pessoais tratados pela CTI na operação da plataforma, quando não houver obrigação legal de retenção.</li>
+			</ul>
+			<p>
+				Dados de alunos/responsáveis cadastrados pela <strong>escola</strong> devem ser
+				solicitados prioritariamente à própria escola (ela é a controladora desses dados).
+			</p>
+
+			<h2 class="h5 mt-4">2. Como a escola desconecta o Facebook/Instagram</h2>
+			<ol>
+				<li>Acesse o Painel CTI como Diretor;</li>
+				<li>Vá em <strong>Configurações → Conexão Meta</strong>;</li>
+				<li>Clique em <strong>Desconectar</strong> — isso remove tokens e desativa a publicação;</li>
+				<li>Opcionalmente, em facebook.com → Configurações → Aplicativos, remova o app da CTI.</li>
+			</ol>
+
+			<h2 class="h5 mt-4">3. Como solicitar exclusão à CTI</h2>
+			<p>Você pode:</p>
+			<ul>
+				<li>Enviar e-mail para
+					<a href="mailto:{{contato_email}}?subject=Solicitacao%20exclusao%20de%20dados%20CTI">{{contato_email}}</a>
+					com assunto “Exclusão de dados”, informando nome, e-mail da conta e o que deseja excluir; ou</li>
+				<li>Preencher o formulário abaixo.</li>
+			</ul>
+			<p>
+				Prazo de resposta: até <strong>30 dias</strong>. Após a exclusão dos dados da
+				integração Meta, a publicação automática deixa de funcionar até nova conexão.
+			</p>
+
+			<h2 class="h5 mt-4">4. Formulário de solicitação</h2>
+			<form method="post" action="{{url_exclusao}}" class="mt-3">
+				<input type="hidden" name="solicitar" value="1">
+				<div class="mb-3">
+					<label class="form-label">Nome completo</label>
+					<input type="text" name="nome" class="form-control" required maxlength="120">
+				</div>
+				<div class="mb-3">
+					<label class="form-label">E-mail da conta / contato</label>
+					<input type="email" name="email" class="form-control" required maxlength="190">
+				</div>
+				<div class="mb-3">
+					<label class="form-label">O que deseja excluir / detalhes</label>
+					<textarea name="detalhe" class="form-control" rows="4" required maxlength="2000"
+						placeholder="Ex.: desconectar Instagram da escola X; apagar meu usuário do painel; etc."></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Enviar solicitação</button>
+			</form>
+
+			<h2 class="h5 mt-4">5. Contato</h2>
+			<p class="mb-0">
+				CTI Educacional ·
+				<a href="mailto:{{contato_email}}">{{contato_email}}</a> ·
+				<a href="{{site_cti}}" target="_blank" rel="noopener noreferrer">{{site_cti}}</a>
+			</p>
+		</div>
+		<div class="card-footer text-center py-3">
+			<a class="small me-3" href="{{url_privacidade}}">Privacidade</a>
+			<a class="small" href="{{URL}}/">Voltar ao login</a>
+		</div>
+	</div>
+</div>

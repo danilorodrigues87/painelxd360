@@ -1,0 +1,71 @@
+<h1 class="mt-4"><i class="fas fa-photo-video text-primary"></i> Biblioteca de mídias</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Marketing · artes para posts, campanhas e redes sociais</li>
+</ol>
+
+<div class="alert alert-info small">
+	Imagens até 8 MB · vídeos até 100 MB. Arquivos ficam em <code>uploads/social/</code> da escola.
+	Exclusão bloqueada se a mídia estiver em post agendado ou campanha.
+	Defina a categoria <strong>Quadrado</strong> ou <strong>Story</strong> no upload ou em <strong>Editar</strong>.
+</div>
+<div class="alert alert-warning small d-none" id="bib-alerta-formato">
+	Não foi possível ativar categorias no banco. Rode <code>database/social_biblioteca_formato.sql</code> no phpMyAdmin.
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+	<span class="badge bg-secondary" id="bib-stats">Carregando...</span>
+	<a href="{{URL}}/painel/social" class="btn btn-sm btn-outline-secondary ms-auto">
+		<i class="fas fa-calendar-alt"></i> Ir para Agenda
+	</a>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+			<ul class="nav nav-pills nav-sm mb-0" id="bib-filtro-formato">
+				<li class="nav-item"><button type="button" class="nav-link active" data-formato="feed" data-tipo="image">Quadrado</button></li>
+				<li class="nav-item"><button type="button" class="nav-link" data-formato="story" data-tipo="image">Story</button></li>
+				<li class="nav-item"><button type="button" class="nav-link" data-formato="" data-tipo="video">Vídeos</button></li>
+				<li class="nav-item"><button type="button" class="nav-link" data-formato="" data-tipo="">Todos</button></li>
+			</ul>
+			<div class="d-flex gap-2 align-items-center flex-wrap">
+				<div id="wrap-bib-upload-formato">
+					<select class="form-select form-select-sm" id="bib-upload-formato" style="width:auto;" title="Categoria do upload">
+						<option value="feed">Quadrado (feed)</option>
+						<option value="story">Story (vertical)</option>
+					</select>
+				</div>
+				<label class="btn btn-sm btn-primary mb-0">
+					<i class="fas fa-upload"></i> Upload
+					<input type="file" id="bib-upload" class="d-none" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" multiple>
+				</label>
+				<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-bib-refresh">
+					<i class="fas fa-sync"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body">
+		<div id="bib-grid" class="row g-2">
+			<div class="col-12 text-muted">Carregando...</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalBibPreview" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header py-2">
+				<h5 class="modal-title" id="bib-preview-titulo">Visualizar</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body text-center p-2" id="bib-preview-body"></div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/social-biblioteca-shared.js?v=20260910a"></script>
+<script src="{{URL}}/resources/js/marketing-biblioteca.js?v=20260910a"></script>

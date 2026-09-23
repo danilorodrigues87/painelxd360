@@ -1,0 +1,119 @@
+<h1 class="mt-4">Assinaturas</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Cobrança mensal dos clientes (PIX Mercado Pago)</li>
+</ol>
+
+<div id="alert-mp-cti" class="alert alert-warning {{mp_ok_hidden}}">
+	Configure <code>MP_XD360_ACCESS_TOKEN</code> no <code>.env</code> para gerar PIX.
+	Opcional: <code>MP_XD360_WEBHOOK_SECRET</code>, <code>MP_XD360_WEBHOOK_TOKEN</code>, <code>MP_XD360_PAYER_EMAIL</code>.
+</div>
+
+<div class="row g-2 mb-3" id="saas-dashboard">
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Ativas</div><div class="fs-4 fw-semibold" id="dash-ativas">—</div>
+	</div></div></div>
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Trial</div><div class="fs-4 fw-semibold text-info" id="dash-trial">—</div>
+	</div></div></div>
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Suspensas</div><div class="fs-4 fw-semibold text-danger" id="dash-suspensas">—</div>
+	</div></div></div>
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Faturas abertas</div><div class="fs-4 fw-semibold text-warning" id="dash-abertas">—</div>
+	</div></div></div>
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Vencidas</div><div class="fs-4 fw-semibold text-danger" id="dash-vencidas">—</div>
+	</div></div></div>
+	<div class="col-6 col-md-4 col-xl-2"><div class="card border-0 shadow-sm h-100"><div class="card-body py-3">
+		<div class="text-muted small">Receita mês</div><div class="fs-5 fw-semibold text-success" id="dash-receita">—</div>
+	</div></div></div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-2">
+				<label class="form-label" for="filtro_competencia">Competência</label>
+				<input type="month" class="form-control form-control-sm" id="filtro_competencia" value="{{competencia}}">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="filtro_escola">Cliente</label>
+				<select class="form-select form-select-sm" id="filtro_escola">
+					<option value="">Todos</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label" for="filtro_status">Status</label>
+				<select class="form-select form-select-sm" id="filtro_status">
+					<option value="">Todos</option>
+					<option value="aberta">Aberta</option>
+					<option value="pago">Paga</option>
+					<option value="vencida">Vencida</option>
+					<option value="cancelada">Cancelada</option>
+				</select>
+			</div>
+			<div class="col-md-5 text-md-end">
+				<button type="button" class="btn btn-sm btn-outline-secondary me-1" id="btn-filtrar">Filtrar</button>
+				<button type="button" class="btn btn-sm btn-primary me-1" id="btn-gerar-mes">Gerar mês</button>
+				<button type="button" class="btn btn-sm btn-outline-primary me-1" id="btn-gerar-escola">Gerar 1 cliente</button>
+				<button type="button" class="btn btn-sm btn-outline-dark" id="btn-processar">Rodar worker</button>
+			</div>
+		</div>
+		<div class="form-text mt-2">
+			Após {{grace_dias}} dias do vencimento sem pagamento, o cliente fica <strong>suspenso</strong> (acesso só à tela Assinatura).
+			Trial padrão: 14 dias. Personalizado cobra se houver <strong>valor custom</strong>.
+			<span id="webhook-hint" class="d-none">Webhook: <code id="webhook-url"></code></span>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0 align-middle">
+				<thead class="table-light">
+					<tr>
+						<th>Cliente</th>
+						<th>Competência</th>
+						<th>Valor</th>
+						<th>Vencimento</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-faturas-saas">
+					<tr><td colspan="6" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalPixSaas" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">PIX da fatura</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<p class="mb-2" id="pix-saas-info"></p>
+				<div class="text-center mb-3">
+					<img id="pix-saas-qr" class="img-thumbnail d-none" alt="QR Code PIX" width="200" height="200" style="width:200px;height:200px;object-fit:contain;">
+				</div>
+				<textarea class="form-control font-monospace" id="pix-saas-copia" rows="5" readonly></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-primary" id="btn-copiar-pix">Copiar PIX</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.MASTER_ESCOLAS_SAAS = {{escolas_json}};
+window.MASTER_MP_CTI_OK = {{mp_ok}};
+window.MASTER_WEBHOOK_SAAS = {{webhook_url_json}};
+</script>
+<script src="{{URL}}/resources/js/master-assinaturas.js?v=20260914"></script>

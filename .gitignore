@@ -1,0 +1,33 @@
+.env
+/vendor/
+*.log
+.cursor/
+.vscode/
+resources/assets/img/*
+!resources/assets/img/icons/
+!resources/assets/img/icons/icone.png
+!resources/assets/img/icons/logo-2.png
+!resources/assets/img/icons/client.png
+!resources/assets/img/bg-cti2.jpg
+uploads/*
+database/*
+!database/xd360_init.sql
+!database/xd360_produto_launch.sql
+!database/xd360_seed_slugs.sql
+!database/xd360_tenant_domains.sql
+
+# Sessões PHP (não versionar)
+app/sessions/*
+!app/sessions/.gitkeep
+
+# Diagnósticos / dumps temporários (nunca versionar)
+_diag_*
+_curl_*
+_login_*
+*_curl_*.tmp
+*_curl_*.bin
+*_curl_*.json
+database/_tmp*
+database/_extract*
+database/_verify*
+debug-*.log

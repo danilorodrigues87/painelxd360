@@ -1,0 +1,78 @@
+<h1 class="mt-4"><i class="fa-solid fa-share-nodes text-primary"></i> Mensagens — Meta</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/social">Redes sociais</a></li>
+	<li class="breadcrumb-item active">Messenger e Instagram Direct</li>
+</ol>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+	<a href="{{URL}}/painel/social" class="btn btn-sm btn-outline-secondary">
+		<i class="fas fa-calendar-alt me-1"></i> Agenda de posts
+	</a>
+	<a href="{{URL}}/painel/config/social" class="btn btn-sm btn-outline-primary">
+		<i class="fab fa-facebook me-1"></i> Conexão Meta
+	</a>
+</div>
+
+<div class="alert alert-warning small d-none" id="alert-meta-sql"></div>
+<div class="alert alert-info small d-none" id="alert-meta-conexao"></div>
+
+<div class="row g-2 mb-2" id="meta-indicadores">
+	<div class="col-auto"><span class="badge bg-primary" id="meta-ind-total">0 abertas</span></div>
+	<div class="col-auto"><span class="badge bg-danger" id="meta-ind-nao-lidas">0 não lidas</span></div>
+	<div class="col-auto"><span class="badge bg-secondary" id="meta-ind-messenger">0 Messenger</span></div>
+	<div class="col-auto"><span class="badge bg-info text-dark" id="meta-ind-instagram">0 Instagram</span></div>
+</div>
+
+<div class="row g-3" style="min-height:70vh;">
+	<div class="col-md-4 col-lg-3">
+		<div class="card shadow-sm h-100">
+			<div class="card-header py-2">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<strong>Conversas</strong>
+					<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-meta-refresh" title="Atualizar">
+						<i class="fas fa-sync"></i>
+					</button>
+				</div>
+				<div class="btn-group btn-group-sm w-100 mb-2 flex-wrap" role="group" id="meta-filtros">
+					<button type="button" class="btn btn-outline-secondary active" data-filtro="todas">Todas</button>
+					<button type="button" class="btn btn-outline-secondary" data-filtro="nao_lidas">Não lidas</button>
+					<button type="button" class="btn btn-outline-secondary" data-filtro="messenger">Messenger</button>
+					<button type="button" class="btn btn-outline-secondary" data-filtro="instagram">Instagram</button>
+					<button type="button" class="btn btn-outline-secondary" data-filtro="arquivadas">Arquivadas</button>
+				</div>
+				<input type="text" class="form-control form-control-sm" id="meta-busca"
+					placeholder="Buscar nome ou mensagem..." autocomplete="off">
+			</div>
+			<div class="list-group list-group-flush overflow-auto" id="meta-lista-conversas" style="max-height:65vh;"></div>
+		</div>
+	</div>
+	<div class="col-md-8 col-lg-9">
+		<div class="card shadow-sm h-100 d-flex flex-column">
+			<div class="card-header py-2 d-flex flex-wrap gap-2 justify-content-between align-items-center">
+				<div>
+					<strong id="meta-chat-titulo">Selecione uma conversa</strong>
+					<div class="small text-muted" id="meta-chat-sub"></div>
+				</div>
+				<div class="d-flex gap-1 flex-wrap">
+					<button type="button" class="btn btn-sm btn-outline-secondary d-none" id="btn-meta-arquivar">Arquivar</button>
+					<button type="button" class="btn btn-sm btn-outline-primary d-none" id="btn-meta-reabrir">Reabrir</button>
+				</div>
+			</div>
+			<div class="card-body overflow-auto flex-grow-1 bg-light" id="meta-mensagens" style="min-height:45vh;max-height:55vh;">
+				<p class="text-muted small mb-0">As mensagens recebidas via webhook Meta aparecem aqui.</p>
+			</div>
+			<div class="card-footer">
+				<form id="form-meta-enviar" class="d-flex gap-2 align-items-end" onsubmit="return false;">
+					<textarea class="form-control" id="meta-texto" rows="2"
+						placeholder="Digite a resposta (janela de 24h da Meta)..." disabled></textarea>
+					<button type="button" class="btn btn-primary" id="btn-meta-enviar" disabled title="Enviar">
+						<i class="fas fa-paper-plane"></i>
+					</button>
+				</form>
+				<small class="text-muted d-block mt-1" id="meta-envio-status"></small>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/social-mensagens.js?v=20260813b"></script>

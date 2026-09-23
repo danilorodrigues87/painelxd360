@@ -1,0 +1,99 @@
+<h1 class="mt-4">Dados jurídicos XD360</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Licenciante no contrato SaaS (CNPJ, endereço, representante legal)</li>
+</ol>
+
+<div id="alert-dados-incompletos" class="alert alert-warning d-none"></div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+		<span>Empresa licenciante (XD360) <span id="badge-dados-xd360" class="badge bg-secondary">—</span></span>
+		<button type="button" class="btn btn-sm btn-primary" id="btn-salvar-dados-xd360">
+			<i class="fas fa-save"></i> Salvar
+		</button>
+	</div>
+	<div class="card-body">
+		<form id="form-dados-xd360" onsubmit="return false;">
+			<h6 class="text-muted mb-3">Dados da empresa</h6>
+			<div class="row g-3 mb-4">
+				<div class="col-md-8">
+					<label class="form-label" for="xd360_razao">Razão social *</label>
+					<input type="text" class="form-control" id="xd360_razao" maxlength="255" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_fantasia">Nome fantasia *</label>
+					<input type="text" class="form-control" id="xd360_fantasia" maxlength="120" required>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_cnpj">CNPJ *</label>
+					<input type="text" class="form-control mascara-cnpj" id="xd360_cnpj" placeholder="00.000.000/0000-00">
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_email">E-mail</label>
+					<input type="email" class="form-control" id="xd360_email">
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_telefone">Telefone</label>
+					<input type="text" class="form-control" id="xd360_telefone">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="xd360_site">Site</label>
+					<input type="url" class="form-control" id="xd360_site" placeholder="https://xd360.com.br">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label" for="xd360_cep">CEP</label>
+					<input type="text" class="form-control mascara-cep" id="xd360_cep">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="xd360_endereco">Endereço</label>
+					<input type="text" class="form-control" id="xd360_endereco">
+				</div>
+				<div class="col-md-2">
+					<label class="form-label" for="xd360_numero">Nº</label>
+					<input type="text" class="form-control" id="xd360_numero">
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_bairro">Bairro</label>
+					<input type="text" class="form-control" id="xd360_bairro">
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_estado">Estado</label>
+					<select class="form-select" id="xd360_estado"><option value="">—</option></select>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="xd360_cidade">Cidade</label>
+					<select class="form-select" id="xd360_cidade"><option value="">—</option></select>
+				</div>
+				<div class="col-md-8">
+					<label class="form-label" for="xd360_foro">Foro / comarca (Cláusula 13ª)</label>
+					<input type="text" class="form-control" id="xd360_foro" placeholder="Ex.: Capão Bonito/SP">
+					<div class="form-text">Se vazio, usa cidade/UF do endereço acima.</div>
+				</div>
+			</div>
+
+			<h6 class="text-muted mb-3">Representante legal da XD360</h6>
+			<div class="row g-3">
+				<div class="col-md-6">
+					<label class="form-label" for="xd360_rep_usuario">Usuário Master (representante legal) *</label>
+					<select class="form-select" id="xd360_rep_usuario">
+						<option value="">— Selecione —</option>
+					</select>
+					<div class="form-text">Nome, CPF e RG vêm do cadastro do usuário — <a href="{{URL}}/master/usuarios">Gerenciar usuários Master</a></div>
+				</div>
+				<div class="col-md-3">
+					<label class="form-label" for="xd360_rep_cargo">Cargo no contrato</label>
+					<input type="text" class="form-control" id="xd360_rep_cargo" value="Administrador">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label">Dados do representante</label>
+					<div id="xd360_rep_preview" class="form-control bg-light small text-muted" style="height:auto;min-height:38px">—</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+window.XD360_ESTADOS = {{estados_json}};
+</script>
+<script src="{{URL}}/resources/js/master-dados-xd360.js?v=20260914"></script>

@@ -1,0 +1,99 @@
+<h1 class="mt-4">Usuários Master</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Operadores XD360 — identidade, contrato SaaS e permissões</li>
+</ol>
+
+<div class="alert alert-info small">
+	Super-admins (<code>MASTER_EMAILS</code> no .env) têm acesso total e são editados em
+	<a href="{{URL}}/master/perfil">Meu perfil</a>.
+	Operadores com <code>id_admin = 0</code> recebem permissões por módulo abaixo.
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-novo-usuario-master">
+		<i class="fas fa-plus"></i> Novo operador
+	</button>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Nome</th>
+						<th>E-mail</th>
+						<th>CPF</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-usuarios-master">
+					<tr><td colspan="5" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalUsuarioMaster" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titulo-modal-usuario">Novo operador</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="master_usuario_id" value="">
+				<input type="hidden" id="master_usuario_email_antigo" value="">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label class="form-label" for="master_usuario_nome">Nome *</label>
+						<input type="text" class="form-control" id="master_usuario_nome">
+					</div>
+					<div class="col-md-6">
+						<label class="form-label" for="master_usuario_email">E-mail *</label>
+						<input type="email" class="form-control" id="master_usuario_email">
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="master_usuario_whatsapp">WhatsApp</label>
+						<input type="text" class="form-control mascara-celular" id="master_usuario_whatsapp">
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="master_usuario_cpf">CPF</label>
+						<input type="text" class="form-control mascara-cpf" id="master_usuario_cpf">
+						<div class="form-text">Obrigatório se for representante legal no contrato SaaS.</div>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="master_usuario_rg">RG</label>
+						<input type="text" class="form-control" id="master_usuario_rg">
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="master_usuario_ativo">Status</label>
+						<select class="form-select" id="master_usuario_ativo">
+							<option value="1">Ativo</option>
+							<option value="0">Inativo</option>
+						</select>
+					</div>
+					<div class="col-md-8" id="wrap-senha-novo">
+						<label class="form-label" for="master_usuario_senha">Senha inicial</label>
+						<input type="password" class="form-control" id="master_usuario_senha" placeholder="Mín. 8 caracteres (padrão 12345678)">
+					</div>
+					<div class="col-12">
+						<h6 class="text-muted mb-2">Permissões Master</h6>
+						<div class="row g-2 border rounded p-2" id="lista-permissoes-master">
+							{{permissoes_html}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-salvar-usuario-master">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/js_mascara.js"></script>
+<script src="{{URL}}/resources/js/master-usuarios.js?v=20260828a"></script>

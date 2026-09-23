@@ -1,0 +1,168 @@
+<h1 class="mt-4">Conecta Jovem — Marca</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/master/conect">Moderação</a></li>
+	<li class="breadcrumb-item active">Logo, hero e textos do portal</li>
+</ol>
+
+<div class="alert alert-info small">
+	As imagens ficam em <code>uploads/img/conect/</code> no painel. O site
+	<a href="https://conectajovem.com.br" target="_blank" rel="noopener">conectajovem.com.br</a>
+	busca via API — após salvar, atualize o portal (Ctrl+F5).
+</div>
+
+<form id="form-conect-branding" enctype="multipart/form-data" onsubmit="return false;">
+	<div class="row g-4 mb-4">
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Textos</strong></div>
+				<div class="card-body">
+					<label class="form-label" for="nome_portal">Nome do portal</label>
+					<input type="text" class="form-control mb-3" name="nome_portal" id="nome_portal" maxlength="120"
+						value="{{nome_portal}}" placeholder="Conecta Jovem">
+					<label class="form-label" for="texto_institucional">Texto institucional (home)</label>
+					<textarea class="form-control" name="texto_institucional" id="texto_institucional" rows="5"
+						placeholder="Breve descrição exibida na página inicial">{{texto_institucional}}</textarea>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Logo</strong></div>
+				<div class="card-body">
+					<div class="text-center mb-3 p-3 bg-light rounded">
+						<img id="preview-conect-logo" src="{{logo_preview}}" alt="Logo"
+							style="max-height:96px;max-width:100%;object-fit:contain;">
+					</div>
+					<label class="form-label">Arquivo (PNG/JPG/WebP · máx. 2 MB)</label>
+					<input type="file" class="form-control" name="logo" id="conect_logo" accept="image/*"
+						onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-conect-logo');}">
+					<div class="form-text">Exibida no header e rodapé do portal. Sem upload, usa a logo padrão do site.</div>
+					<div class="mt-3">
+						<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-restaurar-logo" {{btn_logo_disabled}}>
+							Restaurar padrão
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-header"><strong>Imagem hero (home)</strong></div>
+		<div class="card-body">
+			<div class="mb-3 rounded overflow-hidden border" style="aspect-ratio:16/9;background:#111;max-width:720px;">
+				<img id="preview-conect-hero" src="{{hero_preview}}" alt="Hero"
+					style="width:100%;height:100%;object-fit:cover;">
+			</div>
+			<label class="form-label">Arquivo (PNG/JPG/WebP · máx. 5 MB)</label>
+			<input type="file" class="form-control" name="hero_image" id="conect_hero" accept="image/*"
+				onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-conect-hero');}">
+			<div class="form-text">Fundo da seção principal da home. Sem upload, usa imagem padrão do site.</div>
+			<div class="mt-3">
+				<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-restaurar-hero" {{btn_hero_disabled}}>
+					Restaurar padrão
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-header"><strong>Redes sociais do portal</strong></div>
+		<div class="card-body">
+			<p class="text-muted small mb-3">
+				Links exibidos na página inicial (hero) e no rodapé do site. Deixe em branco para ocultar.
+			</p>
+			<div class="row g-3">
+				<div class="col-md-6">
+					<label class="form-label" for="redes_linkedin">LinkedIn</label>
+					<input type="url" class="form-control" name="redes_linkedin" id="redes_linkedin"
+						value="{{redes_linkedin}}" placeholder="https://linkedin.com/company/…">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="redes_instagram">Instagram</label>
+					<input type="url" class="form-control" name="redes_instagram" id="redes_instagram"
+						value="{{redes_instagram}}" placeholder="https://instagram.com/…">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="redes_facebook">Facebook</label>
+					<input type="url" class="form-control" name="redes_facebook" id="redes_facebook"
+						value="{{redes_facebook}}" placeholder="https://facebook.com/…">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="redes_tiktok">TikTok</label>
+					<input type="url" class="form-control" name="redes_tiktok" id="redes_tiktok"
+						value="{{redes_tiktok}}" placeholder="https://tiktok.com/@…">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="redes_github">GitHub</label>
+					<input type="url" class="form-control" name="redes_github" id="redes_github"
+						value="{{redes_github}}" placeholder="https://github.com/…">
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="redes_portfolio">Site / portfólio</label>
+					<input type="url" class="form-control" name="redes_portfolio" id="redes_portfolio"
+						value="{{redes_portfolio}}" placeholder="https://…">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-primary" id="btn-salvar-conect-branding">
+		<i class="fas fa-save"></i> Salvar
+	</button>
+</form>
+
+<script>
+(function(){
+	const temLogo = {{tem_logo}} === 1;
+	const temHero = {{tem_hero}} === 1;
+	const logoPadrao = 'https://conectajovem.com.br/logo-conect-jovem.png';
+	const heroPadrao = 'https://images.unsplash.com/photo-1521737711862-ea3e097405db?w=1200&h=675&fit=crop&auto=format&q=80';
+	let restaurarLogo = false;
+	let restaurarHero = false;
+
+	$('#btn-restaurar-logo').prop('disabled', !temLogo).on('click', function(){
+		restaurarLogo = true;
+		$('#conect_logo').val('');
+		$('#preview-conect-logo').attr('src', logoPadrao);
+		$(this).prop('disabled', true);
+	});
+
+	$('#btn-restaurar-hero').prop('disabled', !temHero).on('click', function(){
+		restaurarHero = true;
+		$('#conect_hero').val('');
+		$('#preview-conect-hero').attr('src', heroPadrao);
+		$(this).prop('disabled', true);
+	});
+
+	$('#conect_logo').on('change', function(){ restaurarLogo = false; });
+	$('#conect_hero').on('change', function(){ restaurarHero = false; });
+
+	$('#btn-salvar-conect-branding').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		const fd = new FormData(document.getElementById('form-conect-branding'));
+		if (restaurarLogo) fd.append('restaurar_logo', '1');
+		if (restaurarHero) fd.append('restaurar_hero', '1');
+		$.ajax({
+			url: url_base + 'master/conect-branding',
+			method: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			$btn.prop('disabled', false);
+			if (!res || !res.success) {
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+				return;
+			}
+			Swal.fire('Salvo', res.message || 'Atualizado.', 'success').then(function(){
+				location.reload();
+			});
+		}).fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha de rede.', 'error');
+		});
+	});
+})();
+</script>

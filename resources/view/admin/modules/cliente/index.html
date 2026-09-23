@@ -1,0 +1,70 @@
+<h1 class="mt-4">Alunos</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+  <li class="breadcrumb-item active">Alunos</li>
+</ol>
+
+<div id="barra-filtros-lista" class="card shadow-sm mb-3">
+	<div class="card-body py-3">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-4">
+				<label class="form-label small mb-1" for="filtro-busca-aluno">Buscar</label>
+				<input type="search" class="form-control form-control-sm" name="busca" id="filtro-busca-aluno" placeholder="Nome, e-mail ou WhatsApp…">
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small mb-1" for="filtro-ativo-aluno">Situação</label>
+				<select class="form-select form-select-sm" name="ativo" id="filtro-ativo-aluno">
+					<option value="">Todos</option>
+					<option value="s">Ativos</option>
+					<option value="n">Inativos</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small mb-1" for="filtro-matricula-aluno">Matrícula</label>
+				<select class="form-select form-select-sm" name="matricula" id="filtro-matricula-aluno">
+					<option value="">Todas</option>
+					<option value="ativa">Com matrícula ativa</option>
+					<option value="sem">Sem matrícula ativa</option>
+				</select>
+			</div>
+			<div class="col-md-3 d-flex flex-wrap gap-2">
+				<button type="button" class="btn btn-sm btn-outline-secondary btn-limpar-filtros">Limpar</button>
+				<button type="button" class="btn btn-sm btn-success ms-auto" onclick="list_itens('','novo')">Novo aluno</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-body p-0">
+		<div id="listar" class="p-3 text-muted small">Carregando…</div>
+		<nav class="px-3 pb-3" aria-label="Paginação">
+			<ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+		</nav>
+	</div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="listar-dados"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="anotacoesModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="listar-notas"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/clientes';
+	let formulario = 'painel/clientes/form';
+	let edicao = 'painel/clientes/save';
+	let deletar = 'painel/clientes/excluir';
+</script>
+<script src="{{URL}}/resources/js/ajax.js?v=20260728f"></script>
+<script src="{{URL}}/resources/js/whatsapp-iniciar.js?v=20260717c"></script>

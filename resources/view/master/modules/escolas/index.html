@@ -1,0 +1,167 @@
+<h1 class="mt-4">Clientes</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Cadastro, planos, produtos e assinatura</li>
+</ol>
+
+<div id="alert-plan-id" class="alert alert-warning small d-none">
+	Execute o SQL da coluna <code>plan_id</code> para vincular clientes a planos (veja a tela Planos).
+</div>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-nova-escola">
+		<i class="fas fa-plus"></i> Novo cliente
+	</button>
+	<input type="text" class="form-control form-control-sm" id="filtro-escola" placeholder="Filtrar por nome..." style="max-width:260px;" autocomplete="off">
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>ID</th>
+						<th>Nome</th>
+						<th>Subdomínio</th>
+						<th>Plano</th>
+						<th>Contato</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-escolas-master">
+					<tr><td colspan="7" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalEscolaMaster" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titulo-modal-escola">Novo cliente</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+			</div>
+			<div class="modal-body">
+				<form id="form-escola-master" autocomplete="off" onsubmit="return false;">
+					<input type="hidden" id="escola_id" value="">
+					<div class="row g-3">
+						<div class="col-md-8">
+							<label class="form-label" for="escola_nome">Nome da empresa *</label>
+							<input type="text" class="form-control" id="escola_nome" required>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label" for="escola_ativo">Status</label>
+							<select class="form-select" id="escola_ativo">
+								<option value="1">Ativo</option>
+								<option value="0">Inativo</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_slug">Identificador (subdomínio) *</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="escola_slug" placeholder="confeitaria" pattern="[a-z0-9-]+" maxlength="80">
+								<span class="input-group-text text-muted small" id="escola_slug_suffix">.xd360.com.br</span>
+							</div>
+							<div class="form-text" id="escola_url_preview">URL do painel: —</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_dominio_custom">Domínio próprio (premium)</label>
+							<input type="text" class="form-control" id="escola_dominio_custom" placeholder="confeitariadamaria.com.br">
+							<div class="form-check mt-1">
+								<input class="form-check-input" type="checkbox" id="escola_dominio_verificado">
+								<label class="form-check-label small" for="escola_dominio_verificado">DNS verificado</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_plan_id">Plano</label>
+							<select class="form-select" id="escola_plan_id">
+								<option value="">Carregando planos...</option>
+							</select>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label" for="escola_dia_venc">Dia venc. assinatura</label>
+							<input type="number" class="form-control" id="escola_dia_venc" min="1" max="28" value="10">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label" for="escola_valor_custom">Valor mensal (custom)</label>
+							<input type="number" step="0.01" min="0" class="form-control" id="escola_valor_custom" placeholder="Opcional">
+						</div>
+						<div class="col-md-4">
+							<label class="form-label" for="escola_assinatura_status">Status assinatura</label>
+							<select class="form-select" id="escola_assinatura_status">
+								<option value="trial">Trial</option>
+								<option value="ativa">Ativa</option>
+								<option value="suspensa">Suspensa</option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label" for="escola_trial_ate">Trial até</label>
+							<input type="date" class="form-control" id="escola_trial_ate">
+						</div>
+						<div class="col-md-4 d-flex align-items-end">
+							<div class="form-check mb-2">
+								<input class="form-check-input" type="checkbox" id="escola_sem_trial">
+								<label class="form-check-label" for="escola_sem_trial">Novo cliente sem trial</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_email">E-mail da empresa</label>
+							<input type="email" class="form-control" id="escola_email" autocomplete="off">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_telefone">Telefone</label>
+							<input type="text" class="form-control" id="escola_telefone">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_cpf_cnpj">CPF/CNPJ</label>
+							<input type="text" class="form-control" id="escola_cpf_cnpj">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="escola_site">Site</label>
+							<input type="text" class="form-control" id="escola_site">
+						</div>
+					</div>
+
+					<hr class="my-4">
+					<h6 class="text-muted">Administrador do cliente</h6>
+					<div class="row g-3" id="bloco-diretor-nova">
+						<div class="col-md-6">
+							<label class="form-label" for="diretor_nome">Nome do administrador *</label>
+							<input type="text" class="form-control" id="diretor_nome">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="diretor_email">E-mail de login *</label>
+							<input type="email" class="form-control" id="diretor_email" autocomplete="off">
+						</div>
+					</div>
+
+					<hr class="my-4">
+					<h6 class="text-muted">Produtos licenciados</h6>
+					<p class="small text-muted" id="hint-modulos-plano">Selecione um plano ou marque os produtos manualmente.</p>
+					<div class="form-check mb-2">
+						<input class="form-check-input" type="checkbox" id="todos_modulos">
+						<label class="form-check-label" for="todos_modulos">Todos os produtos</label>
+					</div>
+					<div class="row g-2" id="lista-modulos-master"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-salvar-escola">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.MASTER_MODULOS = {{modulos_json}};
+window.MASTER_PLANOS = {{planos_json}};
+window.MASTER_ESTADOS = {{estados_json}};
+window.MASTER_TEM_PLAN_ID = {{tem_plan_id}};
+window.MASTER_TEM_MODELO_CERT = '0';
+window.XD360_BASE_DOMAIN = {{base_domain_json}};
+</script>
+<script src="{{URL}}/resources/js/master-escolas.js?v=20260914b"></script>

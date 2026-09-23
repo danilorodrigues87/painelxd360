@@ -1,0 +1,86 @@
+<h1 class="mt-4">Modelo de contrato</h1>
+<link rel="stylesheet" href="{{URL}}/resources/css/contrato.css?v=20260828b">
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Texto do “Ver Contrato” da matrícula (por escola)</li>
+</ol>
+
+<div class="alert alert-info small">
+	Edite o HTML à esquerda (cláusulas gerais da escola) e veja a prévia à direita.
+	As cláusulas <strong>1ª, 2ª e 3ª</strong> são editadas em
+	<a href="{{URL}}/painel/categoria/cursos">Pedagógico → Categorias → Editar contrato</a>.
+</div>
+
+<div id="alert-categoria-incompleta" class="alert alert-warning small d-none"></div>
+
+<div id="alert-sql-contrato" class="alert alert-warning small d-none"></div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+		<span>Modelo de contrato <span id="badge-padrao-contrato" class="badge bg-secondary">Carregando…</span></span>
+		<div class="d-flex flex-wrap gap-2">
+			<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-restaurar-contrato">Restaurar padrão CTI</button>
+			<button type="button" class="btn btn-sm btn-primary" id="btn-salvar-contrato">Salvar modelo</button>
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="row g-3 mb-3">
+			<div class="col-md-4">
+				<label class="form-label small mb-1" for="preview_categoria">Prévia — categoria de curso</label>
+				<select class="form-control form-control-sm" id="preview_categoria">
+					<option value="">Carregando…</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<label class="form-label small mb-1" for="preview_pagamento">Exemplo — pagamento</label>
+				<select class="form-control form-control-sm" id="preview_pagamento">
+					<option value="parcelado">Parcelado</option>
+					<option value="vista">À vista</option>
+					<option value="bolsista">Bolsista</option>
+				</select>
+			</div>
+			<div class="col-md-4 d-flex align-items-end">
+				<div class="form-check mb-2">
+					<input class="form-check-input" type="checkbox" id="preview_menor" value="1">
+					<label class="form-check-label small" for="preview_menor">Aluno menor de 18 (com responsável)</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="row g-3 contrato-editor-split">
+			<div class="col-lg-6">
+				<label class="form-label" for="modelo_contrato_html">HTML do contrato</label>
+				<textarea class="form-control font-monospace contrato-editor-textarea" id="modelo_contrato_html" rows="28" spellcheck="false"></textarea>
+				<div class="mt-3">
+					<strong class="small">Inserir variável:</strong>
+					<div class="d-flex flex-wrap gap-1 mt-1" id="chips-vars-contrato"></div>
+				</div>
+				<ul class="small mb-0 mt-2 text-muted" id="lista-vars-contrato"></ul>
+			</div>
+			<div class="col-lg-6">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<label class="form-label mb-0">Prévia</label>
+					<button type="button" class="btn btn-sm btn-outline-success" id="btn-print-preview-contrato">Imprimir prévia</button>
+				</div>
+				<div class="contrato-preview-wrap border rounded bg-white">
+					<iframe id="iframe-preview-contrato" class="contrato-preview-frame" title="Prévia do contrato" sandbox="allow-same-origin allow-modals"></iframe>
+				</div>
+				<p class="small text-muted mt-2 mb-0">A prévia usa dados fictícios da sua escola. O contrato real usa os dados da matrícula.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+		<span>Certificado — frase de conclusão</span>
+		<button type="button" class="btn btn-sm btn-primary" id="btn-salvar-frase-cert">Salvar frase</button>
+	</div>
+	<div class="card-body">
+		<label class="form-label" for="certificado_frase_conclusao">Texto acima do nome do curso</label>
+		<input type="text" class="form-control" id="certificado_frase_conclusao" maxlength="255"
+			placeholder="Concluiu com louvor o curso de">
+		<div class="form-text">Padrão: <em>Concluiu com louvor o curso de</em>. Deixe igual ao padrão ou vazio e salve para restaurar.</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/config-contrato.js?v=20260828b"></script>

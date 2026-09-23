@@ -1,0 +1,70 @@
+<h1 class="mt-4">Diário de Classe</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item active">Presenças</li>
+</ol>
+
+<div class="card shadow mb-4">
+	<div class="card-body">
+		<div class="row g-3 align-items-end mb-3">
+			<div class="col-md-3">
+				<label class="form-label">Data</label>
+				<input type="date" id="data-diario" class="form-control" value="">
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Laboratório</label>
+				<select id="lab-diario" class="form-control"></select>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary w-100" onclick="carregarDiario()">Carregar</button>
+			</div>
+		</div>
+		<p class="text-muted small mb-0" id="diario-data-legenda"></p>
+		<div id="listar"></div>
+	</div>
+</div>
+
+<div class="card shadow mb-4 d-none" id="card-diario-whatsapp">
+	<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+		<span><i class="fab fa-whatsapp text-success"></i> Avisos por WhatsApp</span>
+		<span class="badge bg-secondary" id="diario-wa-status"></span>
+	</div>
+	<div class="card-body">
+		<p class="text-muted small">
+			Disponível para escolas com WhatsApp (Evolution) no plano. Os envios entram na fila de campanhas
+			com intervalo mínimo entre mensagens para proteger o número.
+			Variáveis: <code>{nome}</code>, <code>{curso}</code>, <code>{horario}</code>, <code>{data}</code>, <code>{escola}</code>.
+		</p>
+		<div class="row g-4">
+			<div class="col-lg-6">
+				<label class="form-label" for="diario-wa-horario">Horário da turma (lembrete)</label>
+				<select class="form-select mb-2" id="diario-wa-horario">
+					<option value="">— Selecione o horário —</option>
+				</select>
+				<label class="form-label" for="diario-wa-lembrete">Mensagem — lembrete de aula</label>
+				<textarea class="form-control font-monospace" id="diario-wa-lembrete" rows="7"></textarea>
+				<button type="button" class="btn btn-success mt-2" id="btn-diario-wa-lembrete">
+					<i class="fab fa-whatsapp"></i> Enviar lembrete
+				</button>
+				<p class="text-muted small mt-1 mb-0">Envia para alunos do horário selecionado que ainda não estão marcados como Presente ou Reposição.</p>
+			</div>
+			<div class="col-lg-6">
+				<label class="form-label" for="diario-wa-faltas">Mensagem — faltas do dia</label>
+				<textarea class="form-control font-monospace" id="diario-wa-faltas" rows="7"></textarea>
+				<button type="button" class="btn btn-outline-success mt-2" id="btn-diario-wa-faltas">
+					<i class="fab fa-whatsapp"></i> Enviar aviso de faltas
+				</button>
+				<p class="text-muted small mt-1 mb-0">Envia para alunos com status <strong>Falta</strong> já salvos no diário.</p>
+			</div>
+		</div>
+		<div class="text-end mt-3">
+			<button type="button" class="btn btn-sm btn-secondary" id="btn-diario-wa-salvar-msg">Salvar mensagens padrão</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/agenda/diario';
+	let salvarDiario = 'painel/agenda/diario/salvar';
+	let diarioWhatsappUrl = 'painel/agenda/diario/whatsapp';
+</script>
+<script src="{{URL}}/resources/js/agenda-diario.js?v=20260901e"></script>

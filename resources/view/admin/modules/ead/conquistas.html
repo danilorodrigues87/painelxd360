@@ -1,0 +1,64 @@
+<h1 class="mt-4">Conquistas EAD</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Ativar medalhas na escola e liberar manualmente para alunos</li>
+</ol>
+
+<div id="alert-sql-conq" class="alert alert-warning d-none">
+	As conquistas ainda não estão liberadas nesta escola. Fale com o <strong>suporte</strong> para ativar.
+</div>
+
+<div class="row">
+	<div class="col-lg-5 mb-4">
+		<div class="card h-100">
+			<div class="card-header"><i class="fa-solid fa-medal me-1"></i> Liberar conquista</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="form-label" for="busca-aluno">Aluno</label>
+					<input type="text" class="form-control" id="busca-aluno" placeholder="Nome ou e-mail…" autocomplete="off">
+					<input type="hidden" id="id_aluno" value="">
+					<div id="lista-alunos" class="list-group mt-2" style="max-height:180px;overflow:auto;"></div>
+					<div class="form-text" id="aluno-sel">Nenhum aluno selecionado.</div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label" for="slug-liberar">Conquista</label>
+					<select class="form-select" id="slug-liberar"></select>
+				</div>
+				<button type="button" class="btn btn-primary" id="btn-liberar">Liberar para o aluno</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-7 mb-4">
+		<div class="card">
+			<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+				<span><i class="fa-solid fa-toggle-on me-1"></i> Medalhas visíveis nesta escola</span>
+				<span class="badge bg-secondary" id="badge-count">—</span>
+			</div>
+			<div class="card-body border-bottom py-2">
+				<input type="search" class="form-control form-control-sm" id="filtro-conq-escola" placeholder="Filtrar por título ou slug…">
+			</div>
+			<div class="card-body p-0">
+				<div class="table-responsive" style="max-height:520px;overflow:auto;">
+					<table class="table table-sm table-hover mb-0">
+						<thead class="table-light sticky-top">
+							<tr>
+								<th>Ativa</th>
+								<th>Conquista</th>
+								<th>Raridade</th>
+								<th>Meta</th>
+							</tr>
+						</thead>
+						<tbody id="tbody-conquistas">
+							<tr><td colspan="4" class="text-muted p-3">Carregando…</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="card-footer small text-muted">
+				Sem personalização, todas as conquistas ativas do catálogo CTI aparecem. Ao desativar a primeira, o sistema grava o mapa da escola.
+				Para artes customizadas (badge), fale com o <strong>suporte</strong>.
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/ead-conquistas.js?v=20260728p"></script>

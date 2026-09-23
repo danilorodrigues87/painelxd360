@@ -1,0 +1,103 @@
+<h1 class="mt-4">Suporte</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Chamados com o suporte da CTI</li>
+</ol>
+
+<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+	<button type="button" class="btn btn-primary" id="btn-novo-chamado">
+		<i class="fas fa-plus me-1"></i> Abrir chamado
+	</button>
+	<input type="search" class="form-control form-control-sm" id="filtro-busca" placeholder="Buscar número ou assunto…" style="max-width:220px">
+	<select class="form-select form-select-sm" id="filtro-status" style="width:auto">
+		<option value="">Todos status</option>
+	</select>
+	<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-atualizar-lista">Atualizar</button>
+</div>
+
+<div class="card shadow mb-4">
+	<div class="card-header">Meus chamados</div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Categoria</th>
+						<th>Assunto</th>
+						<th>Status</th>
+						<th>Atualizado</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-chamados">
+					<tr><td colspan="5" class="text-muted text-center py-4">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- Novo chamado -->
+<div class="modal fade" id="modalNovoChamado" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Abrir chamado</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label" for="novo-categoria">Categoria</label>
+					<select class="form-select" id="novo-categoria"></select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label" for="novo-assunto">Assunto</label>
+					<input type="text" class="form-control" id="novo-assunto" maxlength="160" placeholder="Resumo do problema">
+				</div>
+				<div class="mb-3">
+					<label class="form-label" for="novo-mensagem">Mensagem</label>
+					<textarea class="form-control" id="novo-mensagem" rows="5" placeholder="Descreva o que aconteceu…"></textarea>
+				</div>
+				<div class="mb-0">
+					<label class="form-label" for="novo-anexo">Print (opcional)</label>
+					<input type="file" class="form-control" id="novo-anexo" accept="image/jpeg,image/png,image/webp,image/gif">
+					<div class="form-text">JPG, PNG, WebP ou GIF · até 5 MB</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-enviar-chamado">Enviar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Detalhe / thread -->
+<div class="modal fade" id="modalDetalheChamado" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div>
+					<h5 class="modal-title mb-0" id="det-titulo">Chamado</h5>
+					<small class="text-muted" id="det-meta"></small>
+				</div>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div id="det-thread" class="mb-3"></div>
+				<div id="det-responder-box" class="border-top pt-3 d-none">
+					<label class="form-label" for="det-mensagem">Sua resposta</label>
+					<textarea class="form-control mb-2" id="det-mensagem" rows="3"></textarea>
+					<input type="file" class="form-control mb-2" id="det-anexo" accept="image/jpeg,image/png,image/webp,image/gif">
+					<button type="button" class="btn btn-primary" id="btn-responder-chamado">Enviar resposta</button>
+				</div>
+				<p id="det-fechado-msg" class="text-muted small mb-0 d-none">Este chamado foi finalizado e não recebe mais mensagens.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.SUPORTE_CATEGORIAS = {{categorias_json}};
+window.SUPORTE_STATUS = {{status_json}};
+</script>
+<script src="{{URL}}/resources/js/suporte.js?v=20260728b"></script>

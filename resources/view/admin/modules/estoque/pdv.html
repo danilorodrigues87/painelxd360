@@ -1,0 +1,84 @@
+<h1 class="mt-4">PDV</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/estoque">Estoque</a></li>
+	<li class="breadcrumb-item active">Venda</li>
+</ol>
+
+<div class="row g-3">
+	<div class="col-lg-7">
+		<div class="card h-100">
+			<div class="card-header d-flex gap-2 align-items-center">
+				<input type="search" id="pdv-busca" class="form-control" placeholder="Buscar produto (nome ou SKU)…" data-anti-autofill autocomplete="off">
+				<button type="button" id="btn-pdv-buscar" class="btn btn-outline-secondary">Buscar</button>
+			</div>
+			<div class="card-body p-0">
+				<div class="table-responsive" style="max-height:420px;overflow:auto">
+					<table class="table table-sm table-hover mb-0 align-middle">
+						<thead class="table-light sticky-top">
+							<tr>
+								<th>Produto</th>
+								<th class="text-end">Estoque</th>
+								<th class="text-end">Preço</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="pdv-produtos">
+							<tr><td colspan="4" class="text-muted p-3">Digite para buscar…</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<div class="card mb-3">
+			<div class="card-header fw-semibold">Carrinho</div>
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-sm mb-0 align-middle">
+						<thead class="table-light">
+							<tr>
+								<th>Item</th>
+								<th class="text-center" style="width:70px">Qtd</th>
+								<th class="text-end">Subtotal</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="pdv-carrinho">
+							<tr><td colspan="4" class="text-muted p-3">Vazio</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<span class="text-muted">Total</span>
+					<strong id="pdv-total" class="fs-5">R$&nbsp;0,00</strong>
+				</div>
+				<label class="form-label small mb-1">Forma de pagamento</label>
+				<select id="pdv-pagamento" class="form-select form-select-sm mb-2">
+					<option value="Dinheiro">Dinheiro</option>
+					<option value="Pix">Pix</option>
+					<option value="Cartão">Cartão</option>
+					<option value="Transferência">Transferência</option>
+					<option value="Boleto">Boleto</option>
+				</select>
+				<label class="form-label small mb-1">Observação (opcional)</label>
+				<input type="text" id="pdv-obs" class="form-control form-control-sm mb-3" maxlength="500">
+				<button type="button" id="btn-pdv-finalizar" class="btn btn-success w-100">
+					<i class="fa-solid fa-check"></i> Finalizar venda
+				</button>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header fw-semibold">Últimas vendas</div>
+			<div class="card-body p-0">
+				<ul class="list-group list-group-flush" id="pdv-ultimas">
+					<li class="list-group-item text-muted">Carregando…</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/estoque-pdv.js?v=20260722a"></script>

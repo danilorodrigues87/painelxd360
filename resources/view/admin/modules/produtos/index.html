@@ -1,0 +1,15 @@
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Meus Produtos</h1>
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{{URL}}/painel">Dashboard</a></li>
+    <li class="breadcrumb-item active">Produtos</li>
+  </ol>
+
+  <div class="alert alert-light border mb-4">
+    <strong>Assinatura:</strong> {{status_assinatura}} · <strong>Mensalidade:</strong> R$ {{valor_mensal}}
+  </div>
+
+  <div class="row">
+    {{cards_html}}
+  </div>
+</div>

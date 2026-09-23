@@ -1,0 +1,97 @@
+<h1 class="mt-4">Planos</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Pacotes de produtos para os clientes</li>
+</ol>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-novo-plano-assinatura">
+		<i class="fas fa-plus"></i> Novo plano
+	</button>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Ordem</th>
+						<th>Nome</th>
+						<th>Valor/mês</th>
+						<th>Produtos</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-planos-master">
+					<tr><td colspan="6" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalPlanoMaster" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titulo-modal-plano">Novo plano <span id="badge-editando-plano" class="badge bg-secondary d-none"></span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="plano_assinatura_id" value="">
+				<div class="row g-3">
+					<div class="col-md-8">
+						<label class="form-label" for="plano_assinatura_nome">Nome *</label>
+						<input type="text" class="form-control" id="plano_assinatura_nome">
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="plano_assinatura_ordem">Ordem</label>
+						<input type="number" class="form-control" id="plano_assinatura_ordem" value="0">
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="plano_assinatura_ativo">Status</label>
+						<select class="form-select" id="plano_assinatura_ativo">
+							<option value="1">Ativo</option>
+							<option value="0">Inativo</option>
+						</select>
+					</div>
+					<div class="col-md-8">
+						<label class="form-label" for="plano_assinatura_descricao">Resumo curto (listagem)</label>
+						<input type="text" class="form-control" id="plano_assinatura_descricao" maxlength="255" placeholder="Ex.: DoceFlow + suporte básico">
+					</div>
+					<div class="col-12">
+						<label class="form-label" for="plano_assinatura_descricao_detalhada">Descrição detalhada (contrato SaaS)</label>
+						<textarea class="form-control font-monospace" id="plano_assinatura_descricao_detalhada" rows="8" placeholder="Descreva os produtos liberados neste plano. Use linhas iniciadas com - para listas.&#10;Ex.:&#10;- DoceFlow (gestão de pedidos)&#10;- Painel web e suporte&#10;- Atualizações incluídas"></textarea>
+						<div class="form-text">Aparece no contrato de licença (<code>{{plano_descricao}}</code>) com o nome do plano.</div>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="plano_assinatura_valor_mensal">Valor mensal (R$)</label>
+						<input type="text" class="form-control" id="plano_assinatura_valor_mensal" placeholder="0,00" inputmode="decimal">
+						<div class="form-text">Usado na cobrança SaaS (Assinaturas).</div>
+					</div>
+					<div class="col-12">
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<h6 class="mb-0">Produtos do plano</h6>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" id="plano_assinatura_todos_modulos">
+								<label class="form-check-label" for="plano_assinatura_todos_modulos">Todos os produtos</label>
+							</div>
+						</div>
+						<div id="lista-modulos-plano" class="row g-2 border rounded p-2" style="max-height:240px;overflow:auto;"></div>
+						<div class="form-text">Ao salvar, clientes já vinculados a este plano terão os produtos sincronizados.</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-salvar-plano-assinatura">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.MASTER_MODULOS = {{modulos_json}};
+</script>
+<script src="{{URL}}/resources/js/master-planos.js?v=20260914"></script>

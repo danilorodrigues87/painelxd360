@@ -1,0 +1,123 @@
+<h1 class="mt-4">Vitrine de cursos</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/ead">Cursos Online</a></li>
+	<li class="breadcrumb-item active">Vitrine de cursos</li>
+</ol>
+
+<div id="alert-sql-vitrine" class="alert alert-warning d-none">
+	Este recurso ainda não está liberado nesta escola. Fale com o <strong>suporte</strong> para ativar.
+</div>
+
+<div class="alert alert-light border mb-4">
+	<p class="mb-1"><strong>Onde fica:</strong> menu <em>Portal EAD → Vitrine de cursos</em> (também pelo botão na lista de Cursos Online).</p>
+	<p class="mb-1"><strong>Para aparecer aqui:</strong> a outra escola precisa marcar o curso como <em>Publicado</em> + <em>Disponibilizar na vitrine</em> (pago ou gratuito).</p>
+	<p class="mb-0 text-muted small">Antes de assinar, use <em>Ver amostra</em> (1º vídeo, PDFs e tópicos). Para material completo, fale com a escola dona e peça uma demonstração.</p>
+</div>
+
+<p class="text-muted">
+	Assine cursos de outras escolas (licença). Seus alunos usam o conteúdo original.
+	Cursos pagos entram na fatura SaaS; gratuitos não cobram o preço do criador (taxa CTI só se o suporte configurar).
+</p>
+
+<div class="card shadow mb-4">
+	<div class="card-header">Catálogo de outras escolas</div>
+	<div class="card-body">
+		<div id="vitrine-catalogo" class="row g-3">
+			<div class="col-12 text-muted">Carregando…</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow mb-4">
+	<div class="card-header">Minhas licenças ativas</div>
+	<div class="card-body">
+		<p class="small text-muted">Após assinar, matricule seus alunos aqui (o conteúdo continua na escola criadora — você não edita o curso).</p>
+		<div id="vitrine-minhas" class="row g-3">
+			<div class="col-12 text-muted">—</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalAmostraVitrine" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="amostra-titulo">Amostra do curso</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div id="amostra-loading" class="text-muted py-4 text-center">Carregando amostra…</div>
+				<div id="amostra-conteudo" class="d-none">
+					<div class="row g-3 mb-3">
+						<div class="col-md-4">
+							<img id="amostra-capa" src="" alt="" class="img-fluid rounded border w-100 d-none" style="max-height:220px;object-fit:cover;">
+							<div id="amostra-capa-ph" class="rounded border bg-light d-flex align-items-center justify-content-center text-muted" style="height:180px;">Sem capa</div>
+						</div>
+						<div class="col-md-8">
+							<p id="amostra-meta" class="small text-muted mb-2"></p>
+							<p id="amostra-desc" class="mb-2"></p>
+							<p id="amostra-objectives" class="small text-muted mb-0"></p>
+						</div>
+					</div>
+
+					<div id="amostra-video-wrap" class="mb-4 d-none">
+						<h6 class="mb-2">Vídeo de amostra</h6>
+						<div id="amostra-video-yt" class="ratio ratio-16x9 d-none">
+							<iframe id="amostra-iframe" src="" title="Vídeo de amostra" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+						</div>
+						<video id="amostra-video-hls" class="w-100 rounded bg-dark d-none" controls playsinline style="max-height:420px;"></video>
+						<p id="amostra-video-titulo" class="small text-muted mt-1 mb-0"></p>
+					</div>
+
+					<div id="amostra-pdfs-wrap" class="mb-4 d-none">
+						<h6 class="mb-2">Materiais PDF</h6>
+						<ul id="amostra-pdfs" class="list-group list-group-flush"></ul>
+					</div>
+
+					<div class="mb-4">
+						<h6 class="mb-2">Tópicos do curso</h6>
+						<div id="amostra-modulos"></div>
+					</div>
+
+					<div class="alert alert-info mb-0">
+						<strong>Quer ver o material completo?</strong>
+						<span id="amostra-aviso"></span>
+						<div id="amostra-contato" class="mt-2 small"></div>
+					</div>
+				</div>
+				<div id="amostra-erro" class="alert alert-danger d-none mb-0"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-success d-none" id="amostra-btn-assinar">Assinar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalMatricularVitrine" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Matricular aluno — <span id="modal-curso-titulo"></span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="modal-id-curso" value="">
+				<label class="form-label">Buscar aluno</label>
+				<input type="text" class="form-control" id="modal-busca-aluno" placeholder="Nome ou e-mail…">
+				<div id="modal-busca-resultados" class="list-group mt-2"></div>
+				<hr>
+				<div class="table-responsive">
+					<table class="table table-sm">
+						<thead><tr><th>Matriculados</th><th></th></tr></thead>
+						<tbody id="modal-matriculados"><tr><td colspan="2" class="text-muted">—</td></tr></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<script src="{{URL}}/resources/js/ead-vitrine.js?v=20260725a"></script>

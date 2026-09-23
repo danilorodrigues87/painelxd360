@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>{{title}}</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xd360-theme');
+        document.documentElement.setAttribute('data-bs-theme', t === 'dark' ? 'dark' : 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-bs-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="icon" href="{{favicon_url}}" type="image/svg+xml">
+  <meta name="theme-color" content="#6366f1">
+  <link href="{{URL}}/resources/css/styles.css" rel="stylesheet" />
+  <link href="{{URL}}/resources/css/panel-theme.css?v=20260901a" rel="stylesheet" />
+  <link href="{{URL}}/resources/css/xd360-brand.css?v=20260914" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css">
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{URL}}/resources/js/url-base.js?v=20260716m"></script>
+  <script src="{{URL}}/resources/js/anti-autofill.js?v=20260729e"></script>
+</head>
+<body class="sb-nav-fixed">
+  <nav class="sb-topnav navbar navbar-expand navbar-dark xd360-navbar">
+    <a class="navbar-brand ps-3 d-flex align-items-center gap-2" href="{{URL}}/master">
+      <img src="{{logo_url}}" alt="XD360">
+      <span class="xd360-brand-badge">Master</span>
+    </a>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0 small text-white-50" id="nav-master-nome">
+      {{user}}
+    </div>
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img id="nav-master-foto" src="{{foto_url}}" alt="" width="28" height="28" class="rounded-circle" style="object-fit:cover;border:1px solid rgba(255,255,255,.35);">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <li><a class="dropdown-item" href="{{URL}}/master/perfil"><i class="fa-regular fa-id-badge me-1"></i> Perfil e senha</a></li>
+          <li><a class="dropdown-item" href="#" id="btn-toggle-theme"><i class="fa-regular fa-moon me-1"></i> Tema escuro</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" href="{{URL}}/logout"><i class="fas fa-arrow-right-from-bracket me-1"></i> Sair</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <div id="layoutSidenav">
+    {{menu}}
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          {{content}}
+        </div>
+      </main>
+      <footer class="py-4 xd360-footer text-white mt-auto">
+        <div class="container-fluid px-4">
+          <div class="small text-muted d-flex flex-wrap gap-2 justify-content-between align-items-center">
+            <span>&copy; XD360</span>
+            <span>Desenvolvido por <a class="text-muted text-decoration-none" target="_blank" rel="noopener noreferrer" href="https://xdtec.com.br">XDTEC</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{URL}}/resources/js/sidebarToggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{{URL}}/resources/js/script.js"></script>
+  <script src="{{URL}}/resources/js/panel-theme.js?v=20260728b"></script>
+</body>
+</html>

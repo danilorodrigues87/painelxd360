@@ -1,0 +1,69 @@
+<h1 class="mt-4">Progresso EAD — Turma</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/ead">Cursos Online</a></li>
+	<li class="breadcrumb-item active">Progresso EAD</li>
+</ol>
+
+<p class="text-muted mb-3">Visão geral do progresso dos alunos nos cursos EAD publicados (matrícula ativa). Exporte CSV ou abra o histórico individual.</p>
+
+<div class="card mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-3">
+				<label class="form-label small mb-1">Curso</label>
+				<select id="filtro-curso" class="form-select form-select-sm">
+					<option value="0">Todos</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small mb-1">Buscar aluno</label>
+				<input type="search" id="filtro-q" class="form-control form-control-sm" placeholder="Nome ou e-mail">
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small mb-1">Status</label>
+				<select id="filtro-status" class="form-select form-select-sm">
+					<option value="all">Todos</option>
+					<option value="not_started">Não iniciados</option>
+					<option value="in_progress">Em andamento</option>
+					<option value="completed">Concluídos</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small mb-1">Mín. %</label>
+				<input type="number" id="filtro-min" class="form-control form-control-sm" min="0" max="100" value="0">
+			</div>
+			<div class="col-md-2 d-flex gap-2">
+				<button type="button" id="btn-filtrar" class="btn btn-sm btn-primary flex-grow-1">Filtrar</button>
+				<button type="button" id="btn-csv" class="btn btn-sm btn-outline-success" title="Exportar CSV">
+					<i class="fa-solid fa-file-csv"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="totais-turma" class="row g-2 mb-3"></div>
+<div id="alert-turma" class="alert alert-warning d-none"></div>
+<div class="card">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Aluno</th>
+						<th>Curso</th>
+						<th style="width:90px">%</th>
+						<th style="width:100px">Aulas</th>
+						<th style="width:120px">Status</th>
+						<th style="width:90px"></th>
+					</tr>
+				</thead>
+				<tbody id="tbody-turma">
+					<tr><td colspan="6" class="text-muted p-3">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/ead-progresso-turma.js?v=20260722a"></script>

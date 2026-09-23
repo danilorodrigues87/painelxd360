@@ -1,0 +1,522 @@
+<h1 class="mt-4">Comunicação</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">E-mail, automações e WhatsApp</li>
+</ol>
+
+<div class="alert alert-info" id="alert-modo-envio">
+	Carregando configurações...
+</div>
+
+<ul class="nav nav-tabs mb-3" id="com-nav-tabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="com-tab-smtp-btn" data-bs-toggle="tab" data-bs-target="#tab-com-smtp" type="button" role="tab">
+			<i class="fas fa-envelope"></i> E-mail / SMTP
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="com-tab-auto-btn" data-bs-toggle="tab" data-bs-target="#tab-com-auto" type="button" role="tab">
+			<i class="fas fa-robot"></i> Automações
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="com-tab-wa-btn" data-bs-toggle="tab" data-bs-target="#tab-com-wa" type="button" role="tab">
+			<i class="fab fa-whatsapp text-success"></i> WhatsApp
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="com-tab-audit-btn" data-bs-toggle="tab" data-bs-target="#tab-com-audit" type="button" role="tab">
+			<i class="fas fa-user-check"></i> Auditoria
+		</button>
+	</li>
+</ul>
+
+<div class="tab-content" id="com-tab-content">
+
+	<!-- SMTP -->
+	<div class="tab-pane fade show active" id="tab-com-smtp" role="tabpanel">
+		<div class="row g-4">
+			<div class="col-lg-8">
+				<div class="card shadow-sm">
+					<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+						<strong>SMTP da escola</strong>
+						<div class="btn-group btn-group-sm" role="group">
+							<button type="button" class="btn btn-outline-secondary" id="btn-preset-gmail">Gmail</button>
+							<button type="button" class="btn btn-outline-secondary" id="btn-preset-outlook">Outlook</button>
+							<button type="button" class="btn btn-outline-secondary" id="btn-preset-corp">Corporativo</button>
+						</div>
+					</div>
+					<div class="card-body">
+						<form id="form-smtp-escola" autocomplete="off" onsubmit="return false;">
+							<div class="form-check form-switch mb-3">
+								<input class="form-check-input" type="checkbox" id="smtp_ativo" name="smtp_ativo" value="1">
+								<label class="form-check-label" for="smtp_ativo">Usar SMTP próprio da escola</label>
+							</div>
+
+							<div class="row g-3">
+								<div class="col-md-8">
+									<label class="form-label" for="smtp_host">Servidor SMTP</label>
+									<input type="text" class="form-control" id="smtp_host" name="smtp_host" placeholder="smtp.gmail.com">
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="smtp_port">Porta</label>
+									<input type="number" class="form-control" id="smtp_port" name="smtp_port" value="587" min="1" max="65535">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="smtp_encryption">Criptografia</label>
+									<select class="form-control" id="smtp_encryption" name="smtp_encryption">
+										<option value="tls">TLS (recomendado — porta 587)</option>
+										<option value="ssl">SSL (porta 465)</option>
+										<option value="none">Nenhuma</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="smtp_user">Usuário SMTP</label>
+									<input type="text" class="form-control" id="smtp_user" name="smtp_user" placeholder="seu-email@gmail.com" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="smtp_pass">Senha / App Password</label>
+									<input type="password" class="form-control" id="smtp_pass" name="smtp_pass" placeholder="Deixe em branco para manter a atual" autocomplete="new-password">
+									<small class="text-muted" id="hint-senha"></small>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="smtp_from_email">E-mail remetente</label>
+									<input type="email" class="form-control" id="smtp_from_email" name="smtp_from_email" placeholder="contato@escola.com.br">
+								</div>
+								<div class="col-md-12">
+									<label class="form-label" for="smtp_from_name">Nome remetente</label>
+									<input type="text" class="form-control" id="smtp_from_name" name="smtp_from_name" placeholder="Nome da escola">
+								</div>
+							</div>
+
+							<hr class="my-4">
+
+							<h6 class="text-muted mb-3">Limites para envio em massa</h6>
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label" for="email_delay_segundos">Intervalo entre envios (segundos)</label>
+									<input type="number" class="form-control" id="email_delay_segundos" name="email_delay_segundos" value="3" min="1" max="60">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label" for="email_max_hora">Máximo de e-mails por hora</label>
+									<input type="number" class="form-control" id="email_max_hora" name="email_max_hora" value="80" min="1" max="500">
+								</div>
+							</div>
+
+							<div class="d-flex gap-2 flex-wrap mt-4">
+								<button type="button" class="btn btn-primary" id="btn-salvar-smtp">
+									<i class="fas fa-save"></i> Salvar
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow-sm mb-4">
+					<div class="card-header"><strong>E-mail padrão do sistema</strong></div>
+					<div class="card-body">
+						<p class="small text-muted mb-2">
+							Usado em recuperação de senha e como fallback quando a escola não configura SMTP.
+						</p>
+						<div id="info-sistema" class="small">Carregando...</div>
+					</div>
+				</div>
+
+				<div class="card shadow-sm">
+					<div class="card-header"><strong>Testar envio</strong></div>
+					<div class="card-body">
+						<label class="form-label" for="email_teste">Enviar teste para</label>
+						<input type="email" class="form-control mb-3" id="email_teste" placeholder="seu-email@exemplo.com">
+						<button type="button" class="btn btn-outline-primary w-100" id="btn-testar-email">
+							<i class="fas fa-paper-plane"></i> Enviar e-mail de teste
+						</button>
+						<small class="text-muted d-block mt-2">
+							Se o SMTP da escola estiver desativado, o teste usa o remetente padrão CTI.
+						</small>
+					</div>
+				</div>
+
+				<div class="card shadow-sm mt-4 border-0 bg-light">
+					<div class="card-body small">
+						<strong>Gmail:</strong> ative verificação em 2 etapas e gere uma <em>senha de app</em> em
+						<a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">Conta Google</a>.
+						Use <code>smtp.gmail.com</code>, porta <code>587</code>, TLS.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Automações -->
+	<div class="tab-pane fade" id="tab-com-auto" role="tabpanel">
+		<div class="row g-4">
+			<div class="col-12">
+				<div class="card shadow-sm">
+					<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+						<strong><i class="fas fa-bell"></i> Cobrança automática</strong>
+						<div class="d-flex gap-2">
+							<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-preview-cobranca">
+								<i class="fas fa-search"></i> Simular hoje
+							</button>
+							<button type="button" class="btn btn-outline-primary btn-sm" id="btn-executar-cobranca">
+								<i class="fas fa-paper-plane"></i> Enviar agora
+							</button>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="alert alert-warning small d-none" id="alert-cobranca-sql"></div>
+						<p class="small text-muted">
+							Avisos automáticos de mensalidades do carnê (títulos em aberto). Cada combinação título + tipo de aviso é enviada <strong>uma única vez</strong>.
+						</p>
+						<div class="small text-muted mb-3" id="cobranca-cron-hint"></div>
+
+						<div class="form-check form-switch mb-2">
+							<input class="form-check-input" type="checkbox" id="cobranca_ativo" value="1">
+							<label class="form-check-label" for="cobranca_ativo">Ativar cobrança automática por e-mail</label>
+						</div>
+						<div class="form-check form-switch mb-3">
+							<input class="form-check-input" type="checkbox" id="cobranca_whatsapp_ativo" value="1">
+							<label class="form-check-label" for="cobranca_whatsapp_ativo">Também enviar por WhatsApp (quando conectado)</label>
+						</div>
+
+						<div class="row g-3">
+							<div class="col-md-4">
+								<label class="form-label" for="cobranca_dias_antes">Dias antes do vencimento</label>
+								<input type="text" class="form-control" id="cobranca_dias_antes" placeholder="3,5,7">
+								<small class="text-muted">Separados por vírgula</small>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label d-block">No dia do vencimento</label>
+								<div class="form-check mt-2">
+									<input class="form-check-input" type="checkbox" id="cobranca_aviso_vencimento" value="1" checked>
+									<label class="form-check-label" for="cobranca_aviso_vencimento">Enviar aviso</label>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label" for="cobranca_dias_depois">Dias após o vencimento</label>
+								<input type="text" class="form-control" id="cobranca_dias_depois" placeholder="1,3,7">
+								<small class="text-muted">Separados por vírgula</small>
+							</div>
+							<div class="col-md-12">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="cobranca_enviar_responsavel" value="1" checked>
+									<label class="form-check-label" for="cobranca_enviar_responsavel">Enviar também para o e-mail do responsável (se o aluno não tiver)</label>
+								</div>
+							</div>
+						</div>
+
+						<hr class="my-4">
+						<p class="small text-muted mb-3">
+							Variáveis: <code>{nome}</code> <code>{valor}</code> <code>{vencimento}</code> <code>{dias}</code> <code>{descricao}</code> <code>{link_carne}</code> <code>{escola}</code>
+						</p>
+
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-cob-antes" type="button">Antes</button></li>
+							<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-cob-vencimento" type="button">Vencimento</button></li>
+							<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-cob-atraso" type="button">Atraso</button></li>
+						</ul>
+						<div class="tab-content border border-top-0 p-3">
+							<div class="tab-pane fade show active" id="tab-cob-antes">
+								<label class="form-label" for="cobranca_assunto_antes">Assunto</label>
+								<input type="text" class="form-control mb-2" id="cobranca_assunto_antes">
+								<label class="form-label" for="cobranca_msg_antes">Mensagem</label>
+								<textarea class="form-control" id="cobranca_msg_antes" rows="5"></textarea>
+							</div>
+							<div class="tab-pane fade" id="tab-cob-vencimento">
+								<label class="form-label" for="cobranca_assunto_vencimento">Assunto</label>
+								<input type="text" class="form-control mb-2" id="cobranca_assunto_vencimento">
+								<label class="form-label" for="cobranca_msg_vencimento">Mensagem</label>
+								<textarea class="form-control" id="cobranca_msg_vencimento" rows="5"></textarea>
+							</div>
+							<div class="tab-pane fade" id="tab-cob-atraso">
+								<label class="form-label" for="cobranca_assunto_atraso">Assunto</label>
+								<input type="text" class="form-control mb-2" id="cobranca_assunto_atraso">
+								<label class="form-label" for="cobranca_msg_atraso">Mensagem</label>
+								<textarea class="form-control" id="cobranca_msg_atraso" rows="5"></textarea>
+							</div>
+						</div>
+
+						<div class="small text-muted mt-3" id="preview-cobranca-resultado"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="card shadow-sm">
+					<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+						<strong><i class="fas fa-birthday-cake"></i> Aniversariantes</strong>
+						<div class="d-flex gap-2">
+							<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-preview-aniversario">
+								<i class="fas fa-search"></i> Simular hoje
+							</button>
+							<button type="button" class="btn btn-outline-primary btn-sm" id="btn-executar-aniversario">
+								<i class="fas fa-paper-plane"></i> Enviar agora
+							</button>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="alert alert-warning small d-none" id="alert-aniversario-sql"></div>
+						<p class="small text-muted">
+							Envia felicitações no dia do aniversário (campo nascimento do aluno). Cada aluno recebe no máximo <strong>1 mensagem por ano</strong>.
+							Para campanhas segmentadas, use <a href="{{URL}}/painel/marketing/aniversariantes">Marketing → Aniversariantes</a>.
+						</p>
+						<div class="small text-muted mb-3" id="aniversario-cron-hint"></div>
+
+						<div class="form-check form-switch mb-2">
+							<input class="form-check-input" type="checkbox" id="aniversario_ativo" value="1">
+							<label class="form-check-label" for="aniversario_ativo">Ativar e-mail automático de aniversário</label>
+						</div>
+						<div class="form-check form-switch mb-3">
+							<input class="form-check-input" type="checkbox" id="aniversario_whatsapp_ativo" value="1">
+							<label class="form-check-label" for="aniversario_whatsapp_ativo">Também enviar por WhatsApp (quando conectado)</label>
+						</div>
+
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="checkbox" id="aniversario_apenas_matriculados" value="1" checked>
+							<label class="form-check-label" for="aniversario_apenas_matriculados">Somente alunos com matrícula ativa</label>
+						</div>
+
+						<label class="form-label" for="aniversario_assunto">Assunto</label>
+						<input type="text" class="form-control mb-2" id="aniversario_assunto">
+
+						<label class="form-label" for="aniversario_mensagem">Mensagem</label>
+						<textarea class="form-control" id="aniversario_mensagem" rows="5"></textarea>
+						<small class="text-muted">Variáveis: <code>{nome}</code> <code>{escola}</code> <code>{email}</code></small>
+
+						<div class="small text-muted mt-3" id="preview-aniversario-resultado"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<button type="button" class="btn btn-primary" id="btn-salvar-automacoes">
+					<i class="fas fa-save"></i> Salvar automações
+				</button>
+				<span class="small text-muted ms-2">Salva cobrança, aniversário e limites de e-mail juntos.</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- WhatsApp -->
+	<div class="tab-pane fade" id="tab-com-wa" role="tabpanel">
+		<div class="card shadow-sm">
+			<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+				<strong><i class="fab fa-whatsapp text-success"></i> WhatsApp — Evolution API</strong>
+				<div class="d-flex gap-2 flex-wrap">
+					<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-wa-status">
+						<i class="fas fa-sync"></i> Atualizar status
+					</button>
+					<button type="button" class="btn btn-outline-primary btn-sm" id="btn-wa-sincronizar">
+						<i class="fas fa-link"></i> Sincronizar
+					</button>
+					<button type="button" class="btn btn-success btn-sm" id="btn-wa-conectar">
+						<i class="fas fa-qrcode"></i> Conectar / QR
+					</button>
+					<button type="button" class="btn btn-outline-warning btn-sm" id="btn-wa-recriar">
+						<i class="fas fa-redo"></i> Trocar número
+					</button>
+					<button type="button" class="btn btn-outline-danger btn-sm" id="btn-wa-desconectar">
+						<i class="fas fa-unlink"></i> Desconectar
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="alert alert-warning small d-none" id="alert-whatsapp-sql"></div>
+				<p class="small text-muted mb-3">
+					Cada escola usa uma instância própria na Evolution (<code>escola_{id_admin}</code>).
+					Se o painel mostra desconectado mas a Evolution está aberta, use <strong>Sincronizar</strong> ou <strong>Conectar / QR</strong> (não “Trocar número”).
+					Para <strong>trocar de número</strong>, desvincule antes em WhatsApp → Aparelhos conectados, depois use <strong>Remover instância</strong> ou <strong>Trocar número</strong>.
+				</p>
+
+				<div class="row g-4">
+					<div class="col-lg-5">
+						<div class="border rounded p-3 h-100">
+							<div class="mb-2"><strong>Status:</strong> <span id="wa-status-label" class="badge bg-secondary">—</span></div>
+							<div class="small text-muted mb-1">Instância: <code id="wa-instance">—</code></div>
+							<div class="small text-muted mb-1">Número: <span id="wa-numero">—</span></div>
+							<div class="small text-muted mb-3 text-break">Webhook: <code id="wa-webhook" class="small">—</code></div>
+
+							<div class="form-check form-switch mb-3">
+								<input class="form-check-input" type="checkbox" id="evolution_ativo" value="1">
+								<label class="form-check-label" for="evolution_ativo">Marcar WhatsApp ativo nesta escola</label>
+							</div>
+							<div class="row g-2 mb-3">
+								<div class="col-12">
+									<div class="alert alert-info small mb-2 py-2">
+										<strong>Envio 1:1 (leads, alunos):</strong> intervalo mínimo <strong>30 segundos</strong> entre cada número (recomendado 60s).
+										Máximo sugerido: 20/hora. O sistema envia <strong>1 mensagem por vez</strong> e respeita esse intervalo mesmo com o painel aberto.
+										<br><strong>Grupos:</strong> intervalo separado (recomendado 10 min). Variação ±20% em ambos.
+										Variação de texto: <a href="{{URL}}/painel/config/ia">Configurações de IA</a>.
+									</div>
+								</div>
+								<div class="col-6">
+									<label class="form-label" for="whatsapp_delay_segundos">Intervalo 1:1 (seg)</label>
+									<input type="number" class="form-control" id="whatsapp_delay_segundos" value="60" min="30" max="300">
+									<div class="form-text">Mín. 30s. Padrão: 60s.</div>
+								</div>
+								<div class="col-6">
+									<label class="form-label" for="whatsapp_max_hora">Máx./hora</label>
+									<input type="number" class="form-control" id="whatsapp_max_hora" value="20" min="1" max="100">
+									<div class="form-text">Padrão: 20.</div>
+								</div>
+								<div class="col-6">
+									<label class="form-label" for="whatsapp_grupo_delay_minutos">Intervalo grupos (min)</label>
+									<input type="number" class="form-control" id="whatsapp_grupo_delay_minutos" value="10" min="1" max="1440" title="Tempo mínimo entre envios para grupos/listas">
+									<div class="form-text">Campanhas em grupo/lista (+ jitter). Padrão: 10 min.</div>
+								</div>
+								<div class="col-12" id="wrap-variar-texto-wa">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="whatsapp_variar_texto" value="1">
+										<label class="form-check-label" for="whatsapp_variar_texto">Variar textos de campanha (anti-template)</label>
+									</div>
+									<div class="form-text">Usa a IA de <a href="{{URL}}/painel/config/ia">Configurações de IA</a>. Também editável lá.</div>
+								</div>
+								<div class="col-6">
+									<label class="form-label" for="whatsapp_horario_inicio">Expediente início</label>
+									<input type="time" class="form-control" id="whatsapp_horario_inicio">
+								</div>
+								<div class="col-6">
+									<label class="form-label" for="whatsapp_horario_fim">Expediente fim</label>
+									<input type="time" class="form-control" id="whatsapp_horario_fim">
+								</div>
+								<div class="col-12">
+									<label class="form-label" for="whatsapp_dias">Dias (1=seg … 7=dom)</label>
+									<input type="text" class="form-control" id="whatsapp_dias" value="1,2,3,4,5" placeholder="1,2,3,4,5">
+								</div>
+								<div class="col-12">
+									<label class="form-label" for="whatsapp_msg_fora">Mensagem fora do expediente</label>
+									<textarea class="form-control" id="whatsapp_msg_fora" rows="2" placeholder="Olá! Nosso atendimento funciona em horário comercial..."></textarea>
+								</div>
+								<div class="col-12" id="wrap-campanha-respeitar-expediente">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="campanha_respeitar_expediente" value="1">
+										<label class="form-check-label" for="campanha_respeitar_expediente">Pausar campanhas WhatsApp fora do expediente</label>
+									</div>
+									<div class="form-text">Campanhas em envio permanecem com status <em>enviando</em> e retomam automaticamente no horário.</div>
+								</div>
+							</div>
+
+							<hr class="my-3">
+							<h6 class="mb-2">Menu inicial (bot de setores)</h6>
+							<p class="small text-muted mb-2">
+								Setores em <a href="{{URL}}/painel/whatsapp">WhatsApp → Setores e atendentes</a>.
+								Fluxos avançados em <a href="{{URL}}/painel/whatsapp/fluxos">Fluxos do bot</a>.
+							</p>
+							<div class="alert alert-warning small d-none" id="alert-whatsapp-menu-sql">
+								Execute <code>database/whatsapp_menu_config.sql</code> no phpMyAdmin para habilitar estas opções.
+							</div>
+							<div id="wrap-whatsapp-menu">
+								<div class="form-check form-switch mb-2">
+									<input class="form-check-input" type="checkbox" id="whatsapp_menu_ativo" value="1" checked>
+									<label class="form-check-label" for="whatsapp_menu_ativo">Enviar menu automático na 1ª mensagem</label>
+								</div>
+								<div class="form-check form-switch mb-3" id="wrap-menu-manual">
+									<input class="form-check-input" type="checkbox" id="whatsapp_menu_manual_ativo" value="1" checked>
+									<label class="form-check-label" for="whatsapp_menu_manual_ativo">Permitir menu manual (palavras-chave)</label>
+									<div class="form-text">Com o automático desligado, a conversa fica silenciosa no Inbox até o atendente responder.</div>
+								</div>
+								<div class="mb-2">
+									<label class="form-label" for="whatsapp_menu_titulo">Texto de abertura</label>
+									<textarea class="form-control wa-menu-field" id="whatsapp_menu_titulo" rows="2" placeholder="Olá! Sou o assistente virtual. Escolha o setor digitando o *número*:"></textarea>
+								</div>
+								<div class="mb-2">
+									<label class="form-label" for="whatsapp_menu_rodape">Texto de rodapé</label>
+									<textarea class="form-control wa-menu-field" id="whatsapp_menu_rodape" rows="2" placeholder="Digite *menu* a qualquer momento para ver as opções novamente."></textarea>
+								</div>
+								<div class="mb-2">
+									<label class="form-label" for="whatsapp_menu_msg_invalida">Mensagem de opção inválida</label>
+									<textarea class="form-control wa-menu-field" id="whatsapp_menu_msg_invalida" rows="2" placeholder="Opção inválida. Digite o *número* do setor ou *menu*..."></textarea>
+								</div>
+								<div class="mb-3">
+									<label class="form-label" for="whatsapp_menu_palavras">Palavras para abrir menu</label>
+									<input type="text" class="form-control wa-menu-field" id="whatsapp_menu_palavras" placeholder="menu,0,inicio,início,oi,olá,ola">
+									<div class="form-text">Separadas por vírgula (sem diferenciar maiúsculas).</div>
+								</div>
+								<div class="border rounded p-2 bg-light small mb-3">
+									<strong>Pré-visualização</strong>
+									<pre id="wa-menu-preview" class="mb-0 mt-2 small text-wrap" style="white-space:pre-wrap;font-family:inherit;">—</pre>
+								</div>
+							</div>
+
+							<button type="button" class="btn btn-primary btn-sm" id="btn-wa-salvar">
+								<i class="fas fa-save"></i> Salvar limites, horário e menu
+							</button>
+						</div>
+					</div>
+					<div class="col-lg-4 text-center">
+						<div class="border rounded p-3 h-100">
+							<p class="small text-muted mb-2">QR Code — escaneie em até ~40s (Aparelhos conectados)</p>
+							<img id="wa-qrcode" class="img-fluid d-none" alt="QR WhatsApp" style="max-width:260px;">
+							<div id="wa-qr-placeholder" class="text-muted small py-5">Nenhum QR. Se estiver em Connecting, use “Trocar número”.</div>
+							<button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="btn-wa-qr">
+								Atualizar QR
+							</button>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="border rounded p-3 h-100">
+							<label class="form-label" for="whatsapp_teste">Telefone teste</label>
+							<input type="text" class="form-control mb-2" id="whatsapp_teste" placeholder="11999999999">
+							<label class="form-label" for="whatsapp_msg_teste">Mensagem</label>
+							<textarea class="form-control mb-2" id="whatsapp_msg_teste" rows="3" placeholder="Teste Painel CTI"></textarea>
+							<button type="button" class="btn btn-outline-success w-100" id="btn-wa-testar">
+								<i class="fas fa-paper-plane"></i> Enviar teste
+							</button>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="border rounded p-3">
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<strong>Checklist operação Evolution</strong>
+								<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-wa-checklist">Atualizar</button>
+							</div>
+							<ul class="small mb-0" id="wa-checklist"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Auditoria -->
+	<div class="tab-pane fade" id="tab-com-audit" role="tabpanel">
+		<div class="row g-4">
+			<div class="col-lg-8">
+				<div class="card shadow-sm">
+					<div class="card-header"><strong><i class="fas fa-user-check"></i> Auditoria de contatos</strong></div>
+					<div class="card-body">
+						<p class="small text-muted">
+							Verifica e-mails fictícios ou inválidos e números de WhatsApp mal formatados em alunos, responsáveis e leads.
+							Recomendado antes de ativar cobrança, aniversário ou campanhas em massa.
+						</p>
+						<button type="button" class="btn btn-warning" id="btn-auditar-emails">
+							<i class="fas fa-search"></i> Auditar contatos agora
+						</button>
+						<p class="small text-muted mt-3 mb-0">
+							Corrija os cadastros com problemas antes de enviar mensagens automáticas.
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card shadow-sm">
+					<div class="card-header"><strong>Crons e últimas execuções</strong></div>
+					<div class="card-body small" id="audit-cron-resumo">
+						<span class="text-muted">Carregando...</span>
+					</div>
+				</div>
+				<div class="card shadow-sm mt-3 border-0 bg-light">
+					<div class="card-body small">
+						<strong>Diagnóstico CLI:</strong>
+						<code class="d-block mt-1">php worker/status-email.php</code>
+						<span class="text-muted">Não envia nada — só verifica tabelas e .env.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script src="{{URL}}/resources/js/config-email.js?v=20260909e"></script>

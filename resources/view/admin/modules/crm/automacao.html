@@ -1,0 +1,45 @@
+<h1 class="mt-4">Automação WhatsApp — CRM</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/crm">CRM</a></li>
+	<li class="breadcrumb-item active">Automação WhatsApp</li>
+</ol>
+
+<div class="alert alert-info small">
+	Quando um lead muda de status no funil (<em>Novo</em>, <em>Em atendimento</em> ou <em>Matriculado</em>),
+	o painel pode enviar uma mensagem automática pelo WhatsApp conectado (Evolution).
+	Use as variáveis <code>{{nome}}</code>, <code>{{nome_completo}}</code>, <code>{{curso}}</code> e <code>{{escola}}</code>.
+</div>
+
+<div id="alert-sql-crm-auto" class="alert alert-warning small d-none"></div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+		<span>Configuração geral</span>
+		<div class="d-flex gap-2">
+			<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-restaurar-crm-auto">Restaurar padrão CTI</button>
+			<button type="button" class="btn btn-sm btn-primary" id="btn-salvar-crm-auto">Salvar</button>
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="form-check form-switch mb-3">
+			<input class="form-check-input" type="checkbox" id="crm_automacao_ativo" checked>
+			<label class="form-check-label" for="crm_automacao_ativo">Enviar mensagens automáticas ao mudar status no CRM</label>
+		</div>
+		<div class="row g-3 mb-2">
+			<div class="col-md-6">
+				<label class="form-label small" for="preview_nome">Nome de exemplo (pré-visualização)</label>
+				<input type="text" class="form-control form-control-sm" id="preview_nome" value="Maria Silva">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label small" for="preview_curso">Curso de exemplo</label>
+				<input type="text" class="form-control form-control-sm" id="preview_curso" value="Informática">
+			</div>
+		</div>
+		<strong class="small">Variáveis disponíveis:</strong>
+		<ul class="small mb-0" id="lista-vars-crm-auto"></ul>
+	</div>
+</div>
+
+<div id="crm-auto-status-cards"></div>
+
+<script src="{{URL}}/resources/js/crm-automacao.js?v=20260813a"></script>

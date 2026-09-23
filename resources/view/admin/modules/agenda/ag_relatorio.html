@@ -1,0 +1,220 @@
+<h1 class="mt-4 no-print">Relatório de Presença</h1>
+<ol class="breadcrumb mb-4 no-print">
+  <li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+  <li class="breadcrumb-item"><a href="{{URL}}/painel/agenda/diario">Agenda</a></li>
+  <li class="breadcrumb-item active">Relatório de presença</li>
+</ol>
+
+<style>
+@media screen {
+  #listar .relatorio-cabecalho,
+  #listar .relatorio-rodape {
+    display: none !important;
+  }
+}
+.relatorio-tela-resumo .relatorio-meta-linha {
+  color: var(--bs-secondary-color, #6c757d);
+}
+.relatorio-logo {
+  max-height: 56px;
+  max-width: 180px;
+  object-fit: contain;
+}
+.relatorio-escola-nome {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.relatorio-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+.relatorio-meta-linha {
+  font-size: 0.875rem;
+  color: #444;
+  line-height: 1.45;
+}
+.relatorio-rodape-nota {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+@media print {
+  @page {
+    margin: 10mm;
+    size: landscape;
+  }
+  html, body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  #layoutSidenav_nav,
+  #layoutSidenav #layoutSidenav_nav {
+    display: none !important;
+  }
+  #layoutSidenav,
+  #layoutSidenav_content,
+  .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+    display: block !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    top: 0 !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  main,
+  .container-fluid,
+  .container-fluid.px-4 {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .card {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  .card-body {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  #listar,
+  #listar .relatorio-financeiro-impressao,
+  #listar .relatorio-financeiro-conteudo,
+  #listar .table-responsive {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+  #listar .relatorio-cabecalho,
+  #listar .relatorio-rodape {
+    display: block !important;
+  }
+  .relatorio-tela-resumo {
+    display: none !important;
+  }
+  .relatorio-cabecalho .d-flex {
+    display: flex !important;
+  }
+  html, body,
+  #layoutSidenav,
+  #layoutSidenav_content,
+  main,
+  .container-fluid,
+  .card,
+  .card-body,
+  .relatorio-financeiro-impressao,
+  .relatorio-cabecalho,
+  .relatorio-rodape,
+  .relatorio-financeiro-conteudo,
+  .relatorio-financeiro-tabela,
+  .relatorio-financeiro-tabela thead,
+  .relatorio-financeiro-tabela tbody,
+  .relatorio-financeiro-tabela tr,
+  .relatorio-financeiro-tabela th,
+  .relatorio-financeiro-tabela td {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+  .relatorio-meta-linha,
+  .relatorio-escola-nome,
+  .relatorio-titulo,
+  .relatorio-rodape-nota {
+    color: #000 !important;
+  }
+  .relatorio-cabecalho,
+  .relatorio-rodape {
+    border-color: #ccc !important;
+  }
+  .relatorio-financeiro-impressao .alert {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    color: #000 !important;
+  }
+  .relatorio-financeiro-tabela.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #f5f5f5 !important;
+    color: #000 !important;
+  }
+  .relatorio-financeiro-tabela th,
+  .relatorio-financeiro-tabela td {
+    border-color: #ccc !important;
+  }
+  .no-print,
+  .d-print-none,
+  #filtragem,
+  #relatorio-filtragem,
+  #listar .btn-group,
+  #listar button,
+  #listar .btn,
+  .btn,
+  .btn-group,
+  .sb-topnav,
+  #sidenavAccordion,
+  #sidebarToggle,
+  #layoutSidenav_content > footer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  #listar .relatorio-rodape {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  #listar {
+    color: #000 !important;
+  }
+  html[data-bs-theme="dark"],
+  html[data-bs-theme="dark"] body,
+  html[data-bs-theme="dark"] #layoutSidenav_content,
+  html[data-bs-theme="dark"] #layoutSidenav_content main,
+  html[data-bs-theme="dark"] .card,
+  html[data-bs-theme="dark"] .card-body,
+  html[data-bs-theme="dark"] #listar {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  html[data-bs-theme="dark"] #listar .relatorio-financeiro-impressao,
+  html[data-bs-theme="dark"] #listar .relatorio-financeiro-impressao * {
+    color: #000 !important;
+  }
+  html[data-bs-theme="dark"] .relatorio-financeiro-tabela.table,
+  html[data-bs-theme="dark"] .relatorio-financeiro-tabela.table > :not(caption) > * > *,
+  html[data-bs-theme="dark"] .relatorio-financeiro-tabela.table td,
+  html[data-bs-theme="dark"] .relatorio-financeiro-tabela.table th {
+    --bs-table-bg: #fff !important;
+    --bs-table-color: #000 !important;
+    --bs-table-striped-bg: #f5f5f5 !important;
+    --bs-table-striped-color: #000 !important;
+    --bs-table-border-color: #ccc !important;
+    background-color: #fff !important;
+    color: #000 !important;
+    border-color: #ccc !important;
+  }
+}
+</style>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <div id="filtragem"></div>
+    <div id="listar" class="mt-3 text-muted small">Carregando filtros…</div>
+  </div>
+</div>
+
+<script>
+	let listagem = 'painel/agenda/relatorio';
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script src="{{URL}}/resources/js/agenda-relatorio.js?v=20260905c"></script>

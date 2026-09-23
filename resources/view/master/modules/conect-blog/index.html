@@ -1,0 +1,42 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect">Conecta Jovem</a></li>
+		<li class="breadcrumb-item active">Blog</li>
+	</ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h4 mb-0">Blog Conecta Jovem</h1>
+	<a href="{{URL}}/master/conect-blog/editar/0" class="btn btn-primary btn-sm">
+		<i class="fas fa-plus me-1"></i> Novo artigo
+	</a>
+</div>
+
+<p class="text-muted small">
+	Artigos publicados aparecem em <a href="https://conectajovem.com.br/blog" target="_blank" rel="noopener">conectajovem.com.br/blog</a>.
+	Total: {{total_posts}}.
+</p>
+
+<ul class="nav nav-tabs mb-3" role="tablist">
+	<li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-posts" type="button">Artigos</button></li>
+	<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-comentarios" type="button">Comentários</button></li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane fade show active" id="tab-posts">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover align-middle">
+				<thead><tr><th>Título</th><th>Categoria</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
+				<tbody>{{rows_posts}}</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="tab-comentarios">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover align-middle">
+				<thead><tr><th>Autor</th><th>Artigo</th><th>Comentário</th><th>Data</th><th></th></tr></thead>
+				<tbody>{{rows_comentarios}}</tbody>
+			</table>
+		</div>
+	</div>
+</div>

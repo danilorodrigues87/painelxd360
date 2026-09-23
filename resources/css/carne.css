@@ -1,0 +1,88 @@
+	.parcela {
+		display: flex;
+		margin-left: 40px;
+	}
+
+	table{
+		font-size: 12px;
+		margin-bottom: 20px;
+	}
+
+	.tag {
+		font-size: 14;
+	}
+
+	.botton {
+		border-bottom: none;
+		padding-bottom: 10px;
+	}
+
+	th, td {
+		padding: 5px 20px;
+		border-bottom: 1px solid #333;
+	}
+	.linha {
+		border-bottom: 1px dashed #333;
+		margin-bottom: 15px;			
+	}
+
+	.destaca {
+		border-right: 1px dashed #333;
+		padding-right: 5px;
+		padding-left: 10px;
+	}
+
+	.espaco {
+		height: 10px;
+	}
+
+	.bto {
+		padding: 1%;
+		background: #dedede;
+		margin-bottom: 1%;
+		border-bottom: 1px solid #ccc;
+	}
+	.bto a,
+	.bto button {
+		padding: 9px;
+		border: 0;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 1em;
+	}
+	.bto .btn-impress {
+		color: #fff;
+		background: green;
+	}
+	.bto .btn {
+		color: #555;
+		background: transparent;
+	}
+
+	bto {
+  padding: 1%;
+  background: #dedede;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #ccc;
+}
+.bto a,
+.bto button {
+  padding: 9px;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1em;
+}
+.bto .btn-impress {
+  color: #fff;
+  background: green;
+}
+.bto .btn {
+  color: #555;
+  background: transparent;
+}
+
+@media print {
+  .bto { display: none; }
+  .quebra-pagina { page-break-after: always; }
+}

@@ -1,0 +1,148 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect-blog">Blog</a></li>
+		<li class="breadcrumb-item active">{{id}} — Editar</li>
+	</ol>
+</nav>
+
+<form id="form-blog-post" enctype="multipart/form-data" onsubmit="return false;">
+	<input type="hidden" name="id" value="{{id}}">
+	<div class="row g-3">
+		<div class="col-lg-8">
+			<div class="mb-3">
+				<label class="form-label">Título</label>
+				<input type="text" class="form-control" name="titulo" id="blog_titulo" value="{{titulo}}" required maxlength="220">
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Slug (URL)</label>
+				<input type="text" class="form-control" name="slug" value="{{slug}}" placeholder="gerado-automaticamente">
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Resumo</label>
+				<textarea class="form-control" name="resumo" rows="2" maxlength="500">{{resumo}}</textarea>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Conteúdo</label>
+				<textarea id="blog_corpo" name="corpo_html">{{corpo_html}}</textarea>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card mb-3">
+				<div class="card-body">
+					<label class="form-label">Categoria</label>
+					<select class="form-select mb-3" name="id_categoria">
+						<option value="">— Sem categoria —</option>
+						{{opts_categorias}}
+					</select>
+					<label class="form-label">Status</label>
+					<select class="form-select mb-3" name="status">
+						<option value="rascunho" {{status_rascunho}}>Rascunho</option>
+						<option value="publicado" {{status_publicado}}>Publicado</option>
+					</select>
+					<label class="form-label">Autor (exibição)</label>
+					<input type="text" class="form-control mb-3" name="autor_nome" value="{{autor_nome}}" maxlength="120">
+					<label class="form-label">Capa</label>
+					<div class="mb-2" id="capa-preview-wrap" style="{{capa_preview_style}}">
+						<img id="preview-capa" src="{{capa_preview}}" alt="" class="img-fluid rounded border" style="max-height:140px">
+					</div>
+					<input type="file" class="form-control mb-2" name="capa" accept="image/*" id="blog_capa">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" name="remover_capa" value="1" id="remover_capa">
+						<label class="form-check-label" for="remover_capa">Remover capa</label>
+					</div>
+				</div>
+			</div>
+			<div class="card mb-3">
+				<div class="card-body">
+					<label class="form-label">Meta title (SEO)</label>
+					<input type="text" class="form-control mb-2" name="meta_title" value="{{meta_title}}" maxlength="220">
+					<label class="form-label">Meta description</label>
+					<textarea class="form-control" name="meta_description" rows="3" maxlength="320">{{meta_description}}</textarea>
+				</div>
+			</div>
+			<button type="button" class="btn btn-primary w-100" id="btn-salvar-blog-post">
+				<i class="fas fa-save me-1"></i> Salvar artigo
+			</button>
+		</div>
+	</div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js"></script>
+<script>
+(function(){
+	const urlBase = typeof url_base !== 'undefined' ? url_base : '{{URL}}/';
+	const uploadUrl = urlBase + 'master/conect-blog/upload-imagem';
+
+	tinymce.init({
+		selector: '#blog_corpo',
+		height: 520,
+		menubar: 'file edit view insert format tools table',
+		plugins: 'lists link image table code autoresize',
+		toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist blockquote | link image | cjimgfull cjimgmedium cjimgleft cjimgright cjimgsmall | removeformat code',
+		content_css: urlBase + 'resources/css/conect-blog-editor.css?v=1',
+		relative_urls: false,
+		convert_urls: true,
+		images_upload_url: uploadUrl,
+		images_upload_credentials: true,
+		automatic_uploads: true,
+		images_upload_handler: function (blobInfo, progress) {
+			return new Promise(function (resolve, reject) {
+				const fd = new FormData();
+				fd.append('file', blobInfo.blob(), blobInfo.filename());
+				fetch(uploadUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+					.then(r => r.json())
+					.then(function (res) {
+						if (res && (res.location || res.url)) resolve(res.location || res.url);
+						else reject((res && res.message) || 'Upload falhou');
+					})
+					.catch(reject);
+			});
+		},
+		setup: function (editor) {
+			function setImgClass(cls) {
+				const node = editor.selection.getNode();
+				if (node && node.nodeName === 'IMG') {
+					node.className = cls;
+				} else if (node && node.querySelector && node.querySelector('img')) {
+					node.querySelector('img').className = cls;
+				}
+			}
+			editor.ui.registry.addButton('cjimgfull', { text: 'Img largura total', onAction: function(){ setImgClass('cj-img-full'); }});
+			editor.ui.registry.addButton('cjimgmedium', { text: 'Img média', onAction: function(){ setImgClass('cj-img-medium'); }});
+			editor.ui.registry.addButton('cjimgleft', { text: 'Img esquerda', onAction: function(){ setImgClass('cj-img-left'); }});
+			editor.ui.registry.addButton('cjimgright', { text: 'Img direita', onAction: function(){ setImgClass('cj-img-right'); }});
+			editor.ui.registry.addButton('cjimgsmall', { text: 'Img pequena', onAction: function(){ setImgClass('cj-img-small'); }});
+		}
+	});
+
+	$('#btn-salvar-blog-post').on('click', function(){
+		if (typeof tinymce !== 'undefined') tinymce.triggerSave();
+		const fd = new FormData(document.getElementById('form-blog-post'));
+		$.ajax({
+			url: urlBase + 'master/conect-blog/salvar',
+			type: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			if (res && res.success) {
+				Swal.fire('Salvo', res.message || 'Artigo salvo.', 'success').then(function(){
+					if (res.redirect) window.location = res.redirect;
+				});
+			} else {
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+			}
+		}).fail(function(){
+			Swal.fire('Erro', 'Falha ao salvar.', 'error');
+		});
+	});
+
+	$('#blog_capa').on('change', function(e){
+		const f = e.target.files && e.target.files[0];
+		if (!f) return;
+		$('#capa-preview-wrap').show();
+		$('#preview-capa').attr('src', URL.createObjectURL(f));
+	});
+})();
+</script>

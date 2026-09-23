@@ -1,0 +1,29 @@
+
+<div class="col-12">
+    <div class="card shadow-lg border-0 rounded-lg mt-3 xd360-login-card">
+        <div class="text-center my-3 px-3">
+            <img src="{{logo_url}}" class="xd360-login-logo" alt="XD360">
+            <p class="text-muted small mb-0 mt-2">Plataforma de gestão e produtos</p>
+        </div>
+        <div class="card-header border-0 pb-0">
+            <h3 class="text-center font-weight-light h5">Entrar na sua conta</h3>
+        </div>
+        <div class="card-body">
+            {{status}}
+            <form method="post">
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="email" type="email" placeholder="nome@email.com" required />
+                    <label>E-mail</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="senha" autocomplete="current-password" type="password" placeholder="******" required />
+                    <label>Senha</label>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                    <a class="small" href="{{URL}}/rercurar-senha">Esqueceu a senha?</a>
+                    <button type="submit" class="btn btn-primary px-4">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+<h1 class="mt-4">Portal do aluno</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Logo e imagem de fundo da tela de login (portal do aluno)</li>
+</ol>
+
+<div class="alert alert-info small">
+	As imagens ficam no servidor do painel e o portal busca via API.
+	Depois de salvar, atualize o site do aluno (Ctrl+F5). Não precisa de novo build só para trocar a arte.
+</div>
+
+<form id="form-portal-branding" enctype="multipart/form-data" onsubmit="return false;">
+	<div class="row g-4">
+		<div class="col-lg-5">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Logo</strong></div>
+				<div class="card-body">
+					<div class="text-center mb-3 p-3 bg-light rounded">
+						<img id="preview-portal-logo" src="{{logo_preview}}" alt="Logo"
+							style="max-height:96px;max-width:100%;object-fit:contain;">
+					</div>
+					<label class="form-label">Arquivo (PNG/JPG/WebP · máx. 2 MB)</label>
+					<input type="file" class="form-control" name="logo" id="portal_logo" accept="image/*"
+						onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-portal-logo');}">
+					<div class="form-text">Exibida no login e no menu do portal. O texto “CTI Educacional” não é mais mostrado ao lado.</div>
+					<div class="mt-3">
+						<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-restaurar-logo" {{btn_logo_disabled}}>
+							Restaurar padrão
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-7">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Fundo do login</strong></div>
+				<div class="card-body">
+					<div class="mb-3 rounded overflow-hidden border" style="aspect-ratio:16/10;background:#111;">
+						<img id="preview-portal-hero" src="{{hero_preview}}" alt="Fundo"
+							style="width:100%;height:100%;object-fit:cover;">
+					</div>
+					<label class="form-label">Arquivo (PNG/JPG/WebP · máx. 5 MB)</label>
+					<input type="file" class="form-control" name="login_hero" id="portal_hero" accept="image/*"
+						onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-portal-hero');}">
+					<div class="form-text">Imagem lateral da página de login (educação / tecnologia).</div>
+					<div class="mt-3">
+						<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-restaurar-hero" {{btn_hero_disabled}}>
+							Restaurar padrão
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="mt-4">
+		<button type="button" class="btn btn-primary" id="btn-salvar-portal-branding">
+			<i class="fas fa-save"></i> Salvar
+		</button>
+	</div>
+</form>
+
+<script>
+(function(){
+	const temLogo = {{tem_logo}} === 1;
+	const temHero = {{tem_hero}} === 1;
+	let restaurarLogo = false;
+	let restaurarHero = false;
+
+	$('#btn-restaurar-logo').prop('disabled', !temLogo).on('click', function(){
+		restaurarLogo = true;
+		$('#portal_logo').val('');
+		$('#preview-portal-logo').attr('src', '{{URL}}/resources/assets/img/icons/logo-2.png');
+		$(this).prop('disabled', true);
+	});
+
+	$('#btn-restaurar-hero').prop('disabled', !temHero).on('click', function(){
+		restaurarHero = true;
+		$('#portal_hero').val('');
+		$('#preview-portal-hero').attr('src', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=500&fit=crop&auto=format&q=80');
+		$(this).prop('disabled', true);
+	});
+
+	$('#portal_logo').on('change', function(){ restaurarLogo = false; });
+	$('#portal_hero').on('change', function(){ restaurarHero = false; });
+
+	$('#btn-salvar-portal-branding').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		const fd = new FormData(document.getElementById('form-portal-branding'));
+		if (restaurarLogo) fd.append('restaurar_logo', '1');
+		if (restaurarHero) fd.append('restaurar_hero', '1');
+		$.ajax({
+			url: url_base + 'master/portal-branding',
+			method: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			$btn.prop('disabled', false);
+			if (!res || !res.success) {
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+				return;
+			}
+			Swal.fire('Salvo', res.message || 'Atualizado.', 'success').then(function(){
+				location.reload();
+			});
+		}).fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha de rede.', 'error');
+		});
+	});
+})();
+</script>

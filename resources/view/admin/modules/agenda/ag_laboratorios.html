@@ -1,0 +1,29 @@
+<h1 class="mt-4">Agenda e Horários</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item active">Laboratórios</li>
+</ol>
+
+<div class="card shadow mb-4">
+	<div id="listar"></div>
+	<nav class="container">
+		<ul class="pagination">
+			<div id="pagination"></div>
+		</ul>
+	</nav>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="listar-dados"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/agenda/laboratorios';
+	let formulario = 'painel/agenda/laboratorios/form';
+	let edicao = 'painel/agenda/laboratorios/salvar';
+	let deletar = 'painel/agenda/laboratorios/excluir';
+</script>
+<script src="{{URL}}/resources/js/agenda-labs.js"></script>

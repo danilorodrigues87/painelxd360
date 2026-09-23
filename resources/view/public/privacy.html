@@ -1,0 +1,164 @@
+<div class="col-lg-10 col-xl-9">
+	<div class="card shadow-lg border-0 rounded-lg mt-3 mb-4">
+		<div class="text-center my-3">
+			<img src="{{logo_url}}" width="140" alt="CTI Educacional">
+		</div>
+		<div class="card-header">
+			<h1 class="h3 text-center font-weight-light mb-0">Política de Privacidade</h1>
+			<p class="text-center text-muted small mb-0 mt-2">Painel CTI Educacional · Última atualização: {{atualizado}}</p>
+		</div>
+		<div class="card-body privacy-body" style="line-height:1.55;font-size:0.95rem;">
+
+			<p>
+				Esta Política de Privacidade descreve como a <strong>CTI Educacional</strong>
+				(Centro de Tecnologia e Inovação Educacional) trata dados pessoais no uso do
+				<strong>Painel CTI</strong> (sistema de gestão educacional multi-tenant) e das
+				integrações com serviços de terceiros, incluindo a plataforma <strong>Meta</strong>
+				(Facebook e Instagram).
+			</p>
+			<p>
+				Documento público disponível em:
+				<a href="{{url_politica}}">{{url_politica}}</a>
+			</p>
+
+			<h2 class="h5 mt-4">1. Quem somos</h2>
+			<p>
+				Controladora das operações da plataforma SaaS do Painel CTI:
+				<strong>CTI Educacional</strong>. Site:
+				<a href="{{site_cti}}" target="_blank" rel="noopener noreferrer">{{site_cti}}</a>.
+				Contato para privacidade:
+				<a href="mailto:{{contato_email}}">{{contato_email}}</a>.
+			</p>
+			<p>
+				Cada <strong>escola assinante</strong> utiliza o painel para gerir seus próprios
+				alunos, finanças e comunicações. Em relação aos dados dos alunos e responsáveis
+				cadastrados pela escola, a escola atua como controladora desses dados; a CTI
+				atua como operadora/fornecedora da plataforma, processando dados conforme
+				necessário para prestar o serviço.
+			</p>
+
+			<h2 class="h5 mt-4">2. Quais dados tratamos</h2>
+			<p>Podemos tratar, conforme o uso do sistema:</p>
+			<ul>
+				<li><strong>Dados de conta:</strong> nome, e-mail, senha (armazenada de forma segura), nível de acesso e vínculo com a escola;</li>
+				<li><strong>Dados educacionais e administrativos:</strong> alunos, responsáveis, matrículas, agenda, financeiro, conteúdo EAD e registros operacionais inseridos pela escola;</li>
+				<li><strong>Dados técnicos:</strong> logs de acesso, endereço IP, data/hora e informações necessárias à segurança e ao funcionamento do sistema;</li>
+				<li><strong>Dados de integração Meta (quando a escola conectar):</strong> identificadores da Página do Facebook, conta Instagram Professional vinculada, tokens de acesso da Página, nomes públicos da Página/@ do Instagram, e conteúdos que a escola optar por publicar (legendas e mídias).</li>
+			</ul>
+
+			<h2 class="h5 mt-4">3. Integração com Facebook e Instagram (Meta)</h2>
+			<p>
+				O Painel CTI permite que a escola, mediante autorização explícita (OAuth / conexão
+				de conta), publique e agende conteúdos em sua própria Página do Facebook e/ou
+				conta Instagram Professional, usando a Graph API da Meta.
+			</p>
+			<ul>
+				<li>A CTI mantém um aplicativo Meta para viabilizar essa conexão em nome das escolas;</li>
+				<li>Tokens e segredos são armazenados de forma <strong>criptografada</strong> no servidor da CTI;</li>
+				<li>Arquivos de mídia enviados para agendamento ficam temporariamente no servidor apenas o necessário para a publicação e podem ser removidos após o envio bem-sucedido;</li>
+				<li>Não vendemos dados obtidos via Meta a terceiros;</li>
+				<li>A escola pode desconectar a integração a qualquer momento nas configurações do painel e também nas configurações de aplicativos da própria conta Meta/Facebook;</li>
+				<li>Automações futuras (ex.: resposta a comentários) só ocorrem se a escola ativar a função e dentro das regras e limites da Meta.</li>
+			</ul>
+			<p>
+				O uso dos dados obtidos da Meta observará também as políticas da Meta
+				(incluindo a Meta Platform Terms e as políticas de privacidade do Facebook/Instagram).
+			</p>
+
+			<h2 class="h5 mt-4">4. Finalidades do tratamento</h2>
+			<ul>
+				<li>Prestar e melhorar o serviço do Painel CTI;</li>
+				<li>Autenticar usuários e garantir segurança;</li>
+				<li>Permitir à escola gerir operações educacionais e administrativas;</li>
+				<li>Executar integrações autorizadas (e-mail, pagamentos, WhatsApp via provedores da escola/CTI, Meta, etc.);</li>
+				<li>Cumprir obrigações legais e defender direitos em disputas;</li>
+				<li>Suporte técnico e comunicação operacional com a escola.</li>
+			</ul>
+
+			<h2 class="h5 mt-4">5. Base legal (LGPD)</h2>
+			<p>
+				O tratamento observa a Lei Geral de Proteção de Dados (Lei nº 13.709/2018),
+				podendo fundamentar-se, conforme o caso, em: execução de contrato; legítimo
+				interesse (com salvaguardas); cumprimento de obrigação legal; e consentimento
+				quando aplicável (incluindo autorização da escola para conectar contas Meta).
+			</p>
+
+			<h2 class="h5 mt-4">6. Compartilhamento</h2>
+			<p>Podemos compartilhar dados apenas quando necessário com:</p>
+			<ul>
+				<li>A própria escola assinante (seus usuários autorizados);</li>
+				<li>Prestadores de infraestrutura (hospedagem, e-mail, CDN, APIs) sob obrigação de confidencialidade;</li>
+				<li>Meta Platforms, quando a escola usa a integração Facebook/Instagram;</li>
+				<li>Autoridades públicas, mediante obrigação legal ou ordem válida.</li>
+			</ul>
+			<p>Não vendemos dados pessoais.</p>
+
+			<h2 class="h5 mt-4">7. Armazenamento e segurança</h2>
+			<p>
+				Adotamos medidas técnicas e organizacionais razoáveis, incluindo controle de
+				acesso por escola (multi-tenant), criptografia de segredos sensíveis (como tokens)
+				e uso de conexões HTTPS em produção. Nenhum sistema é 100% isento de riscos;
+				recomendamos senhas fortes e gestão cuidadosa de permissões na escola.
+			</p>
+
+			<h2 class="h5 mt-4">8. Retenção</h2>
+			<p>
+				Os dados são mantidos enquanto a conta/escola estiver ativa e pelo tempo
+				necessário às finalidades desta política, obrigações legais ou defesa de direitos.
+				Tokens Meta e mídias de agendamento podem ser removidos ou invalidados quando a
+				escola desconecta a integração ou após a publicação, conforme a operação do sistema.
+			</p>
+
+			<h2 class="h5 mt-4">9. Direitos dos titulares</h2>
+			<p>
+				Nos termos da LGPD, titulares podem solicitar confirmação de tratamento, acesso,
+				correção, anonimização, portabilidade, eliminação (quando cabível), informação
+				sobre compartilhamentos e revogação de consentimento.
+			</p>
+			<p>
+				Para solicitar exclusão de dados (incluindo integração Facebook/Instagram), use a página
+				<a href="{{URL}}/exclusao-de-dados">Exclusão de dados do usuário</a>
+				ou escreva para
+				<a href="mailto:{{contato_email}}">{{contato_email}}</a>.
+				Solicitações sobre alunos/responsáveis da escola devem ser dirigidas prioritariamente à escola.
+			</p>
+
+			<h2 class="h5 mt-4">10. Cookies e tecnologias semelhantes</h2>
+			<p>
+				O painel utiliza cookies/sessão essenciais para autenticação e funcionamento.
+				Não utilizamos cookies de publicidade de terceiros nesta política para o núcleo
+				do painel administrativo.
+			</p>
+
+			<h2 class="h5 mt-4">11. Menores</h2>
+			<p>
+				O Painel CTI é destinado a escolas e seus operadores. Dados de alunos menores
+				são inseridos sob responsabilidade da escola, que deve observar a legislação
+				aplicável e o consentimento dos responsáveis quando necessário.
+			</p>
+
+			<h2 class="h5 mt-4">12. Alterações</h2>
+			<p>
+				Podemos atualizar esta Política periodicamente. A data de atualização será
+				indicada no topo da página. O uso continuado do serviço após alterações
+				relevantes constitui ciência da nova versão, quando aplicável.
+			</p>
+			<p>
+				Usuários do painel administrativo também aceitam o
+				<strong>Termo de Uso e Responsabilidade no Tratamento de Dados</strong>
+				(versão controlada no primeiro acesso e em atualizações relevantes), alinhado a esta política e à LGPD.
+			</p>
+
+			<h2 class="h5 mt-4">13. Contato</h2>
+			<p class="mb-0">
+				Dúvidas sobre privacidade:<br>
+				E-mail: <a href="mailto:{{contato_email}}">{{contato_email}}</a><br>
+				Site: <a href="{{site_cti}}" target="_blank" rel="noopener noreferrer">{{site_cti}}</a>
+			</p>
+		</div>
+		<div class="card-footer text-center py-3">
+			<a class="small me-3" href="{{URL}}/exclusao-de-dados">Exclusão de dados</a>
+			<a class="small" href="{{URL}}/">Voltar ao login</a>
+		</div>
+	</div>
+</div>

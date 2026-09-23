@@ -1,0 +1,20 @@
+<h1 class="mt-4">Progresso EAD</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/ead/progresso">Progresso EAD</a></li>
+	<li class="breadcrumb-item active">{{nome_aluno}}</li>
+</ol>
+
+<div class="alert alert-light border mb-3">
+	<strong>{{nome_aluno}}</strong> · {{email_aluno}}
+	<span class="text-muted"> — histórico de aulas, o que falta e liberação manual</span>
+</div>
+
+<div id="alert-prog" class="alert alert-warning d-none"></div>
+<div id="box-progresso">
+	<p class="text-muted">Carregando…</p>
+</div>
+
+<script>
+window.EAD_ALUNO_ID = {{id_aluno}};
+</script>
+<script src="{{URL}}/resources/js/ead-aluno-progresso.js?v=20260722b"></script>

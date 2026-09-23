@@ -1,0 +1,124 @@
+<h1 class="mt-4">Dados da empresa</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Informações usadas em contratos e documentos</li>
+</ol>
+
+<div class="alert alert-secondary small">
+	Nome, CNPJ e plano são gerenciados pelo <strong>suporte</strong> e não podem ser alterados aqui.
+</div>
+
+<div class="card mb-4">
+	<div class="card-header">Somente leitura</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-md-6">
+				<label class="form-label">Nome da empresa</label>
+				<input type="text" class="form-control" id="escola_nome" readonly disabled>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label">CPF/CNPJ</label>
+				<input type="text" class="form-control" id="escola_cpf_cnpj" readonly disabled>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label">Status</label>
+				<input type="text" class="form-control" id="escola_status" readonly disabled>
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">Plano</label>
+				<input type="text" class="form-control" id="escola_plano" readonly disabled>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4">
+	<div class="card-header">Dados editáveis</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-md-6">
+				<label class="form-label" for="escola_email">E-mail</label>
+				<input type="email" class="form-control" id="escola_email" autocomplete="off">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="escola_telefone">Telefone</label>
+				<input type="text" class="form-control" id="escola_telefone">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="escola_site">Site</label>
+				<input type="text" class="form-control" id="escola_site" placeholder="https://">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label" for="escola_instagram">Instagram</label>
+				<input type="text" class="form-control" id="escola_instagram" placeholder="@suaescola ou URL">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label" for="escola_youtube">YouTube</label>
+				<input type="text" class="form-control" id="escola_youtube" placeholder="URL do canal">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="escola_cep">CEP</label>
+				<input type="text" class="form-control" id="escola_cep">
+			</div>
+			<div class="col-md-7">
+				<label class="form-label" for="escola_endereco">Endereço</label>
+				<input type="text" class="form-control" id="escola_endereco">
+			</div>
+			<div class="col-md-2">
+				<label class="form-label" for="escola_numero">Nº</label>
+				<input type="text" class="form-control" id="escola_numero">
+			</div>
+			<div class="col-md-4">
+				<label class="form-label" for="escola_bairro">Bairro</label>
+				<input type="text" class="form-control" id="escola_bairro">
+			</div>
+			<div class="col-md-4">
+				<label class="form-label" for="escola_estado">Estado</label>
+				<select class="form-select" id="escola_estado">
+					<option value="">Selecione</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<label class="form-label" for="escola_cidade">Cidade</label>
+				<select class="form-select" id="escola_cidade">
+					<option value="">Selecione o estado</option>
+				</select>
+			</div>
+
+			<div class="col-md-6">
+				<label class="form-label">Logo (impressos)</label>
+				<div class="d-flex align-items-center gap-3 flex-wrap">
+					<img id="preview-escola-logo" src="" alt="Logo" style="max-height:64px;max-width:140px;object-fit:contain;border:1px solid #dee2e6;padding:4px;background:#fff;">
+					<div class="flex-grow-1">
+						<input type="file" class="form-control form-control-sm" id="escola_logo" accept="image/png,image/jpeg,image/webp"
+							onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-escola-logo');}">
+						<div class="form-text">JPG/PNG/WEBP · máx. 5 MB. Usada em contrato e recibo.</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6" id="wrap-modelo-cert">
+				<label class="form-label">Modelo de certificado</label>
+				<div class="d-flex align-items-start gap-3 flex-wrap">
+					<img id="preview-modelo-cert" src="" alt="Modelo"
+						style="max-height:90px;max-width:160px;object-fit:contain;border:1px solid #dee2e6;padding:4px;background:#fff;">
+					<div class="flex-grow-1">
+						<input type="file" class="form-control form-control-sm" id="escola_modelo_certificado" accept="image/png,image/jpeg,image/webp"
+							onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-modelo-cert');}">
+						<div class="form-text">Imagem A4 paisagem · PNG/JPG · máx. 8 MB.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-4">
+			<button type="button" class="btn btn-primary" id="btn-salvar-escola">Salvar alterações</button>
+		</div>
+	</div>
+</div>
+
+<script>
+window.CONFIG_ESCOLA_ESTADOS = {{estados_json}};
+window.CONFIG_ESCOLA_TEM_MODELO_CERT = {{tem_modelo_cert}};
+window.CONFIG_ESCOLA_MODELO_CERT_PADRAO = {{modelo_cert_padrao_json}};
+window.CONFIG_ESCOLA_LOGO_PADRAO = {{logo_padrao_json}};
+</script>
+<script src="{{URL}}/resources/js/config-escola.js?v=20260718a"></script>

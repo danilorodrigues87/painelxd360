@@ -1,0 +1,24 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect">Conecta Jovem</a></li>
+		<li class="breadcrumb-item active">Depoimentos</li>
+	</ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h4 mb-0">Depoimentos na home</h1>
+	<a href="{{URL}}/master/conect-depoimentos/editar/0" class="btn btn-primary btn-sm">
+		<i class="fas fa-plus me-1"></i> Novo depoimento
+	</a>
+</div>
+
+<p class="text-muted small">
+	Exibidos na seção &ldquo;Quem já está conectado&rdquo; do site. Tipos: candidato, empresa ou pessoa não cadastrada (manual com foto opcional).
+</p>
+
+<div class="table-responsive">
+	<table class="table table-sm table-hover align-middle">
+		<thead><tr><th>Nome</th><th>Texto</th><th>Tipo</th><th>Status</th><th>Ordem</th><th></th></tr></thead>
+		<tbody>{{rows}}</tbody>
+	</table>
+</div>

@@ -1,0 +1,150 @@
+/**
+ * XD360 — identidade visual (login + painéis)
+ */
+:root {
+  --xd360-primary: #6366f1;
+  --xd360-primary-hover: #4f46e5;
+  --xd360-accent: #06b6d4;
+  --xd360-nav: #0f172a;
+  --xd360-nav-border: rgba(255, 255, 255, 0.08);
+  --xd360-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #0e7490 100%);
+  --bs-primary: var(--xd360-primary);
+  --bs-primary-rgb: 99, 102, 241;
+  --bs-link-color: var(--xd360-primary);
+  --bs-link-hover-color: var(--xd360-primary-hover);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--xd360-primary);
+  --bs-btn-border-color: var(--xd360-primary);
+  --bs-btn-hover-bg: var(--xd360-primary-hover);
+  --bs-btn-hover-border-color: var(--xd360-primary-hover);
+  --bs-btn-active-bg: var(--xd360-primary-hover);
+  --bs-btn-active-border-color: var(--xd360-primary-hover);
+}
+
+.border-start-primary {
+  border-left-color: var(--xd360-primary) !important;
+}
+
+.text-primary {
+  color: var(--xd360-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--xd360-primary) !important;
+}
+
+/* Login */
+body.xd360-login {
+  background: var(--xd360-gradient) !important;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+body.xd360-login #layoutAuthentication_content {
+  min-height: calc(100vh - 80px);
+}
+
+body.xd360-login #layoutAuthentication_content main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  width: 100%;
+}
+
+body.xd360-login #layoutAuthentication_content main .container {
+  width: 100%;
+  max-width: 520px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+body.xd360-login #layoutAuthentication_content main .row {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body.xd360-login #layoutAuthentication_content main .row > [class*="col-"] {
+  flex: 0 0 100%;
+  max-width: 100%;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.xd360-login .card,
+body.xd360-login .xd360-login-card {
+  border: none;
+  border-radius: 1rem;
+  width: 100%;
+}
+
+body.xd360-login .card-header {
+  background: transparent;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+body.xd360-login .xd360-login-logo {
+  max-width: 180px;
+  height: auto;
+}
+
+/* Navbar Master + Cliente */
+.sb-topnav.xd360-navbar {
+  background: var(--xd360-nav) !important;
+  border-bottom: 1px solid var(--xd360-nav-border);
+}
+
+.sb-topnav.xd360-navbar .navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sb-topnav.xd360-navbar .navbar-brand img {
+  height: 36px;
+  width: auto;
+}
+
+.sb-topnav.xd360-navbar .navbar-brand .xd360-brand-text {
+  color: #f8fafc;
+  font-size: 1.1rem;
+}
+
+.sb-topnav.xd360-navbar .navbar-brand .xd360-brand-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-left: 0.35rem;
+}
+
+html[data-bs-theme="dark"] .sb-sidenav-dark {
+  background-color: #111827;
+}
+
+html[data-bs-theme="dark"] .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+}
+
+.master-kpi .fs-3.text-success { color: #34d399 !important; }
+.master-kpi .fs-3.text-info { color: var(--xd360-accent) !important; }
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--xd360-primary);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+  color: #c7d2fe;
+}
+
+footer.xd360-footer {
+  background: var(--xd360-nav) !important;
+  border-top: 1px solid var(--xd360-nav-border);
+}

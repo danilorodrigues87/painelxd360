@@ -1,0 +1,573 @@
+<h1 class="mt-4">CRM - Leads</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Kanban de leads</li>
+</ol>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+	<div class="card shadow-sm flex-grow-1">
+		<div class="card-body py-2">
+			<form autocomplete="off" onsubmit="return false;" class="m-0" id="form-filtros-crm">
+				<!-- Campos ocultos absorvem o autocomplete do navegador -->
+				<input type="text" name="email" tabindex="-1" aria-hidden="true" class="crm-autofill-trap" autocomplete="email">
+				<input type="text" name="username" tabindex="-1" aria-hidden="true" class="crm-autofill-trap" autocomplete="username">
+			<div class="row g-2 align-items-end">
+				<div class="col-md-3">
+					<label class="form-label small mb-1" for="filtro-funil">Funil</label>
+					<select id="filtro-funil" class="form-control form-control-sm">
+						<option value="">Carregando...</option>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<label class="form-label small mb-1" for="filtro-busca-lead">Buscar por nome</label>
+					<input type="text" id="filtro-busca-lead" class="form-control form-control-sm" placeholder="Digite o nome do lead..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly value="">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label small mb-1">Filtrar por curso</label>
+					<select id="filtro-curso" class="form-control form-control-sm">
+						<option value="">Todos os cursos</option>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<button type="button" class="btn btn-outline-secondary btn-sm w-100" id="btn-limpar-filtros">
+						<i class="fas fa-times"></i> Limpar
+					</button>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	<div class="d-flex gap-2 flex-wrap">
+		<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNovoLead">
+			<i class="fas fa-plus"></i> Novo lead
+		</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarLeads">
+			<i class="fas fa-file-import"></i> Importar planilha
+		</button>
+		<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalGerenciarFunis">
+			<i class="fas fa-filter"></i> Gerenciar funis
+		</button>
+	</div>
+</div>
+
+<div class="row g-3 kanban-board" id="kanban-board">
+
+	<div class="col-md-3">
+		<div class="card shadow-sm kanban-col">
+			<div class="card-header bg-primary text-white py-2">
+				<div class="d-flex justify-content-between align-items-center">
+					<strong>Novo</strong>
+					<span class="badge bg-light text-primary" id="count-novo">0</span>
+				</div>
+				<small class="d-block opacity-75" id="total-novo">R$ 0,00</small>
+			</div>
+			<div class="card-body p-2 kanban-list" id="coluna-novo" data-status="novo"></div>
+		</div>
+	</div>
+
+	<div class="col-md-3">
+		<div class="card shadow-sm kanban-col">
+			<div class="card-header bg-warning text-dark py-2">
+				<div class="d-flex justify-content-between align-items-center">
+					<strong>Em atendimento</strong>
+					<span class="badge bg-light text-dark" id="count-em_atendimento">0</span>
+				</div>
+				<small class="d-block opacity-75" id="total-em_atendimento">R$ 0,00</small>
+			</div>
+			<div class="card-body p-2 kanban-list" id="coluna-em_atendimento" data-status="em_atendimento"></div>
+		</div>
+	</div>
+
+	<div class="col-md-3">
+		<div class="card shadow-sm kanban-col">
+			<div class="card-header bg-success text-white py-2">
+				<div class="d-flex justify-content-between align-items-center">
+					<strong>Matriculado</strong>
+					<span class="badge bg-light text-success" id="count-matriculado">0</span>
+				</div>
+				<small class="d-block opacity-75" id="total-matriculado">R$ 0,00</small>
+			</div>
+			<div class="card-body p-2 kanban-list" id="coluna-matriculado" data-status="matriculado"></div>
+		</div>
+	</div>
+
+	<div class="col-md-3">
+		<div class="card shadow-sm kanban-col">
+			<div class="card-header bg-secondary text-white py-2">
+				<div class="d-flex justify-content-between align-items-center">
+					<strong>Perdido</strong>
+					<span class="badge bg-light text-secondary" id="count-perdido">0</span>
+				</div>
+				<small class="d-block opacity-75" id="total-perdido">R$ 0,00</small>
+			</div>
+			<div class="card-body p-2 kanban-list" id="coluna-perdido" data-status="perdido"></div>
+		</div>
+	</div>
+
+</div>
+
+<nav class="container mt-3" aria-label="Paginação CRM">
+	<div id="pagination"></div>
+</nav>
+
+<!-- Modal Gerenciar Funis -->
+<div class="modal fade" id="modalGerenciarFunis" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header py-2">
+				<h5 class="modal-title">Gerenciar funis</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body py-2">
+				<div id="response-funis"></div>
+
+				<form id="form-novo-funil" class="mb-3">
+					<label class="form-label small mb-1">Novo funil</label>
+					<div class="input-group input-group-sm">
+						<input type="text" name="nome" id="input-novo-funil" class="form-control" placeholder="Ex: Macrocaptação" maxlength="100" required>
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-plus"></i> Adicionar
+						</button>
+					</div>
+				</form>
+
+				<div id="lista-funis"></div>
+			</div>
+			<div class="modal-footer py-2">
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Importar Planilha -->
+<div class="modal fade" id="modalImportarLeads" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="form-importar-leads" enctype="multipart/form-data">
+				<div class="modal-header py-2">
+					<h5 class="modal-title">Importar leads em lote</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body py-2">
+					<div id="response-importar"></div>
+
+					<div class="mb-3">
+						<label class="form-label small mb-1">Arquivo da planilha *</label>
+						<input type="file" name="planilha" class="form-control form-control-sm" accept=".csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" required>
+						<small class="text-muted">Formatos aceitos: .csv ou .xlsx (máx. 5MB)</small>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label small mb-1">Funil dos leads importados *</label>
+						<select name="funil_id" id="importar-funil" class="form-control form-control-sm" required>
+							<option value="">Selecione...</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label small mb-1">Visibilidade dos leads importados *</label>
+						<select name="visibilidade" class="form-control form-control-sm" required>
+							<option value="publico">Público (Todos podem ver)</option>
+							<option value="privado">Privado (Apenas eu posso ver)</option>
+						</select>
+					</div>
+
+					<div class="alert alert-light border small mb-0">
+						<strong>Ordem das colunas no arquivo:</strong>
+						<ol class="mb-0 ps-3">
+							<li>Nome</li>
+							<li>WhatsApp (apenas números com DDD)</li>
+							<li>E-mail <span class="text-muted">(opcional — deixe vazio se não tiver)</span></li>
+							<li>Curso de interesse</li>
+							<li>Bairro</li>
+							<li>Cidade</li>
+						</ol>
+						<p class="mb-0 mt-2 text-muted">A primeira linha pode ser o cabeçalho. Se não tiver e-mail, use só Nome e WhatsApp — ou Nome, WhatsApp e Curso (nessa ordem).</p>
+					</div>
+				</div>
+				<div class="modal-footer py-2">
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary btn-sm" id="btn-importar-leads">
+						<i class="fas fa-upload"></i> Importar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Novo Lead -->
+<div class="modal fade" id="modalNovoLead" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<form id="form-novo-lead">
+				<div class="modal-header py-2">
+					<h5 class="modal-title">Novo lead</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body py-2">
+					<div id="response-lead"></div>
+
+					<div class="row g-2">
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Funil *</label>
+							<select name="funil_id" id="novo-lead-funil" class="form-control form-control-sm" required>
+								<option value="">Selecione...</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Nome *</label>
+							<input type="text" name="nome" class="form-control form-control-sm" required>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">WhatsApp *</label>
+							<input type="text" name="whatsapp" class="form-control form-control-sm" placeholder="5511999999999" required>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label small mb-1">E-mail</label>
+							<input type="email" name="email" class="form-control form-control-sm" placeholder="email@exemplo.com">
+						</div>
+						<div class="col-md-2">
+							<label class="form-label small mb-1">Idade</label>
+							<input type="number" name="idade" class="form-control form-control-sm" min="1" max="120">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Origem do lead</label>
+							<select name="origem" class="form-control form-control-sm">
+								<option value="">Selecione...</option>
+								<option value="Instagram">Instagram</option>
+								<option value="Facebook">Facebook</option>
+								<option value="Site">Site</option>
+								<option value="Google">Google</option>
+								<option value="Indicação">Indicação</option>
+								<option value="Panfleto">Panfleto</option>
+								<option value="Outros">Outros</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Curso de interesse</label>
+							<input type="text" name="curso_interesse" class="form-control form-control-sm">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Valor estimado</label>
+							<input type="text" name="valor_estimado" class="form-control form-control-sm" placeholder="Ex: 150,00">
+						</div>
+						<div class="col-md-12">
+							<label class="form-label small mb-1">Visibilidade do lead</label>
+							<select name="visibilidade" class="form-control form-control-sm" required>
+								<option value="publico">Público (Todos os usuários podem ver)</option>
+								<option value="privado">Privado (Apenas eu posso ver)</option>
+							</select>
+						</div>
+						<div class="col-md-12">
+							<label class="form-label small mb-1">Responsável (se menor de idade)</label>
+							<input type="text" name="responsavel_nome" class="form-control form-control-sm" placeholder="Nome do responsável">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Bairro</label>
+							<input type="text" name="bairro" class="form-control form-control-sm">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label small mb-1">Cidade</label>
+							<input type="text" name="cidade" class="form-control form-control-sm">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer py-2">
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary btn-sm">Salvar lead</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Detalhes do Lead -->
+<div class="modal fade" id="modalDetalhesLead" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div>
+					<h5 class="modal-title mb-1" id="detalhe-lead-nome">Detalhes do lead</h5>
+					<div class="d-flex align-items-center gap-2 flex-wrap">
+						<span class="badge bg-primary" id="detalhe-status-badge">-</span>
+						<small class="text-muted" id="detalhe-data-resumo">Cadastrado em -</small>
+					</div>
+				</div>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div id="response-detalhe-lead"></div>
+
+				<div class="d-flex gap-2 mb-3 flex-wrap">
+					<button type="button" id="btn-whatsapp-lead" class="btn btn-success btn-sm">
+						<i class="fa-brands fa-whatsapp"></i> WhatsApp
+					</button>
+					<button type="button" id="btn-converter-aluno" class="btn btn-warning btn-sm d-none">
+						<i class="fas fa-user-graduate"></i> Converter em aluno
+					</button>
+					<button type="button" id="btn-ir-matricula" class="btn btn-primary btn-sm d-none">
+						<i class="fas fa-file-signature"></i> Ir para matrícula
+					</button>
+				</div>
+
+				<ul class="nav nav-tabs mb-3" id="tabDetalhesLead" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="tab-dados-btn" data-bs-toggle="tab" data-bs-target="#tab-dados" type="button" role="tab">
+							<i class="fas fa-id-card"></i> Dados cadastrais
+						</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="tab-historico-btn" data-bs-toggle="tab" data-bs-target="#tab-historico" type="button" role="tab">
+							<i class="fas fa-clock-rotate-left"></i> Histórico
+						</button>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane fade show active" id="tab-dados" role="tabpanel">
+						<form id="form-editar-lead">
+							<input type="hidden" name="id" id="editar-lead-id" value="">
+
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label">Nome *</label>
+									<input type="text" name="nome" id="editar-nome" class="form-control" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">WhatsApp *</label>
+									<input type="text" name="whatsapp" id="editar-whatsapp" class="form-control" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">E-mail</label>
+									<input type="email" name="email" id="editar-email" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Idade</label>
+									<input type="number" name="idade" id="editar-idade" class="form-control" min="1" max="120">
+								</div>
+								<div class="col-md-12">
+									<label class="form-label">Responsável (se menor de idade)</label>
+									<input type="text" name="responsavel_nome" id="editar-responsavel" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Curso de interesse</label>
+									<input type="text" name="curso_interesse" id="editar-curso" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Valor estimado</label>
+									<input type="text" name="valor_estimado" id="editar-valor" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Origem do lead</label>
+									<select name="origem" id="editar-origem" class="form-control">
+										<option value="">Selecione...</option>
+										<option value="Instagram">Instagram</option>
+										<option value="Facebook">Facebook</option>
+										<option value="Site">Site</option>
+										<option value="Google">Google</option>
+										<option value="Indicação">Indicação</option>
+										<option value="Panfleto">Panfleto</option>
+										<option value="Outros">Outros</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Funil *</label>
+									<select name="funil_id" id="editar-funil" class="form-control" required>
+										<option value="">Selecione...</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Motivo da perda</label>
+									<input type="text" id="editar-motivo-perda" class="form-control" readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Bairro</label>
+									<input type="text" name="bairro" id="editar-bairro" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Cidade</label>
+									<input type="text" name="cidade" id="editar-cidade" class="form-control">
+								</div>
+							</div>
+
+							<div class="mt-3">
+								<button type="submit" class="btn btn-primary btn-sm">
+									<i class="fas fa-save"></i> Salvar alterações
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<div class="tab-pane fade" id="tab-historico" role="tabpanel">
+						<h6 class="mb-2">Nova observação</h6>
+						<form id="form-comentario-lead">
+							<input type="hidden" name="id" id="detalhe-lead-id" value="">
+							<div class="mb-2">
+								<textarea name="observacao" id="detalhe-observacao" class="form-control" rows="3" placeholder="Digite uma anotação sobre este lead..."></textarea>
+							</div>
+							<button type="submit" class="btn btn-primary btn-sm mb-4">
+								<i class="fas fa-save"></i> Salvar comentário
+							</button>
+						</form>
+
+						<h6 class="mb-3">Linha do tempo</h6>
+						<div id="detalhe-timeline"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Motivo de Perda -->
+<div class="modal fade" id="modalMotivoPerda" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<form id="form-motivo-perda">
+				<div class="modal-header">
+					<h5 class="modal-title">Motivo da perda</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<div id="response-motivo-perda"></div>
+					<input type="hidden" name="id" id="perda-lead-id" value="">
+					<input type="hidden" name="status" value="perdido">
+					<p class="small text-muted mb-3">Selecione o motivo pelo qual este lead foi perdido:</p>
+					<div class="d-grid gap-2">
+						<button type="button" class="btn btn-outline-secondary btn-sm btn-motivo" data-motivo="Preço Alto">Preço Alto</button>
+						<button type="button" class="btn btn-outline-secondary btn-sm btn-motivo" data-motivo="Horário Incompatível">Horário Incompatível</button>
+						<button type="button" class="btn btn-outline-secondary btn-sm btn-motivo" data-motivo="Não Respondeu">Não Respondeu</button>
+						<button type="button" class="btn btn-outline-secondary btn-sm btn-motivo" data-motivo="Outros">Outros</button>
+					</div>
+					<input type="hidden" name="motivo_perda" id="perda-motivo" value="">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-danger btn-sm" id="btn-confirmar-perda" disabled>Confirmar perda</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+.crm-autofill-trap{
+	position: absolute;
+	left: -9999px;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+#filtro-busca-lead:-webkit-autofill,
+#filtro-busca-lead:-webkit-autofill:hover,
+#filtro-busca-lead:-webkit-autofill:focus{
+	-webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+	box-shadow: 0 0 0 1000px #fff inset !important;
+	-webkit-text-fill-color: #212529 !important;
+}
+.kanban-col { min-height: 420px; }
+.kanban-list { min-height: 360px; }
+.kanban-card {
+	cursor: pointer;
+	border: 1px solid rgba(0,0,0,0.08);
+	border-radius: 0.5rem;
+	padding: 0.65rem 0.75rem;
+	margin-bottom: 0.5rem;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+	transition: box-shadow 0.15s ease;
+}
+.kanban-card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+.kanban-card.sortable-drag { cursor: grabbing; }
+.kanban-card.lead-esquecido {
+	border-left: 3px solid #dc3545;
+	background: #fff8f8;
+}
+.kanban-card .lead-nome { font-weight: 600; font-size: 0.95rem; }
+.kanban-card .lead-meta { font-size: 0.8rem; color: #6c757d; }
+.kanban-card .badge-esquecido {
+	font-size: 0.65rem;
+	background: #dc3545;
+	color: #fff;
+}
+.kanban-card .lead-valor {
+	font-size: 0.75rem;
+	color: #198754;
+	font-weight: 600;
+}
+.btn-motivo.active {
+	background-color: #6c757d;
+	color: #fff;
+	border-color: #6c757d;
+}
+.kanban-ghost { opacity: 0.4; background: #e9ecef; }
+
+.timeline-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	position: relative;
+}
+.timeline-list::before {
+	content: '';
+	position: absolute;
+	left: 14px;
+	top: 4px;
+	bottom: 4px;
+	width: 2px;
+	background: #dee2e6;
+}
+.timeline-item {
+	position: relative;
+	padding-left: 42px;
+	padding-bottom: 1.25rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-icon {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background: #f8f9fa;
+	border: 2px solid #dee2e6;
+	color: #495057;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.75rem;
+}
+.timeline-content {
+	background: #f8f9fa;
+	border-radius: 0.5rem;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid rgba(0,0,0,0.05);
+	color: #212529;
+}
+.timeline-content strong { color: #212529; }
+.timeline-content p { color: #343a40; margin-bottom: 0.25rem; }
+.timeline-content .text-muted { color: #6c757d !important; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+	let listagemCrm = 'painel/crm';
+	let salvarLead  = 'painel/crm/save';
+	let statusLead  = 'painel/crm/status';
+	let detalhesLead = 'painel/crm/detalhes';
+	let comentarioLead = 'painel/crm/comentario';
+	let atualizarLead = 'painel/crm/atualizar';
+	let converterAlunoLead = 'painel/crm/converter-aluno';
+	let importarLeads = 'painel/crm/importar';
+	let listarFunis   = 'painel/crm/funis';
+	let salvarFunil   = 'painel/crm/funis/save';
+	let excluirFunil  = 'painel/crm/funis/delete';
+</script>
+<script src="{{URL}}/resources/js/whatsapp-iniciar.js?v=20260728h"></script>
+<script src="{{URL}}/resources/js/crm.js?v=20260826b"></script>

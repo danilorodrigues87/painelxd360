@@ -1,0 +1,174 @@
+<h1 class="mt-4">Editor — Curso CTI</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/master/ead-cursos">Cursos CTI</a></li>
+	<li class="breadcrumb-item active">{{nome_curso}}</li>
+</ol>
+
+<div class="d-flex justify-content-end mb-3">
+	<button type="button" class="btn btn-sm btn-outline-primary" id="btn-abrir-editor-ascend">
+		<i class="fas fa-wand-magic-sparkles"></i> L-Editor
+	</button>
+</div>
+
+<input type="hidden" id="id_curso" value="{{id_curso}}">
+
+<ul class="nav nav-tabs" id="ead-tabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="tab-geral" data-bs-toggle="tab" data-bs-target="#pane-geral" type="button">Geral</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="tab-aulas" data-bs-toggle="tab" data-bs-target="#pane-aulas" type="button">Aulas</button>
+	</li>
+</ul>
+
+<div class="tab-content border border-top-0 p-3 bg-white mb-4">
+	<div class="tab-pane fade show active" id="pane-geral" role="tabpanel">
+		<div class="row g-3">
+			<div class="col-md-8">
+				<label class="form-label">Título do curso</label>
+				<input type="text" class="form-control" id="titulo" required>
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Carga horária (h)</label>
+				<input type="number" class="form-control" id="carga_h" min="0">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">Slug (URL)</label>
+				<input type="text" class="form-control" id="slug">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">Nível</label>
+				<select class="form-select" id="level">
+					<option>Iniciante</option>
+					<option>Intermediário</option>
+					<option>Avançado</option>
+				</select>
+			</div>
+			<div class="col-12">
+				<label class="form-label">Resumo curto</label>
+				<input type="text" class="form-control" id="short_description" maxlength="500">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">URL da capa</label>
+				<input type="url" class="form-control" id="cover_url">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">URL do banner</label>
+				<input type="url" class="form-control" id="banner_url">
+			</div>
+			<div class="col-12">
+				<label class="form-label">Objetivos (um por linha)</label>
+				<textarea class="form-control" id="objectives_text" rows="4"></textarea>
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Instrutor — nome</label>
+				<input type="text" class="form-control" id="instructor_name">
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Título / cargo</label>
+				<input type="text" class="form-control" id="instructor_title">
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Avatar (URL)</label>
+				<input type="url" class="form-control" id="instructor_avatar_url">
+			</div>
+			<div class="col-12">
+				<label class="form-label">Bio do instrutor</label>
+				<textarea class="form-control" id="instructor_bio" rows="2"></textarea>
+			</div>
+			<div class="col-12">
+				<div class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" id="publicado">
+					<label class="form-check-label" for="publicado">Publicado (disponível via planos SaaS)</label>
+				</div>
+			</div>
+			<div class="col-12">
+				<button type="button" class="btn btn-primary" id="btn-salvar-geral">Salvar dados gerais</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-pane fade" id="pane-aulas" role="tabpanel">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<p class="text-muted mb-0 small">Vídeos, PDFs, atividades, role play ou aulas interativas (Ascend).</p>
+			<button type="button" class="btn btn-success btn-sm" id="btn-nova-aula"><i class="fa fa-plus"></i> Nova aula</button>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="list-group" id="lista-aulas"></div>
+			</div>
+			<div class="col-md-8">
+				<div id="painel-aula" class="d-none">
+					<div class="card mb-3">
+						<div class="card-header">Dados da aula</div>
+						<div class="card-body row g-2">
+							<input type="hidden" id="aula_id">
+							<div class="col-md-8">
+								<label class="form-label">Título</label>
+								<input type="text" class="form-control" id="aula_titulo">
+							</div>
+							<div class="col-md-2">
+								<label class="form-label">Ordem</label>
+								<input type="number" class="form-control" id="aula_ordem" value="0">
+							</div>
+							<div class="col-md-2 d-flex align-items-end">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="aula_bloqueado">
+									<label class="form-check-label" for="aula_bloqueado">Bloqueada</label>
+								</div>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Descrição</label>
+								<textarea class="form-control" id="aula_descricao" rows="2"></textarea>
+							</div>
+							<div class="col-12">
+								<button type="button" class="btn btn-primary btn-sm" id="btn-salvar-aula">Salvar aula</button>
+								<button type="button" class="btn btn-outline-danger btn-sm" id="btn-excluir-aula">Excluir aula</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="card mb-3">
+						<div class="card-header d-flex justify-content-between">
+							<span>Vídeos</span>
+							<button type="button" class="btn btn-sm btn-outline-success" id="btn-add-video">+ Vídeo</button>
+						</div>
+						<ul class="list-group list-group-flush" id="lista-videos"></ul>
+					</div>
+
+					<div class="card mb-3">
+						<div class="card-header d-flex justify-content-between">
+							<span>Materiais (PDF / link)</span>
+							<button type="button" class="btn btn-sm btn-outline-success" id="btn-add-material">+ Material</button>
+						</div>
+						<ul class="list-group list-group-flush" id="lista-materiais"></ul>
+					</div>
+
+					<div class="card mb-3">
+						<div class="card-header d-flex justify-content-between">
+							<span>Atividades / avaliações</span>
+							<button type="button" class="btn btn-sm btn-outline-success" id="btn-add-atividade">+ Atividade</button>
+						</div>
+						<div class="card-body" id="lista-atividades"></div>
+					</div>
+
+					<div class="card mb-3">
+						<div class="card-header d-flex justify-content-between">
+							<span>Role play</span>
+							<button type="button" class="btn btn-sm btn-outline-success" id="btn-add-roleplay">+ Cenário</button>
+						</div>
+						<div class="card-body" id="lista-roleplays"></div>
+					</div>
+				</div>
+				<div id="aula-placeholder" class="text-muted p-4 border rounded">Selecione ou crie uma aula.</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<link rel="stylesheet" href="{{URL}}/resources/css/ead-editor.css?v=20260812b">
+<script>
+	window.EAD_EDITOR_API = (typeof url_base !== 'undefined' ? url_base : '{{URL}}/') + 'master/ead-cursos/editor/{{id_curso}}';
+	window.EAD_EDITOR_OPTS = { hideAlunos: true, hideVitrine: true };
+</script>
+<script src="{{URL}}/resources/js/ead-editor.js?v=20260901c"></script>

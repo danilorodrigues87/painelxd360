@@ -1,0 +1,119 @@
+<h1 class="mt-4">Meu perfil</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Dados do operador Master</li>
+</ol>
+
+{{alert_sql}}
+
+<div class="row g-4">
+	<div class="col-lg-7">
+		<div class="card shadow-sm">
+			<div class="card-header"><strong>Dados pessoais</strong></div>
+			<div class="card-body">
+				<form id="form-master-perfil" method="post" enctype="multipart/form-data" onsubmit="return false;">
+					<input type="hidden" name="id" value="{{id}}">
+					<input type="hidden" name="email_antigo" value="{{email_antigo}}">
+					<div class="row g-3">
+						{{foto_html}}
+						<div class="col-md-12">
+							<label class="form-label">Nome</label>
+							<input type="text" name="nome" class="form-control" value="{{nome}}" required>
+						</div>
+						<div class="col-md-8">
+							<label class="form-label">E-mail</label>
+							<input type="email" name="email" class="form-control" value="{{email}}" required>
+							<div class="form-text">Precisa estar listado em <code>MASTER_EMAILS</code> no .env.</div>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">WhatsApp</label>
+							<input type="text" name="whatsapp" class="form-control" value="{{whatsapp}}">
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">CPF</label>
+							<input type="text" name="cpf" class="form-control mascara-cpf" value="{{cpf}}">
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">RG</label>
+							<input type="text" name="rg" class="form-control" value="{{rg}}">
+						</div>
+						<div class="col-12">
+							<button type="button" class="btn btn-primary" id="btn-salvar-master-perfil">
+								<i class="fas fa-save"></i> Salvar perfil
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-5">
+		<div class="card shadow-sm">
+			<div class="card-header"><strong>Alterar senha</strong></div>
+			<div class="card-body">
+				<form id="form-master-senha" onsubmit="return false;">
+					<div class="mb-3">
+						<label class="form-label" for="senha1">Nova senha</label>
+						<input type="password" class="form-control" id="senha1" name="senha1" autocomplete="new-password" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label" for="senha2">Confirmar senha</label>
+						<input type="password" class="form-control" id="senha2" name="senha2" autocomplete="new-password" required>
+					</div>
+					<div class="form-text mb-3">Mínimo de 8 caracteres.</div>
+					<button type="button" class="btn btn-outline-primary" id="btn-salvar-master-senha">
+						<i class="fas fa-lock"></i> Atualizar senha
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(function(){
+	$('#btn-salvar-master-perfil').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		const fd = new FormData(document.getElementById('form-master-perfil'));
+		$.ajax({
+			url: url_base + 'master/perfil/salvar',
+			method: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			$btn.prop('disabled', false);
+			if(!res || !res.success){
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+				return;
+			}
+			if(res.foto_url) $('#nav-master-foto').attr('src', res.foto_url);
+			if(res.nome) $('#nav-master-nome').text(res.nome);
+			Swal.fire('OK', res.message, 'success');
+		}).fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha ao salvar perfil.', 'error');
+		});
+	});
+
+	$('#btn-salvar-master-senha').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		$.post(url_base + 'master/perfil/senha', {
+			senha1: $('#senha1').val(),
+			senha2: $('#senha2').val()
+		}, function(res){
+			$btn.prop('disabled', false);
+			if(!res || !res.success){
+				Swal.fire('Erro', (res && res.message) || 'Falha.', 'error');
+				return;
+			}
+			$('#senha1, #senha2').val('');
+			Swal.fire('OK', res.message, 'success');
+		}, 'json').fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha ao atualizar senha.', 'error');
+		});
+	});
+});
+</script>

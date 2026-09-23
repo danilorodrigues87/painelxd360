@@ -1,0 +1,19 @@
+<div class="col-lg-5">
+  <div class="card shadow-lg border-0 rounded-lg mt-5">
+    <div class="card-header"><h3 class="text-center font-weight-light my-4">Código de Segurança</h3></div>
+    <div class="card-body">
+      {{status}}
+      <form method="post">
+         <div class="form-floating mb-3">
+            <input class="form-control fs-4 text-center" name="codigo" type="text" maxlength="6" required/>
+            <label>Informe o código que você recebeu no email</label>
+         </div>
+         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+            <a class="small" href="{{URL}}/">Voltar para login</a>
+            <button type="submit" id="btn-validaCodigo" class="btn btn-danger">Validar código</button>
+         </div>
+      </form>
+   </div>
+
+</div>
+</div>

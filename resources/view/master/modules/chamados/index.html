@@ -1,0 +1,83 @@
+<h1 class="mt-4">Chamados</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Fila de suporte dos clientes</li>
+</ol>
+
+<div class="alert alert-secondary small py-2">
+	<strong>Em aberto / andamento:</strong> <span id="badge-abertos">{{abertos}}</span>
+</div>
+
+<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+	<select class="form-select form-select-sm" id="filtro_escola" style="width:auto;min-width:180px">
+		<option value="">Todos clientes</option>
+	</select>
+	<select class="form-select form-select-sm" id="filtro_status" style="width:auto">
+		<option value="">Todos status</option>
+	</select>
+	<select class="form-select form-select-sm" id="filtro_categoria" style="width:auto">
+		<option value="">Todas categorias</option>
+	</select>
+	<input type="search" class="form-control form-control-sm" id="filtro_busca" placeholder="Número ou assunto…" style="max-width:200px">
+	<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-atualizar">Atualizar</button>
+</div>
+
+<div class="card shadow mb-4">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Escola</th>
+						<th>Categoria</th>
+						<th>Assunto</th>
+						<th>Status</th>
+						<th>Atualizado</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-chamados">
+					<tr><td colspan="6" class="text-muted text-center py-4">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalDetalheChamado" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div>
+					<h5 class="modal-title mb-0" id="det-titulo">Chamado</h5>
+					<small class="text-muted" id="det-meta"></small>
+				</div>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row g-3 mb-3">
+					<div class="col-md-4">
+						<label class="form-label">Status</label>
+						<select class="form-select form-select-sm" id="det-status"></select>
+					</div>
+					<div class="col-md-8 d-flex align-items-end">
+						<button type="button" class="btn btn-sm btn-outline-primary" id="btn-salvar-status">Atualizar status</button>
+					</div>
+				</div>
+				<div id="det-thread" class="mb-3"></div>
+				<div id="det-responder-box" class="border-top pt-3">
+					<label class="form-label" for="det-mensagem">Responder</label>
+					<textarea class="form-control mb-2" id="det-mensagem" rows="3"></textarea>
+					<input type="file" class="form-control mb-2" id="det-anexo" accept="image/jpeg,image/png,image/webp,image/gif">
+					<button type="button" class="btn btn-primary" id="btn-responder">Enviar resposta</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.MASTER_ESCOLAS_CHAMADOS = {{escolas_json}};
+window.MASTER_CHAMADOS_CATEGORIAS = {{categorias_json}};
+window.MASTER_CHAMADOS_STATUS = {{status_json}};
+</script>
+<script src="{{URL}}/resources/js/master-chamados.js?v=20260728a"></script>

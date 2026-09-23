@@ -1,0 +1,101 @@
+<h1 class="mt-4">Pedagógico</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Cursos Online (EAD)</li>
+</ol>
+
+<div id="alert-sql-ead" class="alert alert-warning d-none">
+	O módulo de Cursos Online ainda não está liberado nesta escola. Fale com o <strong>suporte</strong> para ativar.
+</div>
+
+<div id="alert-sql-xp" class="alert alert-warning d-none">
+	O ranking e os pontos do portal ainda não estão ativos. Fale com o <strong>suporte</strong> para liberar.
+</div>
+
+<p class="text-muted">
+	Cursos do <strong>portal do aluno</strong> — independentes das Trilhas (contrato/carnê).
+	Matricule alunos na aba do curso (sem gerar contrato).
+</p>
+
+<div class="alert alert-info d-flex flex-wrap justify-content-between align-items-center gap-2 {{vitrine_banner_class}}">
+	<span>
+		<strong>Vitrine de cursos:</strong> assine cursos que outras escolas disponibilizaram (pagos ou gratuitos).
+	</span>
+	<a href="{{URL}}/painel/ead/vitrine" class="btn btn-sm btn-primary">Abrir vitrine</a>
+</div>
+
+<div class="card shadow mb-4 d-none" id="card-cursos-cti">
+	<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+		<span><i class="fa-solid fa-building-columns me-1"></i> Cursos CTI (padrão do plano)</span>
+		<span class="badge bg-info text-dark">Somente leitura</span>
+	</div>
+	<div class="card-body">
+		<p class="text-muted small">Incluídos automaticamente pelo seu plano. Matricule alunos manualmente — conteúdo editado pela CTI.</p>
+		<div class="table-responsive">
+			<table class="table table-striped align-middle mb-0">
+				<thead>
+					<tr>
+						<th>Curso</th>
+						<th>Carga h</th>
+						<th>Aulas</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="ead-cti-tbody">
+					<tr><td colspan="5" class="text-muted">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalMatriculaCti" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalMatriculaCtiTitulo">Matrículas</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="cti_matricula_curso_id" value="">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" id="cti_busca_aluno" placeholder="Buscar aluno por nome ou e-mail">
+					<button type="button" class="btn btn-outline-primary" id="btn-cti-buscar-aluno">Buscar</button>
+				</div>
+				<div id="cti_busca_resultados" class="mb-3"></div>
+				<h6>Matriculados</h6>
+				<div id="cti_lista_matriculas" class="small text-muted">—</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow mb-4">
+	<div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+		<span><i class="fa-solid fa-laptop-code me-1"></i> Cursos EAD</span>
+		<button type="button" class="btn btn-sm btn-success" id="btn-novo-curso">
+			<i class="fa-solid fa-plus"></i> Novo curso
+		</button>
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table table-striped align-middle" id="tabela-ead">
+				<thead>
+					<tr>
+						<th>Curso</th>
+						<th>Carga h</th>
+						<th>Aulas</th>
+						<th>Status</th>
+						<th>Vitrine</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="ead-tbody">
+					<tr><td colspan="6" class="text-muted">Carregando…</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/ead-cursos.js?v=20260812a"></script>

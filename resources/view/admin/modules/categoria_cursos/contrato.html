@@ -1,0 +1,97 @@
+<h1 class="mt-4">Contrato — {{nome_categoria}}</h1>
+<link rel="stylesheet" href="{{URL}}/resources/css/contrato.css?v=20260828b">
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/painel/categoria/cursos">Categorias</a></li>
+	<li class="breadcrumb-item active">{{nome_categoria}}</li>
+</ol>
+
+<div class="alert alert-info small">
+	Configure as cláusulas <strong>1ª, 2ª e 3ª</strong> e textos de <strong>pagamento</strong> desta categoria.
+	Cláusulas gerais (4ª em diante) ficam em <a href="{{URL}}/painel/config/contrato">Configurações → Modelo de contrato</a>.
+	Use tokens como <code>{{aulas_semanais}}</code> e <code>{{meses_duracao}}</code>.
+</div>
+
+<div id="alert-sql-cat-contrato" class="alert alert-warning small d-none"></div>
+<div id="alert-incompleto-cat" class="alert alert-warning small d-none"></div>
+
+<input type="hidden" id="id_categoria_contrato" value="{{id_categoria}}">
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+		<span>Cláusulas da categoria <span id="badge-contrato-cat" class="badge bg-secondary">…</span></span>
+		<div class="d-flex flex-wrap gap-2">
+			<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-modelo-sugerido-cat">Usar modelo sugerido</button>
+			<button type="button" class="btn btn-sm btn-primary" id="btn-salvar-cat-contrato">Salvar cláusulas</button>
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="row g-3 mb-3">
+			<div class="col-md-4">
+				<label class="form-label small mb-1" for="preview_pagamento_cat">Prévia — pagamento</label>
+				<select class="form-control form-control-sm" id="preview_pagamento_cat">
+					<option value="parcelado">Parcelado</option>
+					<option value="vista">À vista</option>
+					<option value="bolsista">Bolsista</option>
+				</select>
+			</div>
+			<div class="col-md-4 d-flex align-items-end">
+				<div class="form-check mb-2">
+					<input class="form-check-input" type="checkbox" id="preview_menor_cat" value="1">
+					<label class="form-check-label small" for="preview_menor_cat">Aluno menor de 18</label>
+				</div>
+			</div>
+		</div>
+
+		<ul class="nav nav-tabs mb-3" role="tablist">
+			<li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-clausulas" type="button">Cláusulas 1–3</button></li>
+			<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-extra" type="button">Cláusula extra</button></li>
+			<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pagamento" type="button">Pagamento</button></li>
+		</ul>
+
+		<div class="row g-3 contrato-editor-split">
+			<div class="col-lg-6">
+				<div class="tab-content">
+					<div class="tab-pane fade show active" id="tab-clausulas">
+						<label class="form-label" for="contrato_clausula_1">Cláusula 1ª — Serviços prestados</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula mb-3" id="contrato_clausula_1" rows="6" spellcheck="false"></textarea>
+						<label class="form-label" for="contrato_clausula_2">Cláusula 2ª — Aulas / horários</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula mb-3" id="contrato_clausula_2" rows="6" spellcheck="false"></textarea>
+						<label class="form-label" for="contrato_clausula_3">Cláusula 3ª — Prazo / duração</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula" id="contrato_clausula_3" rows="6" spellcheck="false"></textarea>
+					</div>
+					<div class="tab-pane fade" id="tab-extra">
+						<label class="form-label" for="contrato_clausula_extra">Cláusula extra (opcional)</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula" id="contrato_clausula_extra" rows="10" spellcheck="false"></textarea>
+						<div class="form-text">Ex.: assunção de riscos em atividades esportivas.</div>
+					</div>
+					<div class="tab-pane fade" id="tab-pagamento">
+						<label class="form-label" for="contrato_pagamento_parcelado">Texto — parcelado</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula mb-3" id="contrato_pagamento_parcelado" rows="4" spellcheck="false" placeholder="Vazio = texto padrão do sistema"></textarea>
+						<label class="form-label" for="contrato_pagamento_vista">Texto — à vista</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula mb-3" id="contrato_pagamento_vista" rows="4" spellcheck="false" placeholder="Vazio = texto padrão do sistema"></textarea>
+						<label class="form-label" for="contrato_pagamento_bolsista">Texto — bolsista</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula mb-3" id="contrato_pagamento_bolsista" rows="3" spellcheck="false" placeholder="Vazio = texto padrão do sistema"></textarea>
+						<label class="form-label" for="contrato_obs_pontualidade">Obs. pontualidade (só parcelado + bônus ativo)</label>
+						<textarea class="form-control font-monospace contrato-campo-clausula" id="contrato_obs_pontualidade" rows="2" spellcheck="false" placeholder="Vazio = texto padrão do sistema"></textarea>
+						<div class="form-text">Tokens de multa/juros vêm da matrícula: {{multa_atraso_pct}}, {{juros_mora_pct_mes}}, {{multa_cancelamento_pct}}, {{carencia_dias}}.</div>
+					</div>
+				</div>
+				<div class="mt-3">
+					<strong class="small">Inserir token:</strong>
+					<div class="d-flex flex-wrap gap-1 mt-1" id="chips-tokens-cat"></div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<label class="form-label mb-0">Prévia do contrato completo</label>
+					<button type="button" class="btn btn-sm btn-outline-success" id="btn-print-preview-cat">Imprimir</button>
+				</div>
+				<div class="contrato-preview-wrap border rounded bg-white">
+					<iframe id="iframe-preview-cat" class="contrato-preview-frame" title="Prévia do contrato" sandbox="allow-same-origin allow-modals"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/categoria-contrato.js?v=20260828b"></script>

@@ -1,0 +1,144 @@
+<h1 class="mt-4">Conquistas</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Catálogo global de medalhas do portal do aluno</li>
+</ol>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-nova-conquista">
+		<i class="fas fa-plus"></i> Nova conquista
+	</button>
+	<div class="d-flex flex-wrap gap-2 align-items-center">
+		<input type="search" class="form-control form-control-sm" id="filtro-conq-busca" placeholder="Buscar título, slug, meta…" style="min-width:220px">
+		<select class="form-select form-select-sm" id="filtro-conq-raridade" style="width:auto">
+			<option value="">Todas raridades</option>
+			<option value="bronze">Bronze</option>
+			<option value="prata">Prata</option>
+			<option value="ouro">Ouro</option>
+			<option value="lendario">Lendário</option>
+			<option value="secreto">Secreto</option>
+		</select>
+		<select class="form-select form-select-sm" id="filtro-conq-ativo" style="width:auto">
+			<option value="">Todos status</option>
+			<option value="1">Ativos</option>
+			<option value="0">Inativos</option>
+		</select>
+		<span class="small text-muted" id="conq-pag-info"></span>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Ordem</th>
+						<th>Medalha</th>
+						<th>Meta</th>
+						<th>Raridade</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-conquistas-master">
+					<tr><td colspan="6" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+			<div class="small text-muted" id="conq-pag-resumo">—</div>
+			<nav>
+				<ul class="pagination pagination-sm mb-0" id="conq-paginacao"></ul>
+			</nav>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalConquistaMaster" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titulo-modal-conquista">Nova conquista</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="conq_id" value="">
+				<div class="row g-3">
+					<div class="col-md-4">
+						<label class="form-label" for="conq_slug">Slug *</label>
+						<input type="text" class="form-control" id="conq_slug" placeholder="ex: xp_100">
+					</div>
+					<div class="col-md-5">
+						<label class="form-label" for="conq_titulo">Título (objetivo) *</label>
+						<input type="text" class="form-control" id="conq_titulo">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="conq_subtitulo">Subtítulo</label>
+						<input type="text" class="form-control" id="conq_subtitulo" placeholder="Estilo Duolingo">
+					</div>
+					<div class="col-12">
+						<label class="form-label" for="conq_descricao">Descrição</label>
+						<input type="text" class="form-control" id="conq_descricao">
+					</div>
+					<div class="col-12">
+						<label class="form-label" for="conq_como">Como conquistar</label>
+						<textarea class="form-control" id="conq_como" rows="2"></textarea>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="conq_meta_tipo">Tipo de meta *</label>
+						<select class="form-select" id="conq_meta_tipo"></select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="conq_meta_valor">Valor</label>
+						<input type="number" class="form-control" id="conq_meta_valor" value="1" min="1">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="conq_raridade">Raridade</label>
+						<select class="form-select" id="conq_raridade">
+							<option value="bronze">Bronze</option>
+							<option value="prata">Prata</option>
+							<option value="ouro">Ouro</option>
+							<option value="lendario">Lendário</option>
+							<option value="secreto">Secreto</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="conq_icone">Ícone Lucide</label>
+						<select class="form-select" id="conq_icone"></select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="conq_ordem">Ordem</label>
+						<input type="number" class="form-control" id="conq_ordem" value="0">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="conq_ativo">Status</label>
+						<select class="form-select" id="conq_ativo">
+							<option value="1">Ativo</option>
+							<option value="0">Inativo</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<label class="form-label" for="conq_badge">Figurinha / medalha custom (opcional)</label>
+						<input type="file" class="form-control" id="conq_badge" accept="image/png,image/jpeg,image/webp">
+						<div class="form-text">PNG/JPG/WebP até 2 MB, fundo transparente recomendado. Aparece no portal do aluno.</div>
+						<div id="conq_badge_preview" class="mt-2"></div>
+						<div class="form-check mt-2">
+							<input class="form-check-input" type="checkbox" id="conq_badge_remover">
+							<label class="form-check-label" for="conq_badge_remover">Remover figurinha atual</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" id="btn-salvar-conquista">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.MASTER_CONQ_META_TIPOS = {{meta_tipos_json}};
+window.MASTER_CONQ_ICONES = {{icones_json}};
+</script>
+<script src="{{URL}}/resources/js/master-conquistas.js?v=20260728p"></script>

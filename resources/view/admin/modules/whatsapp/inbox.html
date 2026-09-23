@@ -1,0 +1,176 @@
+<h1 class="mt-4"><i class="fab fa-whatsapp text-success"></i> WhatsApp — Atendimento</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Inbox por setor · chatbot</li>
+</ol>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+	<a href="{{URL}}/painel/whatsapp/fluxos" class="btn btn-sm btn-outline-primary">
+		<i class="fas fa-project-diagram me-1"></i> Fluxos do bot
+	</a>
+</div>
+
+<div class="alert alert-warning small d-none" id="alert-wa-sql"></div>
+
+<ul class="nav nav-tabs mb-3" role="tablist">
+	<li class="nav-item">
+		<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-inbox" type="button">Inbox</button>
+	</li>
+	<li class="nav-item" id="tab-config-li">
+		<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-config" type="button">Setores e atendentes</button>
+	</li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane fade show active" id="tab-inbox">
+		<div class="row g-2 mb-2 align-items-center" id="wa-indicadores">
+			<div class="col-auto">
+				<button type="button" class="badge bg-danger border-0 wa-ind-filtro" data-filtro="nao_lidas" id="wa-ind-nao-lidas" title="Filtrar não lidas">0 não lidas</button>
+			</div>
+			<div class="col-auto">
+				<button type="button" class="badge bg-warning text-dark border-0 wa-ind-filtro" data-filtro="fila" id="wa-ind-fila" title="Filtrar fila">0 na fila</button>
+			</div>
+			<div class="col-auto">
+				<button type="button" class="badge bg-primary border-0 wa-ind-filtro" data-filtro="abertas" id="wa-ind-abertas" title="Filtrar abertas">0 abertas</button>
+			</div>
+			<div class="col-auto small text-muted" id="wa-ind-setores"></div>
+			<div class="col-auto ms-auto">
+				<button type="button" class="btn btn-sm btn-outline-danger" id="btn-wa-fechar-todas" title="Encerrar todas as conversas em andamento">
+					<i class="fas fa-check-double me-1"></i> Finalizar todas em andamento
+				</button>
+			</div>
+		</div>
+		<div class="row g-3" style="min-height:70vh;">
+			<div class="col-md-4 col-lg-3">
+				<div class="card shadow-sm h-100">
+					<div class="card-header py-2">
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<strong>Conversas</strong>
+							<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-wa-refresh" title="Atualizar">
+								<i class="fas fa-sync"></i>
+							</button>
+						</div>
+						<div class="btn-group btn-group-sm w-100 mb-2" role="group" id="wa-filtros">
+							<button type="button" class="btn btn-outline-secondary active" data-filtro="todas">Todas</button>
+							<button type="button" class="btn btn-outline-secondary" data-filtro="minhas">Minhas</button>
+							<button type="button" class="btn btn-outline-secondary" data-filtro="fila">Fila</button>
+						</div>
+						<input type="text" class="form-control form-control-sm" id="wa-busca"
+							name="wa_filtro_conversas"
+							placeholder="Buscar nome ou telefone..."
+							autocomplete="off"
+							autocapitalize="off"
+							autocorrect="off"
+							spellcheck="false"
+							data-lpignore="true"
+							data-1p-ignore="true"
+							data-form-type="other"
+							readonly>
+					</div>
+					<div class="list-group list-group-flush overflow-auto" id="wa-lista-conversas" style="max-height:65vh;"></div>
+				</div>
+			</div>
+			<div class="col-md-8 col-lg-9">
+				<div class="card shadow-sm h-100 d-flex flex-column">
+					<div class="card-header py-2 d-flex flex-wrap gap-2 justify-content-between align-items-center">
+						<div>
+							<strong id="wa-chat-titulo">Selecione uma conversa</strong>
+							<div class="small text-muted" id="wa-chat-sub"></div>
+						</div>
+						<div class="d-flex gap-1 flex-wrap">
+							<button type="button" class="btn btn-sm btn-outline-primary d-none" id="btn-wa-assumir">Assumir</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary d-none" id="btn-wa-transferir">Transferir</button>
+							<button type="button" class="btn btn-sm btn-outline-danger d-none" id="btn-wa-fechar">Encerrar</button>
+						</div>
+					</div>
+					<div class="card-body overflow-auto flex-grow-1 bg-light" id="wa-mensagens" style="min-height:45vh;max-height:55vh;"></div>
+					<div class="card-footer">
+						<div class="d-flex flex-wrap gap-1 mb-2" id="wa-emoji-bar">
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>😀</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>😂</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>😍</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>👍</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>🙏</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>❤️</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>🎉</button>
+							<button type="button" class="btn btn-sm btn-light wa-emoji" disabled>✅</button>
+						</div>
+						<form id="form-wa-enviar" class="d-flex gap-2 align-items-end" onsubmit="return false;">
+							<div class="btn-group">
+								<label class="btn btn-outline-secondary mb-0" id="lbl-wa-img" title="Enviar imagem">
+									<i class="fas fa-image"></i>
+									<input type="file" id="wa-input-img" accept="image/*" class="d-none" disabled>
+								</label>
+								<label class="btn btn-outline-secondary mb-0" title="Enviar documento">
+									<i class="fas fa-paperclip"></i>
+									<input type="file" id="wa-input-doc" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.csv,application/pdf" class="d-none" disabled>
+								</label>
+								<button type="button" class="btn btn-outline-secondary" id="btn-wa-audio" title="Gravar áudio" disabled>
+									<i class="fas fa-microphone"></i>
+								</button>
+								<button type="button" class="btn btn-outline-secondary" id="btn-wa-audio-file" title="Enviar arquivo de áudio" disabled>
+									<i class="fas fa-file-audio"></i>
+								</button>
+							</div>
+							<textarea class="form-control" id="wa-texto" rows="2" placeholder="Digite a mensagem (emojis ok)..." disabled></textarea>
+							<button type="button" class="btn btn-success" id="btn-wa-enviar" disabled>
+								<i class="fas fa-paper-plane"></i>
+							</button>
+						</form>
+						<small class="text-muted" id="wa-audio-status"></small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-pane fade" id="tab-config">
+		<div class="row g-4">
+			<div class="col-lg-6">
+				<div class="card shadow-sm">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<strong>Setores</strong>
+						<button type="button" class="btn btn-sm btn-primary" id="btn-setor-novo">Novo setor</button>
+					</div>
+					<div class="card-body p-0">
+						<table class="table table-sm mb-0">
+							<thead><tr><th>Nome</th><th>Ordem</th><th>Ativo</th><th></th></tr></thead>
+							<tbody id="tbl-setores"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="card shadow-sm">
+					<div class="card-header"><strong>Atendentes por setor</strong></div>
+					<div class="card-body">
+						<div class="row g-2 mb-3">
+							<div class="col-md-5">
+								<select id="at-usuario" class="form-control form-control-sm"></select>
+							</div>
+							<div class="col-md-5">
+								<select id="at-setor" class="form-control form-control-sm"></select>
+							</div>
+							<div class="col-md-2">
+								<button type="button" class="btn btn-sm btn-success w-100" id="btn-at-vincular">OK</button>
+							</div>
+						</div>
+						<table class="table table-sm">
+							<thead><tr><th>Usuário</th><th>Setor</th><th></th></tr></thead>
+							<tbody id="tbl-atendentes"></tbody>
+						</table>
+					</div>
+				</div>
+				<p class="small text-muted mt-2">
+					Conexão do número (QR): <a href="{{URL}}/painel/config/comunicacao">Comunicação → WhatsApp</a>.
+					O módulo WhatsApp precisa estar liberado no plano da escola.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+.wa-ind-filtro { cursor: pointer; }
+.wa-ind-filtro.wa-ind-ativo { box-shadow: 0 0 0 2px #212529; }
+</style>
+<script src="{{URL}}/resources/js/whatsapp-inbox.js?v=20260909a"></script>

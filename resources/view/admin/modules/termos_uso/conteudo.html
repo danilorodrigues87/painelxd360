@@ -1,0 +1,79 @@
+<div class="row mt-4 mb-5">
+	<div class="container col-lg-9">
+		<h2 class="mb-1">Termo de Uso e Responsabilidade no Tratamento de Dados</h2>
+		<p class="text-muted small mb-4">
+			Versão <strong>{{versao}}</strong> · Vigente desde {{data_versao}} ·
+			<a href="{{url_privacidade}}" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+			·
+			<a href="{{url_exclusao}}" target="_blank" rel="noopener noreferrer">Exclusão de dados</a>
+		</p>
+
+		<p>
+			Eu, <strong>{{nome}}</strong>, inscrito(a) no CPF sob o nº
+			<strong class="mascara-cpf">{{cpf}}</strong>, residente e domiciliado(a) em
+			<strong>{{endereco}}</strong>, na qualidade de usuário(a) autorizado(a) da escola
+			<strong>{{escola_nome}}</strong> (CNPJ <strong class="mascara-cnpj">{{escola_cnpj}}</strong>),
+			declaro ter lido e aceitar as condições abaixo para uso do <strong>Painel CTI</strong>.
+		</p>
+
+		<h4 class="h5 mt-4">1. Papéis e LGPD</h4>
+		<p>
+			Este termo observa a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).
+			Em relação aos dados de alunos, responsáveis e demais titulares cadastrados pela escola:
+		</p>
+		<ul>
+			<li>a <strong>escola</strong> atua como <strong>controladora</strong> desses dados;</li>
+			<li>a <strong>CTI Educacional</strong> atua como <strong>operadora</strong> da plataforma SaaS;</li>
+			<li>eu atuo como <strong>pessoa autorizada</strong> pela escola, com acesso limitado às minhas permissões.</li>
+		</ul>
+
+		<h4 class="h5 mt-4">2. Escopo dos dados</h4>
+		<p>
+			Reconheço que o Painel CTI pode conter, além de dados de identificação,
+			informações educacionais, financeiras, de agenda, comunicações, conteúdo EAD,
+			integrações (e-mail, WhatsApp, Meta/Facebook/Instagram, pagamentos) e dados de
+			<strong>menores</strong>, inseridos sob responsabilidade da escola e, quando cabível,
+			com assentimento dos responsáveis.
+		</p>
+
+		<h4 class="h5 mt-4">3. Compromissos de tratamento</h4>
+		<ul>
+			<li>Tratar dados apenas para <strong>finalidades legítimas</strong> das atividades da escola e do sistema;</li>
+			<li>Observar a <strong>minimização</strong>: cadastrar e acessar somente o necessário às minhas funções;</li>
+			<li>Não compartilhar, exportar, copiar ou divulgar dados fora do autorizado pela escola;</li>
+			<li>Não usar dados para benefício próprio ou de terceiros não autorizados;</li>
+			<li>Proteger minhas credenciais; não compartilhar login/senha; encerrar a sessão em dispositivos compartilhados;</li>
+			<li>Comunicar imediatamente à direção da escola qualquer suspeita de acesso indevido, perda ou vazamento;</li>
+			<li>Manter o <strong>sigilo</strong> mesmo após o término do vínculo com a escola, quanto aos dados a que tive acesso.</li>
+		</ul>
+
+		<h4 class="h5 mt-4">4. Integrações e publicações</h4>
+		<p>
+			Quando minhas permissões incluírem módulos de comunicação ou redes sociais,
+			comprometo-me a publicar e enviar conteúdos apenas conforme orientação da escola,
+			respeitando políticas da escola, da CTI e de terceiros (incluindo Meta e provedores de WhatsApp/e-mail).
+		</p>
+
+		<h4 class="h5 mt-4">5. Política de Privacidade</h4>
+		<p>
+			Declaro ciência da
+			<a href="{{url_privacidade}}" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+			do Painel CTI e da página de
+			<a href="{{url_exclusao}}" target="_blank" rel="noopener noreferrer">exclusão de dados</a>.
+			Solicitações de titulares sobre alunos/responsáveis devem ser tratadas prioritariamente pela escola.
+		</p>
+
+		<h4 class="h5 mt-4">6. Responsabilidade</h4>
+		<p>
+			Estou ciente de que o descumprimento deste termo pode resultar em medidas disciplinares,
+			bloqueio de acesso e responsabilização civil/administrativa, conforme a legislação aplicável
+			e a política interna da escola <strong>{{escola_nome}}</strong>.
+		</p>
+
+		{{bloco_status}}
+	</div>
+</div>
+
+<script>
+	let aceitaTermo = 'painel/aceita-termos';
+</script>

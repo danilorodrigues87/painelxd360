@@ -1,0 +1,167 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect">Conecta Jovem</a></li>
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect-anuncios">Anúncios</a></li>
+		<li class="breadcrumb-item active">Lista</li>
+	</ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h4 mb-0">Anúncios no Conecta Jovem</h1>
+	<a href="{{URL}}/master/conect-anuncios/editar/0" class="btn btn-primary btn-sm">
+		<i class="fas fa-plus me-1"></i> Anúncio global
+	</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header py-2"><strong>Configuração comercial</strong> <span class="text-muted small">(Conecta Jovem — negociação direta CTI ↔ empresa)</span></div>
+	<div class="card-body">
+		<form id="form-anuncio-config" class="row g-3">
+			<div class="col-md-3">
+				<label class="form-label small">Preço mínimo mensal (R$)</label>
+				<input type="text" class="form-control form-control-sm" name="preco_minimo_mensal" value="{{preco_minimo}}">
+				<div class="form-text">Referência para propostas; a empresa paga direto à CTI.</div>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small">Máx. por empresa</label>
+				<input type="number" class="form-control form-control-sm" name="max_anuncios_por_empresa" value="{{max_empresa}}" min="1">
+			</div>
+			<div class="col-md-4 d-flex align-items-end">
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" name="requer_aprovacao_master" id="req_aprov" {{requer_aprovacao}}>
+					<label class="form-check-label small" for="req_aprov">Exigir aprovação master (anúncios de empresas)</label>
+				</div>
+			</div>
+			<div class="col-12">
+				<label class="form-label small">Posições habilitadas no Conecta Jovem</label>
+				<div>{{slots_opts}}</div>
+			</div>
+			<div class="col-12">
+				<button type="submit" class="btn btn-outline-primary btn-sm">Salvar configuração</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{{planos_sql_aviso}}
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header py-2 d-flex justify-content-between align-items-center">
+		<strong>Planos de assinatura (empresas)</strong>
+		<button type="button" class="btn btn-sm btn-outline-primary" id="btn-conect-novo-plano">+ Plano</button>
+	</div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover align-middle mb-0">
+				<thead><tr><th>Plano</th><th>Descrição</th><th>Anúncios</th><th>Preço/mês</th><th>Ativo</th><th></th></tr></thead>
+				<tbody>{{planos_rows}}</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header py-2"><strong>Assinaturas de empresas</strong> <span class="text-muted small">clientes ativos e pendentes</span></div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover align-middle mb-0">
+				<thead><tr><th>Empresa</th><th>Plano</th><th>Status</th><th>Anúncios</th><th>Próx. vencimento</th><th>Início</th><th>Desde</th></tr></thead>
+				<tbody>{{assinaturas_rows}}</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-header py-2"><strong>Faturas e pagamentos</strong> <span class="text-muted small">PIX Conecta Jovem</span></div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-sm table-hover align-middle mb-0">
+				<thead><tr><th>#</th><th>Empresa</th><th>Plano</th><th>Competência</th><th>Valor</th><th>Vencimento</th><th>Status</th><th></th></tr></thead>
+				<tbody>{{faturas_rows}}</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<h2 class="h6">Aguardando aprovação</h2>
+<div class="table-responsive mb-4">
+	<table class="table table-sm table-hover align-middle">
+		<thead><tr><th>Anúncio</th><th>Origem</th><th>Posição</th><th>Região</th><th>Status</th><th>Métricas</th><th>Criado</th><th></th></tr></thead>
+		<tbody>{{rows_pendentes}}</tbody>
+	</table>
+</div>
+
+<h2 class="h6">Todos os anúncios</h2>
+<div class="table-responsive">
+	<table class="table table-sm table-hover align-middle">
+		<thead><tr><th>Anúncio</th><th>Origem</th><th>Posição</th><th>Região</th><th>Status</th><th>Impr. / Cliques</th><th>Criado</th><th></th></tr></thead>
+		<tbody>{{rows}}</tbody>
+	</table>
+</div>
+
+<div class="modal fade" id="modalPlano" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h5 class="modal-title">Plano de anúncios</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+			<form id="form-plano">
+				<div class="modal-body row g-2">
+					<input type="hidden" name="id" id="conect_plano_id" value="0">
+					<div class="col-md-6">
+						<label class="form-label small">Slug (novo plano)</label>
+						<input class="form-control form-control-sm" name="slug" id="conect_plano_slug" placeholder="ex: presenca">
+					</div>
+					<div class="col-md-6">
+						<label class="form-label small">Ordem</label>
+						<input type="number" class="form-control form-control-sm" name="ordem" id="conect_plano_ordem" value="0">
+					</div>
+					<div class="col-12">
+						<label class="form-label small">Nome *</label>
+						<input class="form-control form-control-sm" name="nome" id="conect_plano_nome" required>
+					</div>
+					<div class="col-12">
+						<label class="form-label small">Descrição</label>
+						<textarea class="form-control form-control-sm" name="descricao" id="conect_plano_desc" rows="2"></textarea>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label small">Máx. anúncios</label>
+						<input type="number" class="form-control form-control-sm" name="max_anuncios" id="conect_plano_max" min="1" value="1">
+					</div>
+					<div class="col-md-4">
+						<label class="form-label small">Preço mensal (R$)</label>
+						<input class="form-control form-control-sm" name="valor_mensal" id="conect_plano_valor">
+					</div>
+					<div class="col-md-4 d-flex align-items-end">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="ativo" id="conect_plano_ativo" value="1" checked>
+							<label class="form-check-label small" for="conect_plano_ativo">Ativo</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary btn-sm">Salvar plano</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalRejeitar" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h5 class="modal-title">Rejeitar anúncio</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+			<div class="modal-body">
+				<input type="hidden" id="rej_id" value="">
+				<label class="form-label">Motivo (opcional)</label>
+				<textarea class="form-control" id="rej_motivo" rows="3"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-danger" id="btn-confirmar-rejeitar">Rejeitar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/master-conect-anuncios.js?v=5"></script>

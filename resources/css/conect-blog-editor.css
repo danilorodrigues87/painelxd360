@@ -1,0 +1,5 @@
+.cj-img-full { display: block; width: 100%; height: auto; margin: 1rem 0; }
+.cj-img-medium { display: block; max-width: 70%; height: auto; margin: 1rem auto; }
+.cj-img-left { float: left; max-width: 45%; height: auto; margin: 0.25rem 1.25rem 1rem 0; }
+.cj-img-right { float: right; max-width: 45%; height: auto; margin: 0.25rem 0 1rem 1.25rem; }
+.cj-img-small { display: inline-block; max-width: 180px; height: auto; margin: 0.5rem; vertical-align: middle; }

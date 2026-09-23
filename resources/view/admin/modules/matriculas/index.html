@@ -1,0 +1,92 @@
+<h1 class="mt-4">Matrículas</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{{URL}}/painel">Painel</a></li>
+  <li class="breadcrumb-item active">Matrículas</li>
+</ol>
+
+<div id="barra-filtros-lista" class="card shadow-sm mb-3">
+	<div class="card-body py-3">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-5">
+				<label class="form-label small mb-1" for="filtro-busca-mat">Aluno</label>
+				<input type="search" class="form-control form-control-sm" name="busca" id="filtro-busca-mat" placeholder="Nome, e-mail ou WhatsApp do aluno…">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small mb-1" for="filtro-status-mat">Status da matrícula</label>
+				<select class="form-select form-select-sm" name="status" id="filtro-status-mat">
+					<option value="">Todos</option>
+					<option value="0">Em andamento (ativa)</option>
+					<option value="1">Encerrado</option>
+					<option value="3">Cancelado</option>
+				</select>
+			</div>
+			<div class="col-md-4 d-flex flex-wrap gap-2">
+				<button type="button" class="btn btn-sm btn-outline-secondary btn-limpar-filtros">Limpar</button>
+				<button type="button" class="btn btn-sm btn-success ms-auto" onclick="list_itens('','novo')">Nova matrícula</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-4">
+	<div class="card-body p-0">
+		<div id="listar" class="p-3 text-muted small">Carregando…</div>
+		<nav class="px-3 pb-3" aria-label="Paginação">
+			<ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+		</nav>
+	</div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="listar-dados"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let listagem = 'painel/matriculas';
+	let formulario = 'painel/matriculas/form';
+	let edicao = 'painel/matriculas/save';
+	let cancelar = 'painel/matriculas/cancelar';
+	let cancelarSimular = 'painel/matriculas/cancelar/simular';
+	let regularizar = 'painel/matriculas/regularizar';
+	let regularizarSimular = 'painel/matriculas/regularizar/simular';
+	let encerrar = 'painel/matriculas/encerrar';
+	let deletar = 'painel/matriculas/excluir';
+	let buscaResponsavel = 'painel/busca-responsavel';
+</script>
+<script src="{{URL}}/resources/js/ajax.js?v=20260728g"></script>
+<script src="{{URL}}/resources/js/encargos-cancelamento.js?v=20260908c"></script>
+<script>
+(function(){
+	var params = new URLSearchParams(window.location.search);
+	var aluno = parseInt(params.get('aluno') || '0', 10);
+	var lead = parseInt(params.get('lead') || '0', 10);
+	if (aluno > 0 && typeof list_itens === 'function') {
+		$.ajax({
+			url: url_base + formulario,
+			method: 'post',
+			data: { funcao: 'novo', id_aluno: aluno, id_lead: lead > 0 ? lead : '' },
+			dataType: 'json',
+			success: function(result) {
+				if (result && result.form) {
+					$('#listar-dados').html(result.form);
+					if (typeof selectAluno === 'function') {
+						selectAluno(aluno);
+					}
+					if (typeof showFormModal === 'function') {
+						showFormModal();
+					} else {
+						$('#formModal').modal('show');
+					}
+				}
+			}
+		});
+		if (window.history && window.history.replaceState) {
+			window.history.replaceState({}, document.title, window.location.pathname);
+		}
+	}
+})();
+</script>

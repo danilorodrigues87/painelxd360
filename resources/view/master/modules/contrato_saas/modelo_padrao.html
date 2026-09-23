@@ -1,0 +1,195 @@
+<div class="bto">
+  <button class="btn-impress" type="button" onclick="window.print()">Imprimir</button>
+</div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Contrato de Licença de Uso — XD360</title>
+  <link rel="stylesheet" href="{{URL}}/resources/css/contrato.css">
+  <style>
+    #content { font-family: Georgia, "Times New Roman", serif; font-size: 12pt; line-height: 1.45; color: #111; max-width: 900px; margin: 0 auto; padding: 1rem 1.25rem 2rem; }
+    #content h1 { font-size: 16pt; text-align: center; margin: 0 0 .25rem; text-transform: uppercase; letter-spacing: .03em; }
+    #content h2 { font-size: 12pt; margin: 1.25rem 0 .5rem; text-transform: uppercase; }
+    #content .subtitulo { text-align: center; font-size: 11pt; margin-bottom: 1.25rem; color: #333; }
+    #content p { margin: 0 0 .65rem; text-align: justify; }
+    #content ul, #content ol { margin: 0 0 .75rem 1.25rem; }
+    #content li { margin-bottom: .35rem; }
+    #content hr { border: 0; border-top: 1px solid #ccc; margin: 1rem 0; }
+    #content .partes { margin-bottom: 1rem; }
+    #content .assinaturas { margin-top: 2rem; }
+    #content .assinaturas table { width: 100%; border-collapse: collapse; }
+    #content .assinaturas td { width: 50%; vertical-align: top; padding: 1rem .5rem 0; text-align: center; }
+    #content .linha-ass { border-top: 1px solid #000; margin: 3rem auto .35rem; max-width: 85%; }
+  </style>
+</head>
+<body>
+  <div id="content">
+    <h1>Contrato de Licença de Uso de Software</h1>
+    <p class="subtitulo">Plataforma XD360 — modalidade Software as a Service (SaaS)</p>
+
+    <div class="partes">
+      {{licenciante}}
+      {{representante_licenciante}}
+      {{licenciada}}
+      {{representante_licenciada}}
+    </div>
+
+    <p>
+      As partes acima identificadas, doravante denominadas, respectivamente, <strong>LICENCIANTE</strong> e
+      <strong>LICENCIADA</strong>, têm entre si justo e contratado o presente instrumento, regido pelas cláusulas
+      e condições a seguir, bem como pela legislação brasileira aplicável, em especial o Código Civil e a Lei nº
+      13.709/2018 (LGPD).
+    </p>
+
+    <h2>Cláusula 1ª — Do objeto</h2>
+    <p>
+      O presente contrato tem por objeto a concessão, pela LICENCIANTE à LICENCIADA, de licença de uso não exclusiva,
+      intransferível e revogável, na modalidade <em>Software as a Service</em> (SaaS), da plataforma
+      <strong>XD360</strong>, compreendendo painel administrativo web, produtos digitais contratados conforme o plano,
+      atualizações evolutivas, hospedagem gerenciada pela LICENCIANTE e documentação oficial do sistema,
+      exclusivamente para gestão das atividades comerciais e administrativas da LICENCIADA.
+    </p>
+    <p>
+      Ficam expressamente excluídos do objeto: cessão de propriedade intelectual sobre o software, código-fonte,
+      marca XD360, infraestrutura de terceiros (Mercado Pago, provedores de e-mail etc.) e serviços profissionais
+      não previstos neste instrumento ou em proposta comercial específica.
+    </p>
+
+    <h2>Cláusula 2ª — Do plano, produtos e escopo funcional</h2>
+    {{plano_resumo}}
+    {{plano_descricao}}
+    {{modulos_contratados}}
+    <p>
+      A LICENCIADA declara ciência de que cada produto possui funcionalidades descritas na documentação da XD360
+      e que integrações externas, quando disponíveis, dependem de credenciais, políticas e disponibilidade dos
+      respectivos provedores, não constituindo, por si só, obrigação de resultado da LICENCIANTE.
+    </p>
+    <p>
+      Planos comerciais de referência incluem, sem limitar-se a: <strong>Starter</strong>, <strong>Pro</strong>,
+      <strong>Business</strong> ou combinações personalizadas de produtos. O plano efetivamente contratado prevalece
+      sobre descrições genéricas de catálogo.
+    </p>
+
+    <h2>Cláusula 3ª — Das condições comerciais e faturamento</h2>
+    {{condicoes_financeiras}}
+
+    <h2>Cláusula 4ª — Das obrigações da LICENCIANTE</h2>
+    <p>A LICENCIANTE compromete-se a:</p>
+    <ol type="a">
+      <li>Disponibilizar a plataforma XD360 conforme o plano contratado, ressalvadas paradas programadas, manutenções e casos fortuitos ou de força maior;</li>
+      <li>Empregar esforços comercialmente razoáveis para preservar a segurança, integridade e confidencialidade da infraestrutura sob sua gestão;</li>
+      <li>Processar pagamentos de assinatura recebidos via PIX (Mercado Pago) e refletir a quitação no status do cliente, conforme regras do sistema;</li>
+      <li>Atuar como <strong>operadora</strong> de dados pessoais tratados em nome da LICENCIADA, nos termos da LGPD e da Cláusula 8ª;</li>
+      <li>Manter canal de suporte e documentação acessíveis, conforme plano e políticas vigentes da XD360.</li>
+    </ol>
+
+    <h2>Cláusula 5ª — Das obrigações da LICENCIADA</h2>
+    <p>A LICENCIADA compromete-se a:</p>
+    <ol type="a">
+      <li>Utilizar o sistema apenas para finalidades lícitas relacionadas à sua atividade comercial;</li>
+      <li>Manter dados cadastrais, CNPJ, e-mail de cobrança e representantes legais atualizados no painel;</li>
+      <li>Garantir que usuários autorizados (administrador, equipe e terceiros por ela indicados) cumpram o Termo de Uso e Responsabilidade no Tratamento de Dados da XD360;</li>
+      <li>Atuar como <strong>controladora</strong> dos dados de clientes, colaboradores e demais titulares inseridos na plataforma, respondendo por bases legais, consentimentos, transparência e atendimento a titulares;</li>
+      <li>Não praticar engenharia reversa, sublicenciamento, revenda não autorizada, scraping abusivo ou uso que comprometa a estabilidade do serviço;</li>
+      <li>Efetuar o pagamento da assinatura nas datas acordadas;</li>
+      <li>Responsabilizar-se pelo conteúdo inserido e pelas operações realizadas por sua equipe na plataforma.</li>
+    </ol>
+
+    <h2>Cláusula 6ª — Do período de experiência (trial)</h2>
+    <p>
+      Quando concedido pela LICENCIANTE, a LICENCIADA poderá utilizar a XD360 em regime de
+      <strong>período de experiência</strong> (trial), pelo prazo informado no cadastro ou na proposta comercial,
+      usualmente de {{trial_dias}} dias contados da ativação. Durante o trial, não haverá cobrança da assinatura
+      principal, salvo encargos expressamente pactuados à parte. Expirado o trial sem contratação efetiva ou pagamento,
+      a LICENCIANTE poderá restringir produtos, suspender o acesso ou encerrar a licença, preservados dados conforme
+      política de retenção.
+    </p>
+
+    <h2>Cláusula 7ª — Da suspensão, inadimplência e rescisão</h2>
+    <p>
+      O atraso no pagamento da mensalidade ou fatura em aberto sujeita a LICENCIADA a comunicações de cobrança e,
+      após o vencimento e transcorrido o prazo de tolerância de {{grace_dias}} dias, à <strong>suspensão</strong> do
+      acesso ao painel, limitando-o à área de Assinatura até a regularização.
+    </p>
+    <p>
+      Persistindo a inadimplência, a LICENCIANTE poderá rescindir o contrato, bloquear definitivamente o acesso e
+      adotar medidas de cobrança cabíveis, sem prejuízo de valores em aberto. A LICENCIADA poderá solicitar
+      cancelamento mediante comunicação formal, permanecendo devidos valores já vencidos e aviso prévio eventualmente
+      acordado em proposta comercial personalizada.
+    </p>
+    <p>
+      A rescisão não exime a LICENCIADA de obrigações de confidencialidade, LGPD e pagamentos pendentes. A exportação
+      ou exclusão de dados após rescisão observará a Política de Privacidade XD360 e prazos legais de guarda.
+    </p>
+
+    <h2>Cláusula 8ª — Da proteção de dados (LGPD)</h2>
+    <p>
+      As partes reconhecem que, quanto aos dados pessoais de clientes, colaboradores e demais titulares
+      cadastrados pela LICENCIADA:
+    </p>
+    <ul>
+      <li>a <strong>LICENCIADA</strong> é a <strong>controladora</strong>, definindo finalidades e bases legais;</li>
+      <li>a <strong>LICENCIANTE (XD360)</strong> é a <strong>operadora</strong>, tratando dados conforme instruções lícitas da LICENCIADA e para execução deste contrato;</li>
+      <li>usuários internos do cliente são pessoas autorizadas, vinculadas ao Termo de Uso da XD360.</li>
+    </ul>
+    <p>
+      A LICENCIADA deve implementar controles de acesso por perfil, minimização de dados, orientação à equipe e
+      resposta a solicitações de titulares. Incidentes de segurança relevantes devem ser comunicados entre as partes
+      com a brevidade razoável. Suboperadores (hospedagem, e-mail, pagamentos etc.) são utilizados
+      conforme Política de Privacidade publicada em {{url_privacidade}}.
+    </p>
+
+    <h2>Cláusula 9ª — Da propriedade intelectual e confidencialidade</h2>
+    <p>
+      Todo o software, layout, documentação, marcas, logotipos XD360, algoritmos, fluxos, templates padrão
+      e know-how permanecem de titularidade exclusiva da LICENCIANTE ou de seus licenciantes. Conteúdos,
+      imagens, bases de clientes e demais insumos inseridos pela LICENCIADA
+      permanecem de sua titularidade ou de terceiros legítimos.
+    </p>
+    <p>
+      Informações comerciais, técnicas, financeiras e estratégicas trocadas em razão deste contrato são
+      confidenciais, devendo ser preservadas enquanto permanecerem não públicas por outro meio legítimo.
+    </p>
+
+    <h2>Cláusula 10ª — Das garantias e limitações</h2>
+    <p>
+      A XD360 é disponibilizada <em>no estado em que se encontra</em>, com evolução contínua. A LICENCIANTE
+      não garante operação ininterrupta ou livre de falhas, embora empregue boas práticas de disponibilidade e
+      correção. Integrações de terceiros podem sofrer alterações de API, indisponibilidade ou mudanças de política
+      alheias ao controle da LICENCIANTE.
+    </p>
+    <p>
+      Na extensão máxima permitida pela lei, a responsabilidade da LICENCIANTE por danos indiretos, lucros cessantes
+      ou perda de dados limita-se ao montante efetivamente pago pela LICENCIADA nos últimos 3 (três) meses de
+      assinatura, exceto hipóteses de dolo ou culpa grave comprovados.
+    </p>
+
+    <h2>Cláusula 11ª — Das alterações contratuais e comunicações</h2>
+    <p>
+      A LICENCIANTE poderá atualizar funcionalidades, políticas de uso, valores de planos de catálogo e este modelo
+      contratual, comunicando alterações relevantes por e-mail cadastrado, aviso no painel ou publicação na
+      documentação oficial. Alterações de preço da assinatura já contratada serão aplicadas com aviso prévio mínimo
+      de 30 (trinta) dias, salvo acordo diverso em proposta personalizada. O uso continuado após comunicação
+      constituirá ciência; discordâncias deverão ser manifestadas por escrito, podendo ensejar rescisão nos termos
+      da Cláusula 7ª.
+    </p>
+
+    <h2>Cláusula 12ª — Do foro</h2>
+    <p>
+      Fica eleito o foro da comarca de <strong>{{foro}}</strong>, com renúncia a qualquer outro, por mais privilegiado
+      que seja, para dirimir controvérsias oriundas deste contrato, ressalvado o direito do consumidor quando
+      aplicável.
+    </p>
+
+    <p>
+      E, por estarem justas e contratadas, as partes firmam o presente instrumento em meio eletrônico ou em duas vias
+      de igual teor, na presença das testemunhas abaixo, quando exigido.
+    </p>
+
+    {{data_contrato}}
+
+    {{assinaturas}}
+  </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{URL}}/master/conect-anuncios">Anúncios</a></li>
+		<li class="breadcrumb-item active">{{titulo_pagina}}</li>
+	</ol>
+</nav>
+
+<h1 class="h4 mb-3">{{titulo_pagina}}</h1>
+
+<form id="form-anuncio" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{{id}}">
+	<div class="row g-3">
+		<div class="col-md-8">
+			<label class="form-label">Título interno *</label>
+			<input type="text" class="form-control" name="titulo" value="{{titulo}}" required maxlength="160">
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Nome do anunciante *</label>
+			<input type="text" class="form-control" name="nome_anunciante" value="{{nome_anunciante}}" required maxlength="160">
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Posição *</label>
+			<select class="form-control" name="slot" id="anuncio_slot" required>{{slot_opts}}</select>
+			<small class="text-muted d-block mt-1" id="slot_dim_hint"></small>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Status</label>
+			<select class="form-control" name="status">{{status_opts}}</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Ordem</label>
+			<input type="number" class="form-control" name="ordem" value="{{ordem}}">
+		</div>
+		<div class="col-md-6">
+			<label class="form-label">Banner (jpg/png/webp, máx. 3MB) *</label>
+			<input type="file" class="form-control" name="imagem" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+			<small class="text-muted">Tamanho sugerido: <strong id="slot_dim_sugestao">728×90 px</strong></small>
+			<div class="form-check mt-2">
+				<input class="form-check-input" type="checkbox" name="remover_imagem" id="remover_imagem" value="1">
+				<label class="form-check-label" for="remover_imagem">Remover imagem atual</label>
+			</div>
+			<img src="{{imagem_preview}}" alt="" class="img-fluid rounded border mt-2" style="max-height:120px;{{imagem_style}}">
+		</div>
+		<div class="col-md-6">
+			<label class="form-label">Tipo de destino *</label>
+			<select class="form-control" name="link_tipo" id="link_tipo">
+				<option value="url" {{link_tipo_url}}>Site (URL)</option>
+				<option value="instagram" {{link_tipo_insta}}>Instagram</option>
+				<option value="whatsapp" {{link_tipo_wa}}>WhatsApp</option>
+			</select>
+			<label class="form-label mt-2">URL / @ Instagram</label>
+			<input type="text" class="form-control" name="link_destino" value="{{link_destino}}" placeholder="https://... ou @loja">
+			<label class="form-label mt-2">WhatsApp (se aplicável)</label>
+			<input type="text" class="form-control" name="whatsapp" value="{{whatsapp}}" placeholder="11999999999">
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Estado (vazio = nacional)</label>
+			<select class="form-control" name="estado_id" id="anuncio_estado">
+				<option value="">Todo o Brasil</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Cidade (opcional)</label>
+			<select class="form-control" name="cidade_id" id="anuncio_cidade" disabled>
+				<option value="">Selecione o estado</option>
+			</select>
+			<small class="text-muted">Deixe em branco para exibir em todo o estado ou nacionalmente.</small>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Início</label>
+			<input type="datetime-local" class="form-control" name="inicio_em" value="{{inicio_em}}">
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Fim</label>
+			<input type="datetime-local" class="form-control" name="fim_em" value="{{fim_em}}">
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Valor mensal (R$, referência comercial)</label>
+			<input type="text" class="form-control" name="valor_mensal" value="{{valor_mensal}}">
+			<small class="text-muted">Negociação e cobrança direta com a CTI (sem split automático).</small>
+		</div>
+	</div>
+	<div class="mt-4 d-flex gap-2">
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<a href="{{URL}}/master/conect-anuncios" class="btn btn-outline-secondary">Voltar</a>
+	</div>
+</form>
+
+<script>
+window.MASTER_ESTADOS = {{estados_json}};
+window.ANUNCIO_ESTADO_ID = {{estado_id}};
+window.ANUNCIO_CIDADE_ID = {{cidade_id}};
+</script>
+<script src="{{URL}}/resources/js/master-conect-anuncios-edit.js?v=2"></script>

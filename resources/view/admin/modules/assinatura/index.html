@@ -1,0 +1,89 @@
+<h1 class="mt-4">Assinatura</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Mensalidade do Painel CTI</li>
+</ol>
+
+<div id="alert-assinatura" class="alert alert-info d-none"></div>
+<div id="alert-contrato-pendencias" class="alert alert-warning d-none"></div>
+<div id="alert-somente-diretor" class="alert alert-secondary d-none">Apenas o <strong>Diretor</strong> pode gerar/verificar o PIX. Peça a ele para regularizar a assinatura.</div>
+
+<div class="row g-3 mb-4">
+	<div class="col-lg-4">
+		<div class="card shadow-sm h-100">
+			<div class="card-header">Plano</div>
+			<div class="card-body">
+				<p class="mb-1"><strong id="ass-plano-nome">—</strong></p>
+				<p class="mb-1 text-muted small">Valor mensal: <span id="ass-valor-mensal">—</span></p>
+				<p class="mb-2 text-muted small">Vencimento todo dia <span id="ass-dia-venc">—</span></p>
+				{{contrato_link}}
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-8">
+		<div class="card shadow-sm h-100" id="card-fatura-aberta">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<span>Fatura em aberto</span>
+				<span id="badge-fatura-status" class="badge bg-secondary">—</span>
+			</div>
+			<div class="card-body" id="box-sem-aberta">
+				<p class="text-muted mb-0">Nenhuma fatura em aberto no momento.</p>
+			</div>
+			<div class="card-body d-none" id="box-com-aberta">
+				<div class="row g-2 mb-3">
+					<div class="col-sm-4"><span class="text-muted small">Competência</span><div id="fat-competencia" class="fw-semibold">—</div></div>
+					<div class="col-sm-4"><span class="text-muted small">Valor</span><div id="fat-valor" class="fw-semibold">—</div></div>
+					<div class="col-sm-4"><span class="text-muted small">Vencimento</span><div id="fat-vencimento" class="fw-semibold">—</div></div>
+				</div>
+				<div class="row g-3 mb-2 align-items-start">
+					<div class="col-auto text-center">
+						<img id="fat-qr-img" class="img-thumbnail d-none" alt="QR Code PIX" width="180" height="180" style="width:180px;height:180px;object-fit:contain;">
+						<div id="fat-qr-placeholder" class="text-muted small border rounded d-flex align-items-center justify-content-center" style="width:180px;height:180px;">Sem QR</div>
+					</div>
+					<div class="col">
+						<label class="form-label" for="fat-pix">PIX copia e cola</label>
+						<textarea class="form-control font-monospace" id="fat-pix" rows="6" readonly placeholder="PIX ainda não disponível"></textarea>
+					</div>
+				</div>
+				<div class="d-flex flex-wrap gap-2">
+					<button type="button" class="btn btn-primary btn-sm" id="btn-copiar-pix-escola" disabled>
+						<i class="fas fa-copy"></i> Copiar PIX
+					</button>
+					<button type="button" class="btn btn-outline-primary btn-sm" id="btn-atualizar-pix" disabled>
+						<i class="fas fa-sync"></i> Atualizar PIX
+					</button>
+					<button type="button" class="btn btn-outline-success btn-sm" id="btn-verificar-pag" disabled>
+						<i class="fas fa-check"></i> Já paguei — verificar
+					</button>
+				</div>
+				<div class="form-text mt-2">
+					Após o vencimento, há {{grace_dias}} dias de tolerância. Sem pagamento, o acesso da escola pode ser suspenso.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-header">Histórico de faturas</div>
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0 align-middle">
+				<thead class="table-light">
+					<tr>
+						<th>Competência</th>
+						<th>Valor</th>
+						<th>Vencimento</th>
+						<th>Status</th>
+						<th>Pago em</th>
+					</tr>
+				</thead>
+				<tbody id="lista-faturas-escola">
+					<tr><td colspan="5" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<nav class="p-2" id="paginacao-faturas"></nav>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260729d"></script>

@@ -1,0 +1,38 @@
+<h1 class="mt-4">Cursos CTI</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Catálogo padrão incluído nos planos SaaS</li>
+</ol>
+
+<p class="text-muted">
+	Crie cursos aqui e associe-os em <a href="{{URL}}/master/planos">Planos</a>.
+	Escolas com o plano recebem licença automática (somente leitura) e matriculam alunos manualmente.
+</p>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-novo-curso-cti">
+		<i class="fas fa-plus"></i> Novo curso CTI
+	</button>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Curso</th>
+						<th>Carga h</th>
+						<th>Aulas</th>
+						<th>Status</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-cursos-cti">
+					<tr><td colspan="5" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/master-ead-cursos.js?v=20260812b"></script>

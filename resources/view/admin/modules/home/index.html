@@ -1,0 +1,59 @@
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Olá, {{nome_usuario}}</h1>
+  <ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Dashboard</li>
+  </ol>
+
+  <div class="row">
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-start-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="text-xs fw-bold text-primary text-uppercase mb-1">Empresa</div>
+          <div class="h5 mb-0 fw-bold text-gray-800">{{nome_empresa}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-start-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="text-xs fw-bold text-success text-uppercase mb-1">Assinatura</div>
+          <div class="h5 mb-0 fw-bold">{{status_assinatura}} · R$ {{valor_mensal}}/mês</div>
+          {{trial_ate}}
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-start-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="text-xs fw-bold text-info text-uppercase mb-1">Produtos liberados</div>
+          <div class="h5 mb-0 fw-bold">{{qtd_produtos}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span><i class="fas fa-th-large me-1"></i> Seus produtos</span>
+          <a href="{{URL}}/painel/produtos" class="btn btn-sm btn-primary">Ver todos</a>
+        </div>
+        <ul class="list-group list-group-flush">
+          {{lista_produtos}}
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow">
+        <div class="card-header"><i class="fas fa-bolt me-1"></i> Atalhos</div>
+        <div class="card-body d-grid gap-2">
+          <a class="btn btn-outline-primary" href="{{URL}}/painel/produtos">Meus Produtos</a>
+          <a class="btn btn-outline-success" href="{{URL}}/painel/assinatura">Pagar assinatura</a>
+          <a class="btn btn-outline-secondary" href="{{URL}}/painel/config/empresa">Dados da empresa</a>
+          <a class="btn btn-outline-dark" href="{{URL}}/painel/suporte">Suporte</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

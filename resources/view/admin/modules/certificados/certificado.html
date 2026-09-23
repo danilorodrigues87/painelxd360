@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>certificado</title>
+    <!-- Incluindo a biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="container">
+    <!-- Canvas para desenhar o certificado -->
+    <canvas class="mt-2" id="canvas"></canvas>
+
+    <!-- Elemento para exibir o QR Code -->
+
+    {{img-qrcode}}
+
+    <br>
+
+    <!-- Botão para baixar o PDF -->
+    <button class="btn btn-primary" type="button" id="dpdf">Download PDF</button>
+    <!-- Botão para baixar a imagem -->
+    <button class="btn btn-secondary" type="button" id="dimg">Download Image</button>
+</div>
+
+{{script}}
+
+</body>
+</html>

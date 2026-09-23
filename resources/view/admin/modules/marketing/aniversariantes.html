@@ -1,0 +1,103 @@
+<h1 class="mt-4"><i class="fas fa-birthday-cake text-warning"></i> Aniversariantes</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Marketing · segmentação e campanhas</li>
+</ol>
+
+<div class="alert alert-info small">
+	Automação diária (e-mail/WhatsApp) continua em
+	<a href="{{URL}}/painel/config/comunicacao">Configurações → Comunicação</a>.
+	Para envios em massa, use <strong>Criar campanha</strong> com segmento de aniversariantes.
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-auto">
+				<label class="form-label small mb-0">Período</label>
+				<div class="btn-group btn-group-sm" role="group" id="aniv-filtros-periodo">
+					<button type="button" class="btn btn-outline-primary" data-periodo="hoje">Hoje</button>
+					<button type="button" class="btn btn-outline-primary" data-periodo="semana">Esta semana</button>
+					<button type="button" class="btn btn-outline-primary active" data-periodo="mes">Este mês</button>
+				</div>
+			</div>
+			<div class="col-auto" id="wrap-aniv-mes">
+				<label class="form-label small mb-0" for="aniv-mes">Mês</label>
+				<select class="form-select form-select-sm" id="aniv-mes">
+					<option value="1">Janeiro</option>
+					<option value="2">Fevereiro</option>
+					<option value="3">Março</option>
+					<option value="4">Abril</option>
+					<option value="5">Maio</option>
+					<option value="6">Junho</option>
+					<option value="7">Julho</option>
+					<option value="8">Agosto</option>
+					<option value="9">Setembro</option>
+					<option value="10">Outubro</option>
+					<option value="11">Novembro</option>
+					<option value="12">Dezembro</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small mb-0" for="aniv-situacao">Situação do aluno</label>
+				<select class="form-select form-select-sm" id="aniv-situacao">
+					<option value="todos">Todos</option>
+					<option value="ativos">Alunos ativos</option>
+					<option value="inativos">Alunos inativos</option>
+					<option value="inadimplentes">Inadimplentes</option>
+					<option value="ativos_inadimplentes">Ativos inadimplentes</option>
+					<option value="inativos_inadimplentes">Inativos inadimplentes</option>
+					<option value="inativos_regular">Inativos em dia (sem débito)</option>
+					<option value="com_email">Com e-mail</option>
+					<option value="com_whatsapp">Com WhatsApp</option>
+					<option value="nao_enviado_ano">Ainda não enviado este ano</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small mb-0" for="aniv-busca">Buscar</label>
+				<input type="text" class="form-control form-control-sm" id="aniv-busca" placeholder="Nome do aluno...">
+			</div>
+			<div class="col-auto">
+				<button type="button" class="btn btn-sm btn-outline-secondary" id="btn-aniv-atualizar">
+					<i class="fas fa-sync"></i> Atualizar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+	<span class="badge bg-secondary" id="aniv-total">0 aniversariantes</span>
+	<div class="ms-auto">
+		<button type="button" class="btn btn-sm btn-primary" id="btn-aniv-campanha">
+			<i class="fas fa-bullhorn"></i> Criar campanha
+		</button>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover table-sm mb-0" id="tbl-aniversariantes">
+				<thead class="table-light">
+					<tr>
+						<th style="width:36px;">
+							<input type="checkbox" class="form-check-input" id="aniv-check-all" title="Selecionar todos">
+						</th>
+						<th>Nome</th>
+						<th>Nascimento</th>
+						<th>Idade</th>
+						<th>E-mail</th>
+						<th>WhatsApp</th>
+						<th>Situação</th>
+						<th>Enviado este ano</th>
+					</tr>
+				</thead>
+				<tbody id="aniv-corpo">
+					<tr><td colspan="8" class="text-muted p-3">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/marketing-aniversariantes.js?v=20260909g"></script>

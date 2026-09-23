@@ -1,0 +1,164 @@
+<h1 class="mt-4">Site CTI — Marca B2B</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">ctieducacional.com.br — textos, imagens e contatos</li>
+</ol>
+
+<div class="alert alert-info small">
+	As imagens do hero ficam em <code>uploads/img/site-b2b/</code> no painel. Logos do site (<code>logo-light.png</code> e <code>logo-dark.png</code>) são fixas em <code>site-mvc/resources/assets/img/</code>.
+	O site
+	<a href="https://ctieducacional.com.br" target="_blank" rel="noopener">ctieducacional.com.br</a>
+	busca textos e hero via API ou banco — após salvar, atualize o site (Ctrl+F5). A rota <code>/certificado?crt=</code> não é alterada aqui.
+</div>
+
+<form id="form-site-branding" enctype="multipart/form-data" onsubmit="return false;">
+	<div class="row g-4 mb-4">
+		<div class="col-12">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Hero (home)</strong></div>
+				<div class="card-body">
+					<label class="form-label" for="hero_titulo">Título principal</label>
+					<input type="text" class="form-control mb-3" name="hero_titulo" id="hero_titulo" maxlength="255" value="{{hero_titulo}}">
+					<label class="form-label" for="hero_subtitulo">Subtítulo</label>
+					<textarea class="form-control mb-3" name="hero_subtitulo" id="hero_subtitulo" rows="3">{{hero_subtitulo}}</textarea>
+					<div class="row g-3">
+						<div class="col-md-6">
+							<label class="form-label" for="hero_cta_texto">Texto do botão</label>
+							<input type="text" class="form-control" name="hero_cta_texto" id="hero_cta_texto" value="{{hero_cta_texto}}">
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="hero_cta_link">Link do botão</label>
+							<input type="text" class="form-control" name="hero_cta_link" id="hero_cta_link" value="{{hero_cta_link}}" placeholder="/contato">
+						</div>
+					</div>
+					<label class="form-label mt-3" for="texto_institucional">Texto institucional (rodapé)</label>
+					<textarea class="form-control" name="texto_institucional" id="texto_institucional" rows="4">{{texto_institucional}}</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-header"><strong>Imagem hero</strong></div>
+		<div class="card-body">
+			<div class="mb-3 rounded overflow-hidden border" style="aspect-ratio:16/9;background:#111;max-width:720px;">
+				<img id="preview-site-hero" src="{{hero_preview}}" alt="Hero" style="width:100%;height:100%;object-fit:cover;">
+			</div>
+			<input type="file" class="form-control" name="hero_image" id="site_hero" accept="image/*"
+				onchange="if(typeof displaySelectedImage==='function'){displaySelectedImage(event,'preview-site-hero');}">
+			<div class="mt-3">
+				<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-restaurar-hero" {{btn_hero_disabled}}>Restaurar padrão</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="row g-4 mb-4">
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Contato comercial</strong></div>
+				<div class="card-body">
+					<label class="form-label" for="telefone">Telefone</label>
+					<input type="text" class="form-control mb-3" name="telefone" id="telefone" value="{{telefone}}">
+					<label class="form-label" for="email">E-mail</label>
+					<input type="email" class="form-control mb-3" name="email" id="email" value="{{email}}">
+					<label class="form-label" for="whatsapp">WhatsApp (só números, com DDI)</label>
+					<input type="text" class="form-control mb-3" name="whatsapp" id="whatsapp" value="{{whatsapp}}" placeholder="5515996712314">
+					<label class="form-label" for="link_alunos">Link área alunos CTI Guapiara</label>
+					<input type="url" class="form-control" name="link_alunos" id="link_alunos" value="{{link_alunos}}" placeholder="https://wa.me/… ou subdomínio">
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header"><strong>Métricas e catálogo</strong></div>
+				<div class="card-body">
+					<div class="row g-3 mb-3">
+						<div class="col-4">
+							<label class="form-label" for="stat_escolas">Escolas</label>
+							<input type="text" class="form-control" name="stat_escolas" id="stat_escolas" value="{{stat_escolas}}">
+						</div>
+						<div class="col-4">
+							<label class="form-label" for="stat_anos">Anos</label>
+							<input type="text" class="form-control" name="stat_anos" id="stat_anos" value="{{stat_anos}}">
+						</div>
+						<div class="col-4">
+							<label class="form-label" for="stat_modulos">Módulos</label>
+							<input type="text" class="form-control" name="stat_modulos" id="stat_modulos" value="{{stat_modulos}}">
+						</div>
+					</div>
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="checkbox" name="catalogo_cti_em_breve" id="catalogo_cti_em_breve" value="1" {{catalogo_em_breve_chk}}>
+						<label class="form-check-label" for="catalogo_cti_em_breve">Exibir badge &ldquo;Em breve&rdquo; no Catálogo CTI</label>
+					</div>
+					<label class="form-label" for="meta_title">Meta title (SEO)</label>
+					<input type="text" class="form-control mb-3" name="meta_title" id="meta_title" value="{{meta_title}}">
+					<label class="form-label" for="meta_description">Meta description</label>
+					<textarea class="form-control" name="meta_description" id="meta_description" rows="3">{{meta_description}}</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-header"><strong>Redes sociais</strong></div>
+		<div class="card-body row g-3">
+			<div class="col-md-6">
+				<label class="form-label" for="redes_facebook">Facebook</label>
+				<input type="url" class="form-control" name="redes_facebook" id="redes_facebook" value="{{redes_facebook}}">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label" for="redes_instagram">Instagram</label>
+				<input type="url" class="form-control" name="redes_instagram" id="redes_instagram" value="{{redes_instagram}}">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label" for="redes_linkedin">LinkedIn</label>
+				<input type="url" class="form-control" name="redes_linkedin" id="redes_linkedin" value="{{redes_linkedin}}">
+			</div>
+			<div class="col-md-6">
+				<label class="form-label" for="redes_youtube">YouTube</label>
+				<input type="url" class="form-control" name="redes_youtube" id="redes_youtube" value="{{redes_youtube}}">
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-primary" id="btn-salvar-site-branding">
+		<i class="fas fa-save"></i> Salvar
+	</button>
+</form>
+
+<script>
+(function(){
+	const temHero = {{tem_hero}} === 1;
+	let restaurarHero = false;
+
+	$('#btn-restaurar-hero').prop('disabled', !temHero).on('click', function(){
+		restaurarHero = true;
+		$('#site_hero').val('');
+		$(this).prop('disabled', true);
+	});
+	$('#site_hero').on('change', function(){ restaurarHero = false; });
+
+	$('#btn-salvar-site-branding').on('click', function(){
+		const $btn = $(this).prop('disabled', true);
+		const fd = new FormData(document.getElementById('form-site-branding'));
+		if (restaurarHero) fd.append('restaurar_hero', '1');
+		$.ajax({
+			url: url_base + 'master/site-branding',
+			method: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json'
+		}).done(function(res){
+			$btn.prop('disabled', false);
+			if (!res || !res.success) {
+				Swal.fire('Erro', (res && res.message) || 'Falha ao salvar.', 'error');
+				return;
+			}
+			Swal.fire('Salvo', res.message || 'Atualizado.', 'success').then(function(){ location.reload(); });
+		}).fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha de rede.', 'error');
+		});
+	});
+})();
+</script>

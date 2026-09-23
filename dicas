@@ -1,0 +1,79 @@
+
+
+Configuração Inicial
+git init: Inicia um novo repositório Git na pasta onde você está.
+
+git clone [url]: Baixa um projeto pronto do GitHub para o seu computador.
+
+O Ciclo de Trabalho (Dia a Dia)
+git status: O comando mais importante; ele mostra quais arquivos você alterou e o que ainda não foi salvo.
+
+git add .: Prepara todos os arquivos que você mexeu para serem salvos (coloca na "fila").
+
+git commit -m "descrição": Grava definitivamente as alterações com uma mensagem explicando o que você fez (ex: "ajuste no layout do login").
+
+git push origin [branch]: Envia suas alterações do computador para o servidor (GitHub).
+
+git pull: Traz as novidades do servidor para o seu computador (fundamental se você trabalha em dois PCs diferentes).
+
+Organização e Histórico
+git log: Mostra a lista de todos os commits (versões) feitos no projeto.
+
+git branch: Lista as "ramificações" do projeto (geralmente você usa a main ou master).
+
+git checkout -b [nome-da-branch]: Cria uma nova ramificação para testar uma funcionalidade sem estragar o código principal.
+
+Comandos de "Emergência"
+git checkout [arquivo]: Descarta as mudanças que você fez em um arquivo e volta ele ao estado original do último commit.
+
+git reset --hard: CUIDADO! Esse comando apaga todas as suas alterações não salvas e volta o projeto exatamente para como ele estava no último commit.
+
+
+
+dicas focadas no meu objetivo
+
+Aqui estão os passos exatos para quando você fizer uma alteração no seu computador (usando o Cursor) e quiser levá-la para o site online:
+
+Passo 1: No seu Computador (Cursor)
+Sempre salve e envie suas alterações para o GitHub primeiro. No terminal do Cursor, digite:
+
+git add . (Prepara todas as alterações).
+
+git commit -m "Descritivo da atualização" (Grava a versão com uma mensagem, ex: "ajuste no banco de dados").
+
+git push origin main (Envia para o GitHub).
+
+Passo 2: No Servidor (Via Terminal SSH)
+Agora que o código novo está no GitHub, você precisa "puxar" ele para dentro da HostGator.
+
+Conecte ao servidor: ssh cti (Usando o atalho que configuramos).
+
+Entre na pasta do projeto: cd public_html/admin.ctieducacional.com.br
+
+Puxe as atualizações: git pull origin main
+
+Passo 3: Sincronização de Dependências (Se necessário)
+Se você instalou alguma biblioteca nova (via Composer) no seu PC, você precisa atualizar o servidor também:
+
+Ainda dentro da pasta do projeto no servidor, digite: composer install
+
+
+Local     |  Ação      |  Destino
+Seu PC    |  git push  |  GitHub
+Servidor  |  git pull  |  Site Online
+
+
+
+
+
+Dica Importante sobre a HostGator
+Em servidores compartilhados como o da HostGator, 
+às vezes o servidor ignora o gc_maxlifetime se outros sites no mesmo servidor
+ tiverem tempos menores. Se mesmo com essa mudança a sessão cair rápido, 
+ o ideal é salvar as sessões em uma pasta própria dentro do seu projeto:
+
+
+// Adicione isso dentro do seu init() antes do session_start
+$caminhoSessao = __DIR__.'/../../../../sessions'; // Ajuste o caminho conforme sua estrutura
+if(!is_dir($caminhoSessao)) mkdir($caminhoSessao, 0777, true);
+session_save_path($caminhoSessao);

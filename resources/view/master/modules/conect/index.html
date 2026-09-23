@@ -1,0 +1,57 @@
+<h1 class="mt-4">Conecta Jovem</h1>
+<p class="text-muted">Moderação do portal de empregabilidade — empresas cadastradas e vagas parceiras.</p>
+
+<div class="mb-4 d-flex flex-wrap gap-2 align-items-center">
+  <a href="{{URL}}/master/conect-branding" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-paint-brush me-1"></i> Marca do portal (logo, hero, textos)
+  </a>
+  <a href="{{URL}}/master/conect-blog" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-newspaper me-1"></i> Blog
+  </a>
+  <span class="badge bg-secondary">{{total_empresas}} empresas no portal</span>
+  <span class="badge bg-warning text-dark">{{total_pendentes}} pendentes</span>
+</div>
+
+<p class="small text-muted">Empresas com <strong>CNPJ válido</strong> são aprovadas automaticamente no cadastro. Pendências manuais aparecem abaixo.</p>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-header bg-white"><strong>Todas as empresas cadastradas</strong></div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>Empresa</th>
+          <th>CNPJ</th>
+          <th>E-mail</th>
+          <th>Local</th>
+          <th>Status</th>
+          <th>Cadastro</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>{{rows_empresas}}</tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-header bg-white"><strong>Empresas pendentes (aprovação manual)</strong></div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead><tr><th>Empresa</th><th>CNPJ</th><th>E-mail</th><th></th></tr></thead>
+      <tbody>{{rows_pendentes}}</tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white"><strong>Vagas pendentes</strong></div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead><tr><th>Vaga</th><th>Empresa</th><th>Tipo</th><th></th></tr></thead>
+      <tbody>{{rows_vagas}}</tbody>
+    </table>
+  </div>
+</div>
+
+<p class="small text-muted mt-3">Portal: <a href="https://conectajovem.com.br" target="_blank" rel="noopener">conectajovem.com.br</a></p>

@@ -1,0 +1,64 @@
+<h1 class="mt-4">Documentação da plataforma</h1>
+<p class="text-muted">Artigos e vídeos exibidos em <code>/painel/ajuda</code> e <code>/ajuda</code>.</p>
+
+<div class="mb-3 d-flex flex-wrap gap-2">
+	<button type="button" class="btn btn-primary btn-sm" id="btn-nova-cat">+ Categoria</button>
+	<button type="button" class="btn btn-success btn-sm" id="btn-seed-tutoriais" title="Cria/atualiza tutoriais escritos; não apaga URL de vídeo já preenchida">Carregar tutoriais padrão</button>
+	<a class="btn btn-outline-secondary btn-sm" href="{{URL}}/ajuda" target="_blank" rel="noopener">Ver página pública</a>
+</div>
+<p class="small text-muted">
+	Tutoriais: use o botão acima <strong>ou</strong> gere SQL em
+	<code>database/export_platform_help_tutoriais.php</code> e cole
+	<code>platform_help_tutoriais.sql</code> no phpMyAdmin.
+	Depois edite cada artigo e cole a URL do YouTube/Vimeo.
+</p>
+
+{{categorias_html}}
+
+<div class="modal fade" id="modalCat" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h5 class="modal-title">Categoria</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+			<div class="modal-body">
+				<input type="hidden" id="cat_id" value="">
+				<div class="mb-2"><label class="form-label">Título</label><input class="form-control" id="cat_titulo"></div>
+				<div class="mb-2"><label class="form-label">Slug</label><input class="form-control" id="cat_slug" placeholder="auto"></div>
+				<div class="mb-2"><label class="form-label">Ordem</label><input type="number" class="form-control" id="cat_ordem" value="0"></div>
+				<div class="form-check"><input class="form-check-input" type="checkbox" id="cat_ativo" checked><label class="form-check-label" for="cat_ativo">Ativa</label></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-danger me-auto d-none" id="btn-del-cat">Excluir</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-primary" id="btn-save-cat">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalArt" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header"><h5 class="modal-title">Artigo</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+			<div class="modal-body">
+				<input type="hidden" id="art_id" value="">
+				<input type="hidden" id="art_cat" value="">
+				<div class="mb-2"><label class="form-label">Título</label><input class="form-control" id="art_titulo"></div>
+				<div class="mb-2"><label class="form-label">Slug</label><input class="form-control" id="art_slug" placeholder="auto"></div>
+				<div class="mb-2"><label class="form-label">Resumo</label><input class="form-control" id="art_resumo" maxlength="500"></div>
+				<div class="mb-2"><label class="form-label">Corpo (HTML)</label><textarea class="form-control" id="art_corpo" rows="8"></textarea></div>
+				<div class="mb-2"><label class="form-label">URL do vídeo (YouTube/Vimeo)</label><input class="form-control" id="art_video_url" placeholder="https://www.youtube.com/watch?v=..."></div>
+				<div class="mb-2"><label class="form-label">Título do vídeo</label><input class="form-control" id="art_video_titulo"></div>
+				<div class="row g-2">
+					<div class="col-4"><label class="form-label">Ordem</label><input type="number" class="form-control" id="art_ordem" value="0"></div>
+					<div class="col-8 d-flex align-items-end"><div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="art_publicado"><label class="form-check-label" for="art_publicado">Publicado</label></div></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-primary" id="btn-save-art">Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/master-documentacao.js?v=20260729a"></script>

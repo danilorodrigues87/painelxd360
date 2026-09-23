@@ -1,0 +1,205 @@
+<h1 class="mt-4">Conecta Jovem — Relatórios</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item"><a href="{{URL}}/master/conect">Moderação</a></li>
+	<li class="breadcrumb-item active">Relatórios</li>
+</ol>
+
+<div id="rel-analytics-alert" class="alert alert-warning d-none mb-3" role="alert">
+	<strong>Analytics não instalado.</strong> Execute <code>database/conect_jovem_analytics.sql</code> no phpMyAdmin para habilitar visitantes, pageviews e compartilhamentos.
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-2">
+				<label class="form-label small">De</label>
+				<input type="date" class="form-control" id="rel-de">
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small">Até</label>
+				<input type="date" class="form-control" id="rel-ate">
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary w-100" id="btn-rel-filtrar">
+					<i class="fas fa-filter me-1"></i> Filtrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="rel-periodo" class="text-muted small mb-2"></div>
+
+<div class="row g-3 mb-3" id="rel-kpis">
+	<div class="col-6 col-lg-3">
+		<div class="card shadow-sm h-100 border-start border-primary border-3">
+			<div class="card-body">
+				<div class="text-muted small">Novos candidatos</div>
+				<div class="fs-4 fw-semibold" id="kpi-cand-novos">—</div>
+				<div class="small text-muted">Total: <span id="kpi-cand-total">—</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div class="card shadow-sm h-100 border-start border-success border-3">
+			<div class="card-body">
+				<div class="text-muted small">Novas empresas</div>
+				<div class="fs-4 fw-semibold" id="kpi-emp-novas">—</div>
+				<div class="small text-muted">Aprovadas: <span id="kpi-emp-total">—</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div class="card shadow-sm h-100 border-start border-info border-3">
+			<div class="card-body">
+				<div class="text-muted small">Visitantes únicos</div>
+				<div class="fs-4 fw-semibold" id="kpi-visitantes">—</div>
+				<div class="small text-muted"><span id="kpi-visitas">—</span> pageviews</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div class="card shadow-sm h-100 border-start border-warning border-3">
+			<div class="card-body">
+				<div class="text-muted small">Compartilhamentos</div>
+				<div class="fs-4 fw-semibold" id="kpi-shares">—</div>
+				<div class="small text-muted">Novos visitantes: <span id="kpi-novos-visitantes">—</span></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row g-3 mb-3">
+	<div class="col-lg-8">
+		<div class="card shadow-sm h-100">
+			<div class="card-header py-2"><strong>Tráfego e cadastros (diário)</strong></div>
+			<div class="card-body">
+				<canvas id="chart-serie" height="120"></canvas>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="card shadow-sm h-100">
+			<div class="card-header py-2"><strong>Funil de cadastro</strong></div>
+			<div class="card-body">
+				<ul class="list-group list-group-flush small" id="rel-funil">
+					<li class="list-group-item d-flex justify-content-between"><span>Visitas em /cadastro</span><strong id="funil-visitas">—</strong></li>
+					<li class="list-group-item d-flex justify-content-between"><span>Candidatos cadastrados</span><strong id="funil-cadastros">—</strong></li>
+					<li class="list-group-item d-flex justify-content-between"><span>Taxa conversão</span><strong id="funil-taxa">—</strong></li>
+				</ul>
+				<p class="text-muted small mt-3 mb-0">Compara visitas às páginas de cadastro com novos candidatos no período.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row g-3 mb-3">
+	<div class="col-lg-6">
+		<div class="card shadow-sm h-100">
+			<div class="card-header py-2"><strong>Candidatos por escola</strong></div>
+			<div class="card-body">
+				<canvas id="chart-escolas" height="160"></canvas>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="card shadow-sm h-100">
+			<div class="card-header py-2"><strong>Compartilhamentos por plataforma</strong></div>
+			<div class="card-body">
+				<canvas id="chart-shares" height="160"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body py-2">
+		<div class="text-muted small">Views acumuladas em vagas (desde publicação)</div>
+		<div class="fs-5 fw-semibold" id="kpi-views-vagas">—</div>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-header py-2"><strong>Páginas mais visitadas</strong></div>
+	<div class="table-responsive">
+		<table class="table table-sm table-hover mb-0">
+			<thead>
+				<tr><th>Caminho</th><th class="text-end">Visitas</th></tr>
+			</thead>
+			<tbody id="tb-top-paginas">
+				<tr><td colspan="2" class="text-muted text-center py-3">Carregando…</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+		<strong>Candidatos cadastrados</strong>
+		<button type="button" class="btn btn-sm btn-outline-success" id="btn-export-csv">
+			<i class="fas fa-file-csv me-1"></i> Exportar CSV
+		</button>
+	</div>
+	<div class="card-body border-bottom">
+		<div class="row g-2">
+			<div class="col-md-3">
+				<label class="form-label small">Escola vinculada</label>
+				<select class="form-select form-select-sm" id="filt-escola">{{escolas_options}}</select>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small">UF</label>
+				<input type="text" class="form-control form-control-sm" id="filt-uf" maxlength="2" placeholder="SP">
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small">Tipo</label>
+				<select class="form-select form-select-sm" id="filt-tipo">
+					<option value="">Todos</option>
+					<option value="externo">Cadastro portal</option>
+					<option value="aluno">Aluno LMS</option>
+					<option value="escola_cadastro">Cadastro escola</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label small">Status</label>
+				<select class="form-select form-select-sm" id="filt-status">
+					<option value="">Todos</option>
+					<option value="ativo">Ativo</option>
+					<option value="inativo">Inativo</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label small">Busca</label>
+				<input type="text" class="form-control form-control-sm" id="filt-q" placeholder="Nome, WhatsApp ou e-mail">
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-sm table-hover mb-0 align-middle">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>WhatsApp</th>
+					<th>Tipo</th>
+					<th>Escola</th>
+					<th>Cidade</th>
+					<th>UF</th>
+					<th>Selo</th>
+					<th>Cadastro</th>
+				</tr>
+			</thead>
+			<tbody id="tb-candidatos">
+				<tr><td colspan="8" class="text-muted text-center py-4">Carregando…</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
+		<span class="small text-muted" id="rel-cand-info"></span>
+		<div class="btn-group btn-group-sm">
+			<button type="button" class="btn btn-outline-secondary" id="btn-cand-prev" disabled>Anterior</button>
+			<button type="button" class="btn btn-outline-secondary" id="btn-cand-next" disabled>Próxima</button>
+		</div>
+	</div>
+</div>
+
+<script src="{{URL}}/resources/js/vendor/chart.min.js?v=2.8.0"></script>
+<script src="{{URL}}/resources/js/master-conect-relatorios.js?v=20260822e"></script>
