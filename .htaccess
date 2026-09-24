@@ -1,9 +1,14 @@
-# LIGA O REWRITE
-RewriteEngine on
+# Front controller (HostGator/cPanel: sem isso /master e /painel dão 404 da hospedagem)
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
 
-# REGRA DE REWRITE TUDO PARA INDEX
+DirectoryIndex index.php
+
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ ./index.php [QSA,NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L,QSA,NC]
+</IfModule>
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php81” package as the default “PHP” programming language.

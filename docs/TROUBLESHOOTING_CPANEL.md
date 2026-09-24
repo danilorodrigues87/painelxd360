@@ -106,6 +106,21 @@ Após deploy, acesse **uma vez**:
 
 Remova o arquivo depois.
 
+## `/master` ou `/painel` → 404 HostGator (login redireciona e quebra)
+
+**Sintoma:** `https://app.xd360.com.br/` abre o login, mas após logar ou ao abrir `/master` aparece **404 da HostGator**.
+
+**Causa:** `.htaccess` ausente ou rewrite desligado — o Apache procura pasta/arquivo `master` em vez de mandar tudo para `index.php`.
+
+**Correção:**
+
+1. Confirme `.htaccess` na raiz do site (`~/app.xd360.com.br/.htaccess`), conteúdo igual ao do Git (bloco `mod_rewrite` + `RewriteBase /`).
+2. No Terminal: `ls -la ~/app.xd360.com.br/master` — se existir **pasta** `master` vazia/velha, **renomeie ou apague** (impede o rewrite em alguns hosts).
+3. cPanel → **Domains** → document root do subdomínio = pasta onde está `index.php` + `.htaccess`.
+4. Teste: `https://app.xd360.com.br/login` deve mostrar o login XD360, não 404 HostGator.
+
+Script: `scripts/verificar-rewrite.php` (remover depois).
+
 ## Logs
 
 cPanel → **Errors** / `error_log` na pasta do domínio — mensagem `Fatal error` ou `failed to open stream: vendor/autoload.php`.
