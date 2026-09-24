@@ -84,7 +84,7 @@ class ProdutoLaunchToken {
 		}
 
 		if (!empty($row->usado_em)) {
-			return $row;
+			return null;
 		}
 
 		$agora = date('Y-m-d H:i:s');
