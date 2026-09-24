@@ -1,8 +1,7 @@
 # Front controller (HostGator/cPanel: sem isso /master e /painel dão 404 da hospedagem)
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /
-
+# Nao use RewriteBase / — em localhost (/pjt/xd360/) manda tudo para o dashboard do XAMPP.
 DirectoryIndex index.php
 
 RewriteCond %{REQUEST_FILENAME} !-f

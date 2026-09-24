@@ -106,6 +106,12 @@ Após deploy, acesse **uma vez**:
 
 Remova o arquivo depois.
 
+## Localhost (XAMPP) cai no dashboard do XAMPP
+
+**Causa:** `.htaccess` com `RewriteBase /` em app dentro de subpasta (`/pjt/xd360/`).
+
+**Correção:** use o `.htaccess` do Git **sem** `RewriteBase /`. Acesse `http://localhost/pjt/xd360/` (não só `http://localhost/`).
+
 ## `/master` ou `/painel` → 404 HostGator (login redireciona e quebra)
 
 **Sintoma:** `https://app.xd360.com.br/` abre o login, mas após logar ou ao abrir `/master` aparece **404 da HostGator**.
