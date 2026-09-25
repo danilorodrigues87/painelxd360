@@ -9,9 +9,12 @@ class PlanosAssinatura {
 
 	public $id;
 	public $nome;
+	public $produto_slug;
 	public $descricao;
 	public $descricao_detalhada;
 	public $valor_mensal = 0;
+	public $ciclo = 'mensal';
+	public $valor_sugerido;
 	public $modulos;
 	public $ativo = 1;
 	public $ordem = 0;
@@ -55,6 +58,10 @@ class PlanosAssinatura {
 		return self::temColuna('valor_mensal');
 	}
 
+	public static function temColunaProduto(): bool {
+		return self::temColuna('produto_slug');
+	}
+
 	public static function tabelaExiste(): bool {
 		static $cache = null;
 		if ($cache !== null) {
@@ -90,9 +97,7 @@ class PlanosAssinatura {
 			'ativo'     => (int)$this->ativo ? 1 : 0,
 			'ordem'     => (int)$this->ordem,
 		];
-		if (self::temColunaValorMensal()) {
-			$dados['valor_mensal'] = round((float)($this->valor_mensal ?? 0), 2);
-		}
+		self::anexarCamposComerciais($dados);
 		if (self::temColunaDescricaoDetalhada()) {
 			$dados['descricao_detalhada'] = $this->descricaoDetalhadaParaDb();
 		}
@@ -108,9 +113,7 @@ class PlanosAssinatura {
 			'ativo'     => (int)$this->ativo ? 1 : 0,
 			'ordem'     => (int)$this->ordem,
 		];
-		if (self::temColunaValorMensal()) {
-			$dados['valor_mensal'] = round((float)($this->valor_mensal ?? 0), 2);
-		}
+		self::anexarCamposComerciais($dados);
 		if (self::temColunaDescricaoDetalhada()) {
 			$dados['descricao_detalhada'] = $this->descricaoDetalhadaParaDb();
 		}
@@ -126,14 +129,69 @@ class PlanosAssinatura {
 		return $t !== '' ? $t : null;
 	}
 
-	/** true = todos os módulos (modulos NULL/vazio) */
+	public function ehPlanoDeProduto(): bool {
+		return self::temColunaProduto() && trim((string)($this->produto_slug ?? '')) !== '';
+	}
+
+	public function valorSugerido(): float {
+		if (self::temColuna('valor_sugerido') && $this->valor_sugerido !== null && $this->valor_sugerido !== '') {
+			return round((float)$this->valor_sugerido, 2);
+		}
+		return round((float)($this->valor_mensal ?? 0), 2);
+	}
+
+	/** true = todos os módulos. Em plano de produto, NULL = todos os módulos daquele produto. */
 	public function temTodosModulos(): bool {
 		$raw = $this->modulos ?? null;
+		if ($this->ehPlanoDeProduto()) {
+			return $raw === null || $raw === '';
+		}
 		return $raw === null || $raw === '';
 	}
 
-	/** @return string[] slugs */
+	/** @param array<string,mixed> $dados */
+	private function anexarCamposComerciais(array &$dados): void {
+		$valor = round((float)($this->valor_sugerido ?? $this->valor_mensal ?? 0), 2);
+		if (self::temColunaValorMensal()) {
+			$dados['valor_mensal'] = $valor;
+		}
+		if (self::temColunaProduto()) {
+			$slug = trim((string)($this->produto_slug ?? ''));
+			$dados['produto_slug'] = $slug !== '' ? $slug : null;
+		}
+		if (self::temColuna('ciclo')) {
+			$ciclo = (string)($this->ciclo ?? 'mensal');
+			$dados['ciclo'] = $ciclo === 'anual' ? 'anual' : 'mensal';
+		}
+		if (self::temColuna('valor_sugerido')) {
+			$dados['valor_sugerido'] = $valor;
+		}
+	}
+
+	/** @return string[] slugs de módulos internos, ou de produtos no plano legado */
 	public function getSlugs(): array {
+		if ($this->ehPlanoDeProduto()) {
+			$permitidos = ProdutoModulo::slugs((string)$this->produto_slug);
+			if ($this->temTodosModulos()) {
+				return $permitidos;
+			}
+			$decoded = json_decode((string)$this->modulos, true);
+			if (!is_array($decoded)) {
+				return [];
+			}
+			if (empty($permitidos)) {
+				return [];
+			}
+			$map = array_flip($permitidos);
+			$out = [];
+			foreach ($decoded as $s) {
+				$s = (string)$s;
+				if (isset($map[$s])) {
+					$out[] = $s;
+				}
+			}
+			return $out;
+		}
 		if ($this->temTodosModulos()) {
 			return ProductModules::getSlugs();
 		}
@@ -154,6 +212,10 @@ class PlanosAssinatura {
 
 	/** Valor para gravar em clientes_assinantes.modulos_liberados */
 	public function modulosParaEscola(): ?string {
+		if ($this->ehPlanoDeProduto()) {
+			$slug = trim((string)$this->produto_slug);
+			return $slug !== '' ? json_encode([$slug], JSON_UNESCAPED_UNICODE) : null;
+		}
 		if ($this->temTodosModulos()) {
 			return null;
 		}

@@ -103,7 +103,11 @@ class Perfil extends Page {
 		$ob->uf = $atual->uf ?? '';
 		$ob->cidade = $atual->cidade ?? '';
 		$ob->foto = $foto;
-		$ob->atualizaPerfil();
+		try {
+			$ob->atualizaPerfil();
+		} catch (\Throwable $e) {
+			return json_encode(['success' => false, 'message' => 'Não foi possível salvar o perfil. Confira nome, e-mail e CPF e tente de novo.']);
+		}
 
 		$_SESSION['usuario-mvc-1']['nome'] = $nome;
 		$_SESSION['usuario-mvc-1']['email'] = $email;

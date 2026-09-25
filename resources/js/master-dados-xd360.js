@@ -2,23 +2,27 @@ const MASTER_DADOS_XD360_URL = 'master/dados-xd360';
 
 let usuariosMasterCache = [];
 
-function popularEstados(selected) {
-	const $sel = $('#xd360_estado').empty().append('<option value="">—</option>');
-	(window.XD360_ESTADOS || []).forEach(function (e) {
-		$sel.append('<option value="' + e.id + '">' + $('<div>').text(e.nome).html() + '</option>');
-	});
-	if (selected) $sel.val(String(selected));
-}
-
-function carregarCidades(estadoId, cidadeId) {
-	const $cid = $('#xd360_cidade').empty().append('<option value="">—</option>');
-	if (!estadoId) return $.Deferred().resolve().promise();
-	return $.post(url_base + MASTER_DADOS_XD360_URL, { acao: 'cidades', estado: estadoId }, function (res) {
-		(res.cidades || []).forEach(function (c) {
-			$cid.append('<option value="' + c.id + '">' + $('<div>').text(c.nome).html() + '</option>');
+function buscarCep() {
+	const cep = String($('#xd360_cep').val() || '').replace(/\D/g, '');
+	if (cep.length !== 8) return;
+	$.getJSON('https://viacep.com.br/ws/' + cep + '/json/')
+		.done(function (data) {
+			if (!data || data.erro) {
+				Swal.fire('CEP', 'CEP não encontrado.', 'warning');
+				return;
+			}
+			if (data.logradouro) $('#xd360_endereco').val(data.logradouro);
+			if (data.bairro) $('#xd360_bairro').val(data.bairro);
+			if (data.localidade) $('#xd360_cidade').val(data.localidade);
+			if (data.uf) $('#xd360_uf').val(String(data.uf).toUpperCase());
+			if (!$('#xd360_foro').val() && data.localidade && data.uf) {
+				$('#xd360_foro').val(data.localidade + '/' + data.uf);
+			}
+			$('#xd360_numero').trigger('focus');
+		})
+		.fail(function () {
+			Swal.fire('CEP', 'Não foi possível consultar o CEP agora.', 'error');
 		});
-		if (cidadeId) $cid.val(String(cidadeId));
-	}, 'json');
 }
 
 function popularSelectRepresentantes(usuarios, selectedId) {
@@ -58,12 +62,12 @@ function preencherForm(d) {
 	$('#xd360_endereco').val(d.endereco || '');
 	$('#xd360_numero').val(d.numero || '');
 	$('#xd360_bairro').val(d.bairro || '');
+	$('#xd360_cidade').val(d.cidade_nome || '');
+	$('#xd360_uf').val(d.uf || '');
 	$('#xd360_foro').val(d.foro_comarca || '');
 	$('#xd360_rep_cargo').val(d.rep_cargo || 'Administrador');
-	popularEstados(d.estado || 0);
-	return carregarCidades(d.estado || 0, d.cidade || 0).then(function () {
-		popularSelectRepresentantes(window._usuariosMaster || [], d.rep_legal_usuario_id || 0);
-	});
+	popularSelectRepresentantes(window._usuariosMaster || [], d.rep_legal_usuario_id || 0);
+	return $.Deferred().resolve().promise();
 }
 
 function atualizarBadge(completo, faltando) {
@@ -107,8 +111,8 @@ function salvarDadosXd360() {
 		endereco: $('#xd360_endereco').val(),
 		numero: $('#xd360_numero').val(),
 		bairro: $('#xd360_bairro').val(),
-		estado: $('#xd360_estado').val(),
-		cidade: $('#xd360_cidade').val(),
+		uf: $('#xd360_uf').val(),
+		cidade_nome: $('#xd360_cidade').val(),
 		foro_comarca: $('#xd360_foro').val(),
 		rep_legal_usuario_id: $('#xd360_rep_usuario').val(),
 		rep_cargo: $('#xd360_rep_cargo').val(),
@@ -129,11 +133,8 @@ function salvarDadosXd360() {
 }
 
 $(function () {
-	popularEstados();
 	carregarDadosXd360();
 	$('#btn-salvar-dados-xd360').on('click', salvarDadosXd360);
-	$('#xd360_estado').on('change', function () {
-		carregarCidades($(this).val(), 0);
-	});
+	$('#xd360_cep').on('blur', buscarCep);
 	$('#xd360_rep_usuario').on('change', atualizarPreviewRepresentante);
 });

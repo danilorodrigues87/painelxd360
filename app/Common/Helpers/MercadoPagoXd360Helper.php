@@ -9,6 +9,20 @@ use App\Common\Gateways\MercadoPago\Pix;
 /** Conta Mercado Pago do XD360 (Master cobra os clientes). Credenciais: MP_XD360_* no .env */
 class MercadoPagoXd360Helper {
 
+	public static function publicKey(): string {
+		Environment::load(__DIR__.'/../../../');
+		return trim((string)(
+			Environment::get('MP_XD360_PUBLIC_KEY')
+			?: Environment::get('MP_PUBLIC_KEY')
+			?: ''
+		));
+	}
+
+	public static function checkout(): ?\App\Common\Gateways\MercadoPago\Checkout {
+		$client = self::client();
+		return $client ? new \App\Common\Gateways\MercadoPago\Checkout($client) : null;
+	}
+
 	public static function accessToken(): string {
 		Environment::load(__DIR__.'/../../../');
 		return trim((string)(

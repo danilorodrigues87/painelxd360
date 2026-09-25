@@ -1,6 +1,6 @@
 <h1 class="mt-4">Planos</h1>
 <ol class="breadcrumb mb-4">
-	<li class="breadcrumb-item active">Pacotes de produtos para os clientes</li>
+	<li class="breadcrumb-item active">Um plano por produto. O preço daqui é só sugestão.</li>
 </ol>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,9 +16,9 @@
 				<thead class="table-light">
 					<tr>
 						<th>Ordem</th>
-						<th>Nome</th>
-						<th>Valor/mês</th>
-						<th>Produtos</th>
+						<th>Produto / nome</th>
+						<th>Ciclo</th>
+						<th>Valor sugerido</th>
 						<th>Status</th>
 						<th class="text-end">Ações</th>
 					</tr>
@@ -41,6 +41,17 @@
 			<div class="modal-body">
 				<input type="hidden" id="plano_assinatura_id" value="">
 				<div class="row g-3">
+					<div class="col-md-4">
+						<label class="form-label" for="plano_produto">Produto *</label>
+						<select class="form-select" id="plano_produto"></select>
+					</div>
+					<div class="col-md-4">
+						<label class="form-label" for="plano_ciclo">Ciclo sugerido</label>
+						<select class="form-select" id="plano_ciclo">
+							<option value="mensal">Mensal</option>
+							<option value="anual">Anual</option>
+						</select>
+					</div>
 					<div class="col-md-8">
 						<label class="form-label" for="plano_assinatura_nome">Nome *</label>
 						<input type="text" class="form-control" id="plano_assinatura_nome">
@@ -66,20 +77,20 @@
 						<div class="form-text">Aparece no contrato de licença (<code>{{plano_descricao}}</code>) com o nome do plano.</div>
 					</div>
 					<div class="col-md-4">
-						<label class="form-label" for="plano_assinatura_valor_mensal">Valor mensal (R$)</label>
+						<label class="form-label" for="plano_assinatura_valor_mensal">Valor sugerido (R$)</label>
 						<input type="text" class="form-control" id="plano_assinatura_valor_mensal" placeholder="0,00" inputmode="decimal">
-						<div class="form-text">Usado na cobrança SaaS (Assinaturas).</div>
+						<div class="form-text">Não altera contratos já gravados.</div>
 					</div>
-					<div class="col-12">
+					<div class="col-12" id="bloco-modulos-plano">
 						<div class="d-flex justify-content-between align-items-center mb-2">
-							<h6 class="mb-0">Produtos do plano</h6>
+							<h6 class="mb-0">Módulos do produto</h6>
 							<div class="form-check form-switch">
 								<input class="form-check-input" type="checkbox" id="plano_assinatura_todos_modulos">
-								<label class="form-check-label" for="plano_assinatura_todos_modulos">Todos os produtos</label>
+								<label class="form-check-label" for="plano_assinatura_todos_modulos">Todos os módulos</label>
 							</div>
 						</div>
 						<div id="lista-modulos-plano" class="row g-2 border rounded p-2" style="max-height:240px;overflow:auto;"></div>
-						<div class="form-text">Ao salvar, clientes já vinculados a este plano terão os produtos sincronizados.</div>
+						<div class="form-text">Só aparece em produto modular. Salvar o plano não muda contratos existentes.</div>
 					</div>
 				</div>
 			</div>
@@ -93,5 +104,6 @@
 
 <script>
 window.MASTER_MODULOS = {{modulos_json}};
+window.MASTER_PRODUTOS = {{produtos_json}};
 </script>
-<script src="{{URL}}/resources/js/master-planos.js?v=20260914"></script>
+<script src="{{URL}}/resources/js/master-planos.js?v=20260925"></script>

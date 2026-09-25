@@ -42,10 +42,13 @@ CREATE TABLE IF NOT EXISTS clientes_assinantes (
 CREATE TABLE IF NOT EXISTS planos_assinatura (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   nome VARCHAR(120) NOT NULL,
+  produto_slug VARCHAR(40) NULL DEFAULT NULL,
   descricao TEXT NULL,
   descricao_detalhada TEXT NULL,
   valor_mensal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  modulos JSON NULL COMMENT 'slugs ProductModules',
+  ciclo VARCHAR(12) NOT NULL DEFAULT 'mensal',
+  valor_sugerido DECIMAL(10,2) NULL DEFAULT NULL,
+  modulos JSON NULL COMMENT 'módulos internos do produto',
   ativo TINYINT(1) NOT NULL DEFAULT 1,
   ordem INT NOT NULL DEFAULT 0,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -184,10 +187,9 @@ VALUES (1, 'XD360 Tecnologia', 'XD360', 'contato@xd360.com.br', 'Administrador')
 
 INSERT IGNORE INTO saas_contrato_modelo (id, html) VALUES (1, NULL);
 
-INSERT INTO planos_assinatura (nome, descricao, valor_mensal, modulos, ativo, ordem) VALUES
-('Starter', '1 produto, 1 usuário', 49.00, '["doceflow"]', 1, 1),
-('Pro', 'Até 3 produtos, 3 usuários', 99.00, '["doceflow","fitpro","financas"]', 1, 2),
-('Business', 'Todos os produtos, 10 usuários', 149.00, '["doceflow","fitpro","financas","estoqueiro","salao","nail","odonto","oficina","bussinespro"]', 1, 3);
+INSERT INTO planos_assinatura (nome, produto_slug, descricao, valor_mensal, ciclo, valor_sugerido, modulos, ativo, ordem) VALUES
+('DoceFlow Mensal', 'doceflow', 'Licença DoceFlow, cobrança mensal', 49.00, 'mensal', 49.00, '[]', 1, 1),
+('DoceFlow Anual', 'doceflow', 'Licença DoceFlow por 12 meses. Ajuste o valor sugerido.', 0.00, 'anual', 0.00, '[]', 1, 2);
 
 -- Master admin (senha: admin123)
 INSERT INTO usuarios (nome, email, senha, nivel, id_admin, ativo) VALUES

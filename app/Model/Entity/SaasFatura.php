@@ -9,13 +9,18 @@ class SaasFatura {
 	public $id;
 	public $id_admin;
 	public $plan_id;
+	public $contrato_id;
+	public $numero_parcela;
 	public $competencia;
 	public $valor;
 	public $vencimento;
 	public $status = 'aberta';
+	public $meio_pagamento;
 	public $mp_payment_id;
 	public $pix_copia_cola;
 	public $pix_qr_base64;
+	public $boleto_url;
+	public $boleto_linha;
 	public $email_enviado_em;
 	public $pago_em;
 	public $criado_em;
@@ -94,6 +99,7 @@ class SaasFatura {
 		if (self::temColunaEmailEnviado()) {
 			$dados['email_enviado_em'] = $this->email_enviado_em ?: null;
 		}
+		$this->anexarCamposContrato($dados, true);
 		$this->id = (int)(new Database('saas_faturas'))->insert($dados);
 		return $this->id > 0;
 	}
@@ -114,6 +120,7 @@ class SaasFatura {
 		if (self::temColunaEmailEnviado()) {
 			$dados['email_enviado_em'] = $this->email_enviado_em ?: null;
 		}
+		$this->anexarCamposContrato($dados, false);
 		return (bool)(new Database('saas_faturas'))->update('id = '.(int)$this->id, $dados);
 	}
 
@@ -123,6 +130,25 @@ class SaasFatura {
 			null,
 			'1'
 		)->fetchObject(self::class);
+	}
+
+	/** @param array<string,mixed> $dados */
+	private function anexarCamposContrato(array &$dados, bool $insert): void {
+		if (self::temColuna('contrato_id') && ($insert || $this->contrato_id)) {
+			$dados['contrato_id'] = $this->contrato_id ? (int)$this->contrato_id : null;
+		}
+		if (self::temColuna('numero_parcela') && ($insert || $this->numero_parcela)) {
+			$dados['numero_parcela'] = $this->numero_parcela ? (int)$this->numero_parcela : null;
+		}
+		if (self::temColuna('meio_pagamento')) {
+			$dados['meio_pagamento'] = $this->meio_pagamento ?: null;
+		}
+		if (self::temColuna('boleto_url')) {
+			$dados['boleto_url'] = $this->boleto_url ?: null;
+		}
+		if (self::temColuna('boleto_linha')) {
+			$dados['boleto_linha'] = $this->boleto_linha ?: null;
+		}
 	}
 
 	public static function getPorMpPaymentId(string $paymentId) {

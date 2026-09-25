@@ -23,7 +23,7 @@ class ContratoVariaveisBuilder {
 		if ($estadoId > 0) {
 			$estado = EstadoCidades::getEstados('id = '.$estadoId)->fetchObject();
 			if (is_object($estado)) {
-				$estadoSigla = (string)($estado->sigla ?? '');
+				$estadoSigla = (string)($estado->uf ?? $estado->sigla ?? '');
 			}
 		}
 		return trim($cidadeNome.($estadoSigla !== '' ? '/'.$estadoSigla : ''));

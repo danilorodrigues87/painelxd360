@@ -50,6 +50,22 @@ class Escolas extends Page {
 				return self::resetDiretor($post);
 			case 'impersonar':
 				return self::impersonar($request, $post);
+			case 'contratos':
+				return json_encode([
+					'success' => true,
+					'contratos' => \App\Common\Helpers\SaasContratoService::listar((int)($post['id'] ?? 0)),
+					'planos' => Planos::listarAtivosResumo(),
+					'produtos' => \App\Common\ProductModules::listarComModo(),
+				], JSON_UNESCAPED_UNICODE);
+			case 'salvar_contrato':
+				$r = \App\Common\Helpers\SaasContratoService::criar((int)($post['id_admin'] ?? 0), $post);
+				return json_encode(['success' => $r['ok'], 'message' => $r['message'], 'contrato' => $r['contrato'] ?? null], JSON_UNESCAPED_UNICODE);
+			case 'preparar_renovacao':
+				$r = \App\Common\Helpers\SaasContratoService::prepararRenovacao((int)($post['contrato_id'] ?? 0));
+				return json_encode(['success' => $r['ok'], 'message' => $r['message']] + $r, JSON_UNESCAPED_UNICODE);
+			case 'renovar_contrato':
+				$r = \App\Common\Helpers\SaasContratoService::renovar((int)($post['contrato_id'] ?? 0), $post);
+				return json_encode(['success' => $r['ok'], 'message' => $r['message']], JSON_UNESCAPED_UNICODE);
 			default:
 				return json_encode(['success' => false, 'message' => 'Ação inválida.']);
 		}
@@ -108,9 +124,20 @@ class Escolas extends Page {
 				return json_encode(['success' => false, 'message' => $erroSlug]);
 			}
 
-			[$modulosJson, $planIdSalvar, $erroMods] = self::resolverModulosEPlano($post, $planId);
-			if ($erroMods !== null) {
-				return json_encode(['success' => false, 'message' => $erroMods]);
+			if (!empty($post['comercial_por_contrato'])) {
+				if ($id > 0) {
+					$atual = ClientesAssinantes::getEscolaById($id);
+					$modulosJson = $atual instanceof ClientesAssinantes ? $atual->modulos_liberados : '[]';
+					$planIdSalvar = $atual instanceof ClientesAssinantes ? ($atual->plan_id ?: null) : null;
+				} else {
+					$modulosJson = '[]';
+					$planIdSalvar = null;
+				}
+			} else {
+				[$modulosJson, $planIdSalvar, $erroMods] = self::resolverModulosEPlano($post, $planId);
+				if ($erroMods !== null) {
+					return json_encode(['success' => false, 'message' => $erroMods]);
+				}
 			}
 
 			if ($id > 0) {
@@ -128,11 +155,12 @@ class Escolas extends Page {
 				}
 				$ob->id_admin = (int)$ob->id;
 				$ob->atualizar();
+				self::atualizarResponsavel((int)$ob->id, $diretorNome, $diretorEmail, trim((string)($post['diretor_cpf'] ?? '')));
 				ModuleGateHelper::limparCache((int)$ob->id);
 				ModuleGateHelper::sincronizarAcessoDiretores((int)$ob->id);
 				return json_encode([
 					'success' => true,
-					'message' => 'Cliente atualizado. Produtos sincronizados com o plano.',
+					'message' => 'Cliente atualizado.',
 					'escola'  => self::formatar($ob, true),
 				]);
 			}
@@ -189,7 +217,7 @@ class Escolas extends Page {
 			$diretor->id_responsavel = 0;
 			$diretor->whatsapp = $telefone !== '' ? $telefone : '';
 			$diretor->rg = '';
-			$diretor->cpf = '';
+			$diretor->cpf = preg_replace('/\D+/', '', (string)($post['diretor_cpf'] ?? ''));
 			$diretor->nascimento = null;
 			$diretor->endereco = (string)($ob->endereco ?? '');
 			$diretor->numero = (string)($ob->numero ?? '');
@@ -278,7 +306,7 @@ class Escolas extends Page {
 			$dia = (int)($post['dia_vencimento_assinatura'] ?? $ob->dia_vencimento_assinatura ?? 10);
 			$ob->dia_vencimento_assinatura = max(1, min(28, $dia ?: 10));
 		}
-		if (ClientesAssinantes::temColunaValorMensalCustom()) {
+		if (ClientesAssinantes::temColunaValorMensalCustom() && array_key_exists('valor_mensal_custom', $post)) {
 			$raw = trim(str_replace(',', '.', (string)($post['valor_mensal_custom'] ?? '')));
 			$ob->valor_mensal_custom = ($raw !== '' && (float)$raw > 0) ? round((float)$raw, 2) : null;
 		}
@@ -445,20 +473,52 @@ class Escolas extends Page {
 		]);
 	}
 
-	/** @return array<int, array{id:int,nome:string,email:string,ativo:string}> */
+	private static function atualizarResponsavel(int $idAdmin, string $nome, string $email, string $cpf): void {
+		if ($nome === '' && $cpf === '' && $email === '') {
+			return;
+		}
+		$user = EntityUser::getUser(
+			'id_admin = '.$idAdmin.' AND nivel = "Diretor"',
+			'id ASC',
+			'1'
+		)->fetchObject(EntityUser::class);
+		if (!$user instanceof EntityUser) {
+			return;
+		}
+		if ($nome !== '') {
+			$user->nome = $nome;
+		}
+		$cpfDig = preg_replace('/\D+/', '', $cpf);
+		if ($cpfDig !== '') {
+			$user->cpf = $cpfDig;
+		}
+		if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) && $email !== (string)$user->email) {
+			$outro = EntityUser::getUserByEmail($email);
+			if (!$outro instanceof EntityUser || (int)$outro->id === (int)$user->id) {
+				$user->email = $email;
+			}
+		}
+		$user->nascimento = $user->nascimento ?: null;
+		$user->uf = (int)($user->uf ?: 0);
+		$user->cidade = (int)($user->cidade ?: 0);
+		$user->atualizaPerfil();
+	}
+
+	/** @return array<int, array{id:int,nome:string,email:string,cpf:string,ativo:string}> */
 	private static function listarDiretores(int $idAdmin): array {
 		$out = [];
 		$results = EntityUser::getUser(
 			'id_admin = '.$idAdmin.' AND nivel = "Diretor"',
 			'nome ASC',
 			null,
-			'id, nome, email, ativo'
+			'id, nome, email, cpf, ativo'
 		);
 		while ($u = $results->fetchObject(EntityUser::class)) {
 			$out[] = [
 				'id'    => (int)$u->id,
 				'nome'  => $u->nome,
 				'email' => $u->email,
+				'cpf'   => (string)($u->cpf ?? ''),
 				'ativo' => $u->ativo,
 			];
 		}

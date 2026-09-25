@@ -42,7 +42,8 @@
 				</div>
 				<div class="col-md-3">
 					<label class="form-label" for="xd360_cep">CEP</label>
-					<input type="text" class="form-control mascara-cep" id="xd360_cep">
+					<input type="text" class="form-control mascara-cep" id="xd360_cep" placeholder="00000-000" inputmode="numeric">
+					<div class="form-text">Ao sair do campo, o endereço é preenchido pelo CEP.</div>
 				</div>
 				<div class="col-md-6">
 					<label class="form-label" for="xd360_endereco">Endereço</label>
@@ -56,13 +57,13 @@
 					<label class="form-label" for="xd360_bairro">Bairro</label>
 					<input type="text" class="form-control" id="xd360_bairro">
 				</div>
-				<div class="col-md-4">
-					<label class="form-label" for="xd360_estado">Estado</label>
-					<select class="form-select" id="xd360_estado"><option value="">—</option></select>
-				</div>
-				<div class="col-md-4">
+				<div class="col-md-5">
 					<label class="form-label" for="xd360_cidade">Cidade</label>
-					<select class="form-select" id="xd360_cidade"><option value="">—</option></select>
+					<input type="text" class="form-control" id="xd360_cidade" maxlength="120">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label" for="xd360_uf">UF</label>
+					<input type="text" class="form-control text-uppercase" id="xd360_uf" maxlength="2" placeholder="SP">
 				</div>
 				<div class="col-md-8">
 					<label class="form-label" for="xd360_foro">Foro / comarca (Cláusula 13ª)</label>
@@ -93,7 +94,4 @@
 	</div>
 </div>
 
-<script>
-window.XD360_ESTADOS = {{estados_json}};
-</script>
-<script src="{{URL}}/resources/js/master-dados-xd360.js?v=20260914"></script>
+<script src="{{URL}}/resources/js/master-dados-xd360.js?v=20260925"></script>

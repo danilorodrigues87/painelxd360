@@ -48,8 +48,15 @@
 				<form id="form-escola-master" autocomplete="off" onsubmit="return false;">
 					<input type="hidden" id="escola_id" value="">
 					<div class="row g-3">
+						<div class="col-md-4">
+							<label class="form-label" for="escola_tipo">Tipo</label>
+							<select class="form-select" id="escola_tipo">
+								<option value="pj">Empresa ou MEI</option>
+								<option value="pf">Pessoa física</option>
+							</select>
+						</div>
 						<div class="col-md-8">
-							<label class="form-label" for="escola_nome">Nome da empresa *</label>
+							<label class="form-label" for="escola_nome" id="lbl-escola-nome">Nome da empresa *</label>
 							<input type="text" class="form-control" id="escola_nome" required>
 						</div>
 						<div class="col-md-4">
@@ -60,34 +67,31 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-							<label class="form-label" for="escola_slug">Identificador (subdomínio) *</label>
+							<label class="form-label" for="escola_slug">Endereço do sistema *</label>
 							<div class="input-group">
 								<input type="text" class="form-control" id="escola_slug" placeholder="confeitaria" pattern="[a-z0-9-]+" maxlength="80">
 								<span class="input-group-text text-muted small" id="escola_slug_suffix">.xd360.com.br</span>
 							</div>
-							<div class="form-text" id="escola_url_preview">URL do painel: —</div>
+							<div class="form-text" id="escola_url_preview">O painel do cliente abre neste endereço.</div>
 						</div>
-						<div class="col-md-6">
-							<label class="form-label" for="escola_dominio_custom">Domínio próprio (premium)</label>
+						<div class="col-md-6 d-flex align-items-end">
+							<div class="form-check mb-2">
+								<input class="form-check-input" type="checkbox" id="escola_quer_site">
+								<label class="form-check-label" for="escola_quer_site">Também quer um site, com endereço próprio</label>
+							</div>
+						</div>
+						<div class="col-12 d-none" id="bloco-dominio-site">
+							<label class="form-label" for="escola_dominio_custom">Endereço do site</label>
 							<input type="text" class="form-control" id="escola_dominio_custom" placeholder="confeitariadamaria.com.br">
 							<div class="form-check mt-1">
 								<input class="form-check-input" type="checkbox" id="escola_dominio_verificado">
-								<label class="form-check-label small" for="escola_dominio_verificado">DNS verificado</label>
+								<label class="form-check-label small" for="escola_dominio_verificado">DNS já aponta para a XD360</label>
 							</div>
+							<div class="form-text">Só o site usa esse domínio. O sistema continua no endereço acima.</div>
 						</div>
-						<div class="col-md-6">
-							<label class="form-label" for="escola_plan_id">Plano</label>
-							<select class="form-select" id="escola_plan_id">
-								<option value="">Carregando planos...</option>
-							</select>
-						</div>
-						<div class="col-md-3">
-							<label class="form-label" for="escola_dia_venc">Dia venc. assinatura</label>
+						<div class="col-md-4">
+							<label class="form-label" for="escola_dia_venc">Dia de vencimento</label>
 							<input type="number" class="form-control" id="escola_dia_venc" min="1" max="28" value="10">
-						</div>
-						<div class="col-md-3">
-							<label class="form-label" for="escola_valor_custom">Valor mensal (custom)</label>
-							<input type="number" step="0.01" min="0" class="form-control" id="escola_valor_custom" placeholder="Opcional">
 						</div>
 						<div class="col-md-4">
 							<label class="form-label" for="escola_assinatura_status">Status assinatura</label>
@@ -116,36 +120,62 @@
 							<input type="text" class="form-control" id="escola_telefone">
 						</div>
 						<div class="col-md-6">
-							<label class="form-label" for="escola_cpf_cnpj">CPF/CNPJ</label>
+							<label class="form-label" for="escola_cpf_cnpj" id="lbl-escola-doc">CNPJ</label>
 							<input type="text" class="form-control" id="escola_cpf_cnpj">
-						</div>
-						<div class="col-md-6">
-							<label class="form-label" for="escola_site">Site</label>
-							<input type="text" class="form-control" id="escola_site">
 						</div>
 					</div>
 
 					<hr class="my-4">
-					<h6 class="text-muted">Administrador do cliente</h6>
+					<h6 class="text-muted" id="titulo-responsavel">Quem assina o contrato</h6>
+					<p class="small text-muted mb-2" id="ajuda-responsavel">No MEI e na empresa, o contrato é da pessoa jurídica e a assinatura é de uma pessoa física (nome e CPF).</p>
 					<div class="row g-3" id="bloco-diretor-nova">
-						<div class="col-md-6">
-							<label class="form-label" for="diretor_nome">Nome do administrador *</label>
+						<div class="col-md-4">
+							<label class="form-label" for="diretor_nome">Nome de quem assina *</label>
 							<input type="text" class="form-control" id="diretor_nome">
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
+							<label class="form-label" for="diretor_cpf">CPF de quem assina</label>
+							<input type="text" class="form-control" id="diretor_cpf">
+						</div>
+						<div class="col-md-4">
 							<label class="form-label" for="diretor_email">E-mail de login *</label>
 							<input type="email" class="form-control" id="diretor_email" autocomplete="off">
 						</div>
 					</div>
 
 					<hr class="my-4">
-					<h6 class="text-muted">Produtos licenciados</h6>
-					<p class="small text-muted" id="hint-modulos-plano">Selecione um plano ou marque os produtos manualmente.</p>
-					<div class="form-check mb-2">
-						<input class="form-check-input" type="checkbox" id="todos_modulos">
-						<label class="form-check-label" for="todos_modulos">Todos os produtos</label>
+					<h6 class="text-muted">Contrato</h6>
+					<p class="small text-muted mb-2">Escolha o produto e o plano. O plano só sugere o preço: você confirma valor, duração e parcelas antes de gravar. Isso não muda se o catálogo for reajustado depois.</p>
+					<div id="lista-contratos-cliente" class="mb-3"></div>
+					<div class="row g-2" id="form-contrato-cliente">
+						<div class="col-md-4">
+							<label class="form-label">Produto</label>
+							<select class="form-select form-select-sm" id="ct_produto"></select>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">Plano</label>
+							<select class="form-select form-select-sm" id="ct_plano"></select>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label">Valor da parcela (R$)</label>
+							<input type="number" step="0.01" min="0" class="form-control form-control-sm" id="ct_valor">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label">Duração (meses)</label>
+							<input type="number" min="1" class="form-control form-control-sm" id="ct_duracao" value="1">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label">Parcelas</label>
+							<input type="number" min="1" class="form-control form-control-sm" id="ct_parcelas" value="1">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label">Início</label>
+							<input type="date" class="form-control form-control-sm" id="ct_inicio">
+						</div>
+						<div class="col-md-3 d-flex align-items-end">
+							<button type="button" class="btn btn-sm btn-outline-primary" id="btn-salvar-contrato">Gravar contrato</button>
+						</div>
 					</div>
-					<div class="row g-2" id="lista-modulos-master"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -164,4 +194,5 @@ window.MASTER_TEM_PLAN_ID = {{tem_plan_id}};
 window.MASTER_TEM_MODELO_CERT = '0';
 window.XD360_BASE_DOMAIN = {{base_domain_json}};
 </script>
-<script src="{{URL}}/resources/js/master-escolas.js?v=20260914b"></script>
+<script src="{{URL}}/resources/js/master-escolas.js?v=20260925c"></script>
+<script src="{{URL}}/resources/js/master-contratos-cliente.js?v=20260925b"></script>

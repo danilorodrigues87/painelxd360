@@ -17,6 +17,18 @@ $obRouter->post('/painel/assinatura', [
 	}
 ]);
 
+$obRouter->post('/painel/assinatura/contrato/aceitar', [
+	'middlewares' => ['required-admin-login'],
+	function ($request) {
+		$json = Admin\AssinaturaEscola::aceitarContrato($request);
+		$data = json_decode($json, true) ?: [];
+		$ok = !empty($data['success']);
+		$msg = rawurlencode((string)($data['message'] ?? ''));
+		$request->getRouter()->redirect('/painel/assinatura/contrato?aceite='.($ok ? 'ok' : 'erro').'&msg='.$msg);
+		return new Response(302, '');
+	}
+]);
+
 $obRouter->get('/painel/assinatura/contrato', [
 	'middlewares' => ['required-admin-login'],
 	function ($request) {

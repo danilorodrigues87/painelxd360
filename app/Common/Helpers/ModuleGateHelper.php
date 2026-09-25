@@ -39,9 +39,13 @@ class ModuleGateHelper {
 		}
 
 		$decoded = json_decode($raw, true);
-		if (!is_array($decoded) || empty($decoded)) {
+		if (!is_array($decoded)) {
 			self::$cacheEscola[$cacheKey] = ProductModules::getSlugs();
 			return self::$cacheEscola[$cacheKey];
+		}
+		if ($decoded === []) {
+			self::$cacheEscola[$cacheKey] = [];
+			return [];
 		}
 
 		$slugsMap = array_flip(ProductModules::getSlugs());

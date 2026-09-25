@@ -52,6 +52,20 @@ $obRouter->post('/master/assinaturas', [
 	}
 ]);
 
+$obRouter->get('/master/contratos', [
+	'middlewares' => ['required-master-login'],
+	function ($request) {
+		return new Response(200, Master\Contratos::index($request));
+	}
+]);
+
+$obRouter->post('/master/contratos', [
+	'middlewares' => ['required-master-login'],
+	function ($request) {
+		return new Response(200, Master\Contratos::getInfo($request), 'application/json');
+	}
+]);
+
 $obRouter->get('/master/contrato-saas', [
 	'middlewares' => ['required-master-login'],
 	function ($request) {

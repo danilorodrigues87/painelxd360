@@ -165,18 +165,19 @@ class User{
 	public function atualizaPerfil(){
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
+		$nasc = trim((string)($this->nascimento ?? ''));
 		$dados = [
 			'nome' => $this->nome,
 			'email' => $this->email,
 			'whatsapp' => $this->whatsapp,
 			'rg' => $this->rg,
 			'cpf' => $this->cpf,
-			'nascimento' => $this->nascimento,
+			'nascimento' => ($nasc !== '' && $nasc !== '0000-00-00') ? $nasc : null,
 			'endereco' => $this->endereco,
 			'numero' => $this->numero,
 			'bairro' => $this->bairro,
-			'uf' => $this->uf,
-			'cidade' => $this->cidade
+			'uf' => (int)($this->uf ?: 0),
+			'cidade' => (int)($this->cidade ?: 0)
 		];
 		if (self::temColunaFoto()) {
 			$dados['foto'] = $this->foto ?: null;

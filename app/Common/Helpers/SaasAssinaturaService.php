@@ -177,6 +177,25 @@ class SaasAssinaturaService {
 
 		self::encerrarTrialSeExpirado($escola);
 
+		if (\App\Model\Entity\SaasContrato::tabelaExiste()) {
+			SaasContratoService::garantirFaturas($idAdmin);
+			$vigentes = \App\Model\Entity\SaasContrato::vigentesDoCliente($idAdmin);
+			if (!empty($vigentes)) {
+				$aberta = SaasFatura::get(
+					'id_admin = '.$idAdmin.' AND status IN ("aberta","vencida")',
+					'vencimento ASC',
+					'1'
+				)->fetchObject(SaasFatura::class);
+				if ($aberta instanceof SaasFatura) {
+					if (empty($aberta->pix_copia_cola) && empty($aberta->boleto_url) && empty($aberta->mp_payment_id)) {
+						self::anexarPix($aberta, $escola);
+					}
+					return ['ok' => true, 'message' => 'Parcela do contrato disponível.', 'fatura' => self::formatar($aberta, $escola)];
+				}
+				return ['ok' => true, 'message' => 'Nenhuma parcela em aberto.', 'fatura' => null];
+			}
+		}
+
 		if (self::emTrialAtivo($escola)) {
 			return [
 				'ok' => false,
@@ -288,6 +307,7 @@ class SaasAssinaturaService {
 			return false;
 		}
 		$fat->mp_payment_id = $cob['id'];
+		$fat->meio_pagamento = 'pix';
 		$fat->pix_copia_cola = $cob['copia_cola'];
 		if (SaasFatura::temColunaPixQrBase64() && !empty($cob['qr_base64'])) {
 			$fat->pix_qr_base64 = (string)$cob['qr_base64'];
@@ -348,6 +368,15 @@ class SaasAssinaturaService {
 		$fat->status = 'pago';
 		$fat->pago_em = $pagoEm ?: date('Y-m-d H:i:s');
 		$fat->atualizar();
+		if (!empty($fat->contrato_id) && !empty($fat->numero_parcela)) {
+			try {
+				(new Database('saas_contrato_parcelas'))->execute(
+					'UPDATE saas_contrato_parcelas SET status = "paga" WHERE contrato_id = '.(int)$fat->contrato_id
+					.' AND numero = '.(int)$fat->numero_parcela
+				);
+			} catch (\Throwable $e) {
+			}
+		}
 
 		\App\Model\Entity\LmsVitrineRepasse::gerarDeFaturaPaga((int)$fat->id, (string)$fat->competencia);
 
@@ -547,6 +576,9 @@ class SaasAssinaturaService {
 			'email_enviado_em' => $emailEm,
 			'email_enviado_em_br' => self::formatarDataBr($emailEm, true),
 			'tem_pix'        => $copia !== '',
+			'meio_pagamento' => (string)($f->meio_pagamento ?? ''),
+			'boleto_url'     => (string)($f->boleto_url ?? ''),
+			'boleto_linha'   => (string)($f->boleto_linha ?? ''),
 		];
 	}
 

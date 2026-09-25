@@ -8,6 +8,19 @@ namespace App\Common;
  */
 class ProductModules {
 
+	/** @var array<string,string> slug => fixo|modular */
+	private static $modo = [
+		'doceflow'    => 'fixo',
+		'fitpro'      => 'fixo',
+		'financas'    => 'fixo',
+		'estoqueiro'  => 'fixo',
+		'salao'       => 'fixo',
+		'nail'        => 'fixo',
+		'odonto'      => 'fixo',
+		'oficina'     => 'fixo',
+		'bussinespro' => 'fixo',
+	];
+
 	/** @var array<string,string> slug => label */
 	private static $catalog = [
 		'doceflow'    => 'DoceFlow Pro',
@@ -36,6 +49,27 @@ class ProductModules {
 
 	public static function getCatalog(): array {
 		return self::$catalog;
+	}
+
+	public static function modo(string $slug): string {
+		return self::$modo[$slug] ?? 'fixo';
+	}
+
+	public static function ehModular(string $slug): bool {
+		return self::modo($slug) === 'modular';
+	}
+
+	/** @return array<int,array{slug:string,label:string,modo:string}> */
+	public static function listarComModo(): array {
+		$out = [];
+		foreach (self::$catalog as $slug => $label) {
+			$out[] = [
+				'slug'  => $slug,
+				'label' => $label,
+				'modo'  => self::modo($slug),
+			];
+		}
+		return $out;
 	}
 
 	public static function getSlugs(): array {

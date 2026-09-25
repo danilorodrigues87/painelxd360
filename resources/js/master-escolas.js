@@ -126,12 +126,29 @@ function carregarCidades(estadoId, cidadeSelected, done){
 	});
 }
 
+function aplicarTipoCliente(){
+	const pf = $('#escola_tipo').val() === 'pf';
+	$('#lbl-escola-nome').text(pf ? 'Nome completo *' : 'Nome da empresa *');
+	$('#lbl-escola-doc').text(pf ? 'CPF' : 'CNPJ');
+	$('#titulo-responsavel').text(pf ? 'Quem assina' : 'Quem assina o contrato');
+	$('#ajuda-responsavel').text(pf
+		? 'Pessoa física assina com o próprio nome e CPF. O e-mail abaixo é o login do painel.'
+		: 'No MEI e na empresa, o contrato é da pessoa jurídica e a assinatura é de uma pessoa física (nome e CPF).');
+	if (pf) {
+		if (!$('#diretor_nome').val()) $('#diretor_nome').val($('#escola_nome').val() || '');
+		if (!$('#diretor_cpf').val()) $('#diretor_cpf').val($('#escola_cpf_cnpj').val() || '');
+	}
+}
+
 function limparForm(){
 	$('#escola_id').val('');
 	$('#escola_nome, #escola_email, #escola_telefone, #escola_cpf_cnpj, #escola_site, #escola_slug, #escola_dominio_custom').val('');
-	$('#escola_dominio_verificado').prop('checked', false);
+	$('#escola_dominio_verificado, #escola_quer_site').prop('checked', false);
+	$('#bloco-dominio-site').addClass('d-none');
 	atualizarPreviewSlug();
-	$('#diretor_nome, #diretor_email').val('');
+	$('#diretor_nome, #diretor_email, #diretor_cpf').val('');
+	$('#escola_tipo').val('pj');
+	aplicarTipoCliente();
 	$('#escola_ativo').val('1');
 	$('#escola_dia_venc').val('10');
 	$('#escola_valor_custom').val('');
@@ -143,6 +160,7 @@ function limparForm(){
 	$('#bloco-diretor-nova').show();
 	$('#titulo-modal-escola').text('Novo cliente');
 	renderModulosChecks([], true);
+	if(typeof carregarContratosCliente === 'function') carregarContratosCliente('');
 }
 
 function mostrarSenhaDiretor(titulo, diretor){
@@ -225,10 +243,19 @@ function abrirEdicao(id){
 		$('#escola_slug').val(e.slug || '');
 		$('#escola_dominio_custom').val(e.dominio_custom || '');
 		$('#escola_dominio_verificado').prop('checked', !!e.dominio_verificado);
+		$('#escola_quer_site').prop('checked', !!(e.dominio_custom));
+		$('#bloco-dominio-site').toggleClass('d-none', !e.dominio_custom);
 		atualizarPreviewSlug();
 		$('#escola_email').val(e.email || '');
 		$('#escola_telefone').val(e.telefone || '');
 		$('#escola_cpf_cnpj').val(e.cpf_cnpj || '');
+		const doc = String(e.cpf_cnpj || '').replace(/\D/g, '');
+		$('#escola_tipo').val(doc.length === 11 ? 'pf' : 'pj');
+		aplicarTipoCliente();
+		const dir = (e.diretores && e.diretores[0]) || {};
+		$('#diretor_nome').val(dir.nome || '');
+		$('#diretor_email').val(dir.email || '');
+		$('#diretor_cpf').val(dir.cpf || '');
 		$('#escola_site').val(e.site || '');
 		$('#escola_ativo').val(e.ativo ? '1' : '0');
 		$('#escola_dia_venc').val(e.dia_vencimento_assinatura || 10);
@@ -238,10 +265,11 @@ function abrirEdicao(id){
 		$('#escola_sem_trial').prop('checked', false);
 		$('#todos_modulos').prop('checked', !!e.todos_modulos);
 		popularSelectPlanos(e.plan_id || '');
-		$('#bloco-diretor-nova').hide();
+		$('#bloco-diretor-nova').show();
 		$('#titulo-modal-escola').text('Editar cliente #'+e.id);
 		renderModulosChecks(e.modulos || [], !!e.todos_modulos);
 		$('#modalEscolaMaster').modal('show');
+		if (typeof carregarContratosCliente === 'function') carregarContratosCliente(e.id);
 	}, 'json');
 }
 
@@ -252,7 +280,7 @@ function salvarEscola(){
 	const diretorEmail = ($('#diretor_email').val() || '').trim();
 
 	if(!nome){
-		Swal.fire('Atenção', 'Informe o nome da empresa.', 'warning');
+		Swal.fire('Atenção', $('#escola_tipo').val() === 'pf' ? 'Informe o nome completo.' : 'Informe o nome da empresa.', 'warning');
 		return;
 	}
 	if(!id && (!diretorNome || !diretorEmail)){
@@ -265,8 +293,10 @@ function salvarEscola(){
 	fd.append('id', id || '');
 	fd.append('nome', nome);
 	fd.append('slug', ($('#escola_slug').val() || '').trim());
-	fd.append('dominio_custom', ($('#escola_dominio_custom').val() || '').trim());
-	if($('#escola_dominio_verificado').is(':checked')){
+	const querSite = $('#escola_quer_site').is(':checked');
+	fd.append('dominio_custom', querSite ? ($('#escola_dominio_custom').val() || '').trim() : '');
+	fd.append('comercial_por_contrato', '1');
+	if(querSite && $('#escola_dominio_verificado').is(':checked')){
 		fd.append('dominio_verificado', '1');
 	}
 	fd.append('email', $('#escola_email').val() || '');
@@ -275,7 +305,6 @@ function salvarEscola(){
 	fd.append('site', $('#escola_site').val() || '');
 	fd.append('ativo', $('#escola_ativo').val());
 	fd.append('dia_vencimento_assinatura', $('#escola_dia_venc').val() || '10');
-	fd.append('valor_mensal_custom', $('#escola_valor_custom').val() || '');
 	fd.append('assinatura_status', $('#escola_assinatura_status').val() || 'ativa');
 	fd.append('trial_ate', $('#escola_trial_ate').val() || '');
 	if($('#escola_sem_trial').is(':checked')){
@@ -285,6 +314,7 @@ function salvarEscola(){
 	fd.append('todos_modulos', $('#todos_modulos').is(':checked') ? '1' : '0');
 	fd.append('modulos_json', JSON.stringify(coletarSlugs()));
 	fd.append('diretor_nome', diretorNome);
+	fd.append('diretor_cpf', $('#diretor_cpf').val() || '');
 	fd.append('diretor_email', diretorEmail);
 	$('#btn-salvar-escola').prop('disabled', true);
 	$.ajax({
@@ -300,10 +330,15 @@ function salvarEscola(){
 			Swal.fire('Erro', (res && res.message) || 'Não foi possível salvar.', 'error');
 			return;
 		}
-		$('#modalEscolaMaster').modal('hide');
 		carregarEscolas();
+		if(res.escola && res.escola.id){
+			$('#escola_id').val(res.escola.id);
+			$('#bloco-diretor-nova').hide();
+			$('#titulo-modal-escola').text('Cliente #'+res.escola.id);
+			if(typeof carregarContratosCliente === 'function') carregarContratosCliente(res.escola.id);
+		}
 		if(res.diretor && res.diretor.senha){
-			mostrarSenhaDiretor('Cliente criado', res.diretor);
+			mostrarSenhaDiretor('Cliente criado. Agora grave o contrato abaixo.', res.diretor);
 			return;
 		}
 		Swal.fire('OK', res.message, 'success');
@@ -337,6 +372,7 @@ $(function(){
 	carregarCidades('', '');
 	renderModulosChecks([], true);
 	carregarEscolas();
+	$('#escola_tipo').on('change', aplicarTipoCliente);
 
 	$('#escola_nome').on('blur', function(){
 		if(!($('#escola_slug').val() || '').trim()){
@@ -349,6 +385,13 @@ $(function(){
 		atualizarPreviewSlug();
 	});
 	atualizarPreviewSlug();
+	$('#escola_quer_site').on('change', function(){
+		$('#bloco-dominio-site').toggleClass('d-none', !this.checked);
+		if(!this.checked){
+			$('#escola_dominio_custom').val('');
+			$('#escola_dominio_verificado').prop('checked', false);
+		}
+	});
 
 	$('#btn-nova-escola').on('click', function(){
 		limparForm();

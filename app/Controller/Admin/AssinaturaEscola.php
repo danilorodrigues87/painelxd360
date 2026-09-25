@@ -6,6 +6,7 @@ use App\Utils\View;
 use App\Session\User\Login as SessionUser;
 use App\Common\Helpers\TenantHelper;
 use App\Common\Helpers\SaasAssinaturaService;
+use App\Common\Helpers\SaasContratoService;
 use App\Common\Helpers\SaasContratoTemplateHelper;
 use App\Common\Helpers\SaasContratoVariaveisBuilder;
 use App\Common\Helpers\MercadoPagoXd360Helper;
@@ -77,7 +78,107 @@ class AssinaturaEscola extends Page {
 			return 'Escola não encontrada.';
 		}
 		$vars = SaasContratoVariaveisBuilder::montarFromEscola($escola);
-		return SaasContratoTemplateHelper::render($vars);
+		$html = SaasContratoTemplateHelper::render($vars);
+		$_SESSION['contrato_leitura_inicio'] = time();
+		return self::comBarraAceite($html, $escola);
+	}
+
+	public static function aceitarContrato($request): string {
+		if (!self::assertDiretor($request, true)) {
+			return json_encode(['success' => false, 'message' => 'Apenas o diretor pode aceitar o contrato.']);
+		}
+		$inicio = (int)($_SESSION['contrato_leitura_inicio'] ?? 0);
+		if ($inicio <= 0 || (time() - $inicio) < 15) {
+			return json_encode(['success' => false, 'message' => 'Leia o contrato até o final antes de aceitar.']);
+		}
+		$post = $request->getPostVars();
+		$user = SessionUser::getUserLogedData();
+		$uid = (int)($user['usuario']['id'] ?? 0);
+		$obUser = $uid > 0 ? \App\Model\Entity\User::getUserById($uid) : null;
+		$nome = $obUser instanceof \App\Model\Entity\User ? (string)$obUser->nome : (string)($user['usuario']['nome'] ?? '');
+		$cpf = $obUser instanceof \App\Model\Entity\User ? (string)($obUser->cpf ?? '') : '';
+		$ip = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+		$r = SaasContratoService::aceitar(
+			TenantHelper::getIdAdmin(),
+			$uid,
+			$nome,
+			$cpf,
+			$ip,
+			!empty($post['leu'])
+		);
+		return json_encode(['success' => $r['ok'], 'message' => $r['message']], JSON_UNESCAPED_UNICODE);
+	}
+
+	private static function comBarraAceite(string $html, ClientesAssinantes $escola): string {
+		$user = SessionUser::getUserLogedData();
+		$diretor = (($user['usuario']['nivel'] ?? '') === 'Diretor');
+		$vigentes = \App\Model\Entity\SaasContrato::vigentesDoCliente((int)$escola->id);
+		$pendente = false;
+		$quando = '';
+		foreach ($vigentes as $c) {
+			if (trim((string)($c->aceito_em ?? '')) === '') {
+				$pendente = true;
+			} elseif ($quando === '') {
+				$quando = (string)$c->aceito_em;
+			}
+		}
+		$aviso = '';
+		$qAceite = (string)($_GET['aceite'] ?? '');
+		if ($qAceite === 'erro') {
+			$aviso = '<p style="color:#a00">'.htmlspecialchars((string)($_GET['msg'] ?? 'Não foi possível aceitar.'), ENT_QUOTES, 'UTF-8').'</p>';
+		} elseif ($qAceite === 'ok') {
+			$aviso = '<p style="color:#060">Contrato aceito.</p>';
+		}
+		if (!$diretor) {
+			$barra = '<div id="barra-aceite">Apenas o diretor pode aceitar este contrato. Leia o texto e peça a ele para assinar.</div>';
+		} elseif ($vigentes !== [] && !$pendente) {
+			$barra = '<div id="barra-aceite">Contrato aceito em '.htmlspecialchars($quando, ENT_QUOTES, 'UTF-8').'.</div>';
+		} elseif ($vigentes === []) {
+			$barra = '';
+		} else {
+			$barra = '<div id="barra-aceite">'.$aviso
+				.'<p id="aviso-leitura">Role até o final do contrato para poder aceitar.</p>'
+				.'<form method="post" action="'.URL.'/painel/assinatura/contrato/aceitar" id="form-aceite">'
+				.'<input type="hidden" name="leu" value="1">'
+				.'<label><input type="checkbox" id="chk-li" disabled> Li o contrato até o final e aceito os termos.</label> '
+				.'<button type="submit" id="btn-aceitar" disabled>Aceitar contrato</button>'
+				.'</form></div>'
+				.'<script>
+				(function(){
+					var ok=false;
+					function fim(){
+						var el=document.documentElement;
+						var curto=el.scrollHeight<=el.clientHeight+80;
+						return curto || (el.scrollTop+el.clientHeight>=el.scrollHeight-48);
+					}
+					function liberar(){
+						if(ok||!fim()) return;
+						ok=true;
+						var c=document.getElementById("chk-li");
+						var a=document.getElementById("aviso-leitura");
+						if(c) c.disabled=false;
+						if(a) a.textContent="Marque que leu e aceite o contrato.";
+					}
+					window.addEventListener("scroll", liberar, {passive:true});
+					setTimeout(liberar, 15000);
+					var f=document.getElementById("form-aceite");
+					if(f) f.addEventListener("submit", function(e){
+						var c=document.getElementById("chk-li");
+						if(!c||!c.checked){ e.preventDefault(); }
+					});
+					var c=document.getElementById("chk-li");
+					if(c) c.addEventListener("change", function(){
+						var b=document.getElementById("btn-aceitar");
+						if(b) b.disabled=!c.checked;
+					});
+				})();
+				</script>';
+		}
+		$css = '<style>#barra-aceite{position:sticky;bottom:0;background:#fff;border-top:1px solid #ccc;padding:12px 16px;font-family:sans-serif;font-size:14px}#barra-aceite button{margin-left:8px}@media print{#barra-aceite{display:none}}</style>';
+		if (stripos($html, '</body>') !== false) {
+			return str_ireplace('</body>', $css.$barra.'</body>', $html);
+		}
+		return $html.$css.$barra;
 	}
 
 	public static function getInfo($request) {
@@ -99,6 +200,10 @@ class AssinaturaEscola extends Page {
 		switch ($acao) {
 			case 'atualizar_pix':
 				return self::atualizarPix($post);
+			case 'pagar_boleto':
+				return self::pagarBoleto($post);
+			case 'pagar_cartao':
+				return self::pagarCartao($post);
 			case 'verificar':
 				return self::verificar($post);
 			default:
@@ -123,6 +228,9 @@ class AssinaturaEscola extends Page {
 		}
 
 		$escola = ClientesAssinantes::getEscolaById($idAdmin);
+		if ($escola instanceof ClientesAssinantes) {
+			SaasContratoService::garantirFaturas($idAdmin);
+		}
 		$planoNome = null;
 		$valorMensal = null;
 		$valorCustom = null;
@@ -218,6 +326,8 @@ class AssinaturaEscola extends Page {
 				'grace_dias'                   => SaasAssinaturaService::GRACE_DIAS,
 				'so_leitura'                   => (($user['usuario']['nivel'] ?? '') !== 'Diretor'),
 				'bloqueada'                    => !empty($user['usuario']['assinatura_bloqueada']),
+				'mp_public_key'                => MercadoPagoXd360Helper::publicKey(),
+				'contratos'                    => SaasContratoService::listar($idAdmin),
 			],
 			'aberta'  => $aberta,
 			'faturas' => $faturas,
@@ -277,6 +387,95 @@ class AssinaturaEscola extends Page {
 			'message' => 'PIX atualizado.',
 			'fatura'  => SaasAssinaturaService::formatar($fat),
 		], JSON_UNESCAPED_UNICODE);
+	}
+
+	private static function faturaAbertaDoCliente(int $id, int $idAdmin): ?SaasFatura {
+		$fat = SaasFatura::getById($id);
+		if (!$fat instanceof SaasFatura || (int)$fat->id_admin !== $idAdmin || $fat->status === 'pago') {
+			return null;
+		}
+		return $fat;
+	}
+
+	private static function dadosPagador(ClientesAssinantes $escola): array {
+		return [
+			'pagador_email'    => (string)$escola->email,
+			'pagador_nome'     => (string)$escola->nome,
+			'pagador_doc'      => (string)$escola->cpf_cnpj,
+			'pagador_cpf'      => (string)$escola->cpf_cnpj,
+			'pagador_endereco' => (string)$escola->endereco,
+			'pagador_numero'   => (string)$escola->numero,
+			'pagador_bairro'   => (string)$escola->bairro,
+			'pagador_cep'      => (string)$escola->cep,
+		];
+	}
+
+	private static function pagarBoleto(array $post): string {
+		$idAdmin = TenantHelper::getIdAdmin();
+		$fat = self::faturaAbertaDoCliente((int)($post['id'] ?? 0), $idAdmin);
+		$escola = ClientesAssinantes::getEscolaById($idAdmin);
+		if (!$fat || !$escola instanceof ClientesAssinantes) {
+			return json_encode(['success' => false, 'message' => 'Fatura não encontrada.']);
+		}
+		$checkout = MercadoPagoXd360Helper::checkout();
+		if (!$checkout) {
+			return json_encode(['success' => false, 'message' => 'Mercado Pago indisponível.']);
+		}
+		$bol = $checkout->criarBoleto(self::dadosPagador($escola) + [
+			'valor' => (float)$fat->valor,
+			'descricao' => 'Assinatura XD360 '.$fat->competencia,
+			'external_reference' => 'saas-'.$fat->id,
+			'notification_url' => MercadoPagoXd360Helper::webhookUrl(),
+			'vencimento' => (string)$fat->vencimento,
+		]);
+		if (!$bol) {
+			return json_encode(['success' => false, 'message' => \App\Common\Gateways\MercadoPago\Checkout::getUltimoErro() ?: 'Falha ao gerar boleto.']);
+		}
+		$fat->mp_payment_id = $bol['id'];
+		$fat->meio_pagamento = 'boleto';
+		$fat->boleto_url = $bol['url'];
+		$fat->boleto_linha = $bol['linha'];
+		$fat->atualizar();
+		return json_encode(['success' => true, 'message' => 'Boleto gerado. A compensação leva de 1 a 3 dias úteis.', 'fatura' => SaasAssinaturaService::formatar($fat)], JSON_UNESCAPED_UNICODE);
+	}
+
+	private static function pagarCartao(array $post): string {
+		$idAdmin = TenantHelper::getIdAdmin();
+		$fat = self::faturaAbertaDoCliente((int)($post['id'] ?? 0), $idAdmin);
+		$escola = ClientesAssinantes::getEscolaById($idAdmin);
+		if (!$fat || !$escola instanceof ClientesAssinantes) {
+			return json_encode(['success' => false, 'message' => 'Fatura não encontrada.']);
+		}
+		$checkout = MercadoPagoXd360Helper::checkout();
+		if (!$checkout) {
+			return json_encode(['success' => false, 'message' => 'Mercado Pago indisponível.']);
+		}
+		$pag = $checkout->criarCartao([
+			'valor' => (float)$fat->valor,
+			'token' => (string)($post['token'] ?? ''),
+			'payment_method_id' => (string)($post['payment_method_id'] ?? ''),
+			'issuer_id' => (string)($post['issuer_id'] ?? ''),
+			'pagador_email' => (string)($post['email'] ?? $escola->email),
+			'doc_type' => (string)($post['doc_type'] ?? 'CPF'),
+			'doc_number' => (string)($post['doc_number'] ?? ''),
+			'descricao' => 'Assinatura XD360 '.$fat->competencia,
+			'external_reference' => 'saas-'.$fat->id,
+			'notification_url' => MercadoPagoXd360Helper::webhookUrl(),
+		]);
+		if (!$pag) {
+			return json_encode(['success' => false, 'message' => \App\Common\Gateways\MercadoPago\Checkout::getUltimoErro() ?: 'Falha no cartão.']);
+		}
+		$fat->mp_payment_id = $pag['id'];
+		$fat->meio_pagamento = 'cartao';
+		$fat->atualizar();
+		if ($pag['status'] === 'approved') {
+			SaasAssinaturaService::marcarPaga($fat);
+			return json_encode(['success' => true, 'message' => 'Pagamento aprovado.', 'fatura' => SaasAssinaturaService::formatar($fat)], JSON_UNESCAPED_UNICODE);
+		}
+		$msg = $pag['status'] === 'in_process'
+			? 'Pagamento em análise. A parcela continua em aberto até a confirmação.'
+			: 'Pagamento não aprovado ('.$pag['status_detail'].'). A parcela continua em aberto.';
+		return json_encode(['success' => false, 'message' => $msg, 'fatura' => SaasAssinaturaService::formatar($fat)], JSON_UNESCAPED_UNICODE);
 	}
 
 	private static function verificar(array $post): string {

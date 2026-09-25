@@ -84,6 +84,8 @@ class DadosXd360 extends Page {
 		$emp->cep = (string)($post['cep'] ?? '');
 		$emp->estado = (int)($post['estado'] ?? 0);
 		$emp->cidade = (int)($post['cidade'] ?? 0);
+		$emp->uf = (string)($post['uf'] ?? '');
+		$emp->cidade_nome = (string)($post['cidade_nome'] ?? '');
 		$emp->email = EmailValidator::normalizar($post['email'] ?? '');
 		$emp->telefone = trim((string)($post['telefone'] ?? ''));
 		$emp->site = trim((string)($post['site'] ?? ''));
@@ -115,7 +117,12 @@ class DadosXd360 extends Page {
 			return json_encode(['success' => false, 'message' => 'CNPJ inválido.']);
 		}
 
-		if (!SaasEmpresaXd360::salvar($emp)) {
+		try {
+			$ok = SaasEmpresaXd360::salvar($emp);
+		} catch (\Throwable $e) {
+			return json_encode(['success' => false, 'message' => 'Não foi possível gravar os dados jurídicos. Confira CNPJ, CEP e representante.']);
+		}
+		if (!$ok) {
 			return json_encode(['success' => false, 'message' => 'Falha ao salvar.']);
 		}
 
@@ -137,7 +144,7 @@ class DadosXd360 extends Page {
 			return json_encode(['success' => true, 'cidades' => []]);
 		}
 		$out = [];
-		$results = EstadoCidades::getCidades('estado = '.$idEstado, 'nome ASC');
+		$results = EstadoCidades::getCidades('estados_id = '.$idEstado, 'nome ASC');
 		while ($c = $results->fetchObject()) {
 			$out[] = ['id' => (int)$c->id, 'nome' => (string)$c->nome];
 		}
@@ -158,6 +165,8 @@ class DadosXd360 extends Page {
 			'cep'                    => (string)($emp->cep ?? ''),
 			'estado'                 => (int)($emp->estado ?? 0),
 			'cidade'                 => (int)($emp->cidade ?? 0),
+			'uf'                     => (string)($emp->uf ?? ''),
+			'cidade_nome'            => (string)($emp->cidade_nome ?? ''),
 			'email'                  => (string)($emp->email ?? ''),
 			'telefone'               => (string)($emp->telefone ?? ''),
 			'site'                   => (string)($emp->site ?? ''),

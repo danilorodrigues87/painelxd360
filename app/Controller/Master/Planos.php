@@ -18,6 +18,7 @@ class Planos extends Page {
 
 		$content = View::render('master/modules/planos/index', [
 			'modulos_json' => json_encode(self::catalogoModulos(), JSON_UNESCAPED_UNICODE),
+			'produtos_json' => json_encode(ProductModules::listarComModo(), JSON_UNESCAPED_UNICODE),
 		]);
 		return parent::getPanel('Planos — Master', $content, 'planos');
 	}
@@ -36,6 +37,13 @@ class Planos extends Page {
 		switch ($acao) {
 			case 'listar':
 				return self::listar();
+			case 'modulos_produto':
+				$slug = trim((string)($post['produto_slug'] ?? ''));
+				return json_encode([
+					'success' => true,
+					'modular' => ProductModules::ehModular($slug),
+					'modulos' => \App\Model\Entity\ProdutoModulo::listar($slug),
+				], JSON_UNESCAPED_UNICODE);
 			case 'detalhes':
 				return self::detalhes($post);
 			case 'salvar':
@@ -67,8 +75,12 @@ class Planos extends Page {
 			$out[] = [
 				'id'            => (int)$p->id,
 				'nome'          => $p->nome,
+				'produto_slug'  => (string)($p->produto_slug ?? ''),
+				'ciclo'         => (string)($p->ciclo ?? 'mensal'),
+				'valor_sugerido'=> $p->valorSugerido(),
 				'todos_modulos' => $p->temTodosModulos(),
 				'modulos'       => $p->getSlugs(),
+				'modular'       => ProductModules::ehModular((string)($p->produto_slug ?? '')),
 			];
 		}
 		return $out;
@@ -103,19 +115,25 @@ class Planos extends Page {
 		$ordem = (int)($post['ordem'] ?? 0);
 		$ativo = !empty($post['ativo']) ? 1 : 0;
 		$todos = !empty($post['todos_modulos']);
-		$valorMensal = self::parseValorMensal($post['valor_mensal'] ?? 0);
+		$valorMensal = self::parseValorMensal($post['valor_sugerido'] ?? $post['valor_mensal'] ?? 0);
+		$produto = trim((string)($post['produto_slug'] ?? ''));
+		$ciclo = (($post['ciclo'] ?? '') === 'anual') ? 'anual' : 'mensal';
 
 		if ($nome === '') {
 			return json_encode(['success' => false, 'message' => 'Informe o nome do plano.']);
 		}
+		if ($produto === '' || ProductModules::slugParaLabel($produto) === null) {
+			return json_encode(['success' => false, 'message' => 'Selecione o produto deste plano.']);
+		}
 
-		$modulosJson = null;
-		if (!$todos) {
-			$slugs = self::parseSlugs($post['modulos_json'] ?? '[]');
-			if (empty($slugs)) {
-				return json_encode(['success' => false, 'message' => 'Selecione módulos ou marque “Todos”.']);
+		$modulosJson = '[]';
+		if (ProductModules::ehModular($produto)) {
+			if ($todos) {
+				$modulosJson = null;
+			} else {
+				$slugs = self::parseSlugsProduto($produto, $post['modulos_json'] ?? '[]');
+				$modulosJson = json_encode($slugs, JSON_UNESCAPED_UNICODE);
 			}
-			$modulosJson = json_encode($slugs, JSON_UNESCAPED_UNICODE);
 		}
 
 		if ($id > 0) {
@@ -128,6 +146,9 @@ class Planos extends Page {
 		}
 
 		$ob->nome = $nome;
+		$ob->produto_slug = $produto;
+		$ob->ciclo = $ciclo;
+		$ob->valor_sugerido = $valorMensal;
 		$ob->descricao = $descricao !== '' ? $descricao : null;
 		if (PlanosAssinatura::temColunaDescricaoDetalhada()) {
 			$ob->descricao_detalhada = $descricaoDetalhada !== '' ? $descricaoDetalhada : null;
@@ -141,8 +162,7 @@ class Planos extends Page {
 
 		if ($id > 0) {
 			$ob->atualizar();
-			self::reescreverEscolasDoPlano($ob);
-			return json_encode(['success' => true, 'message' => 'Plano atualizado. Clientes vinculados foram sincronizados.', 'plano_id' => (int)$ob->id, 'plano' => self::formatar($ob)]);
+			return json_encode(['success' => true, 'message' => 'Plano atualizado. Contratos já feitos mantêm o preço e os módulos gravados.', 'plano_id' => (int)$ob->id, 'plano' => self::formatar($ob)]);
 		}
 
 		$ob->cadastrar();
@@ -192,19 +212,22 @@ class Planos extends Page {
 		return [
 			'id'            => (int)$p->id,
 			'nome'          => $p->nome,
+			'produto_slug'  => (string)($p->produto_slug ?? ''),
+			'produto_label' => ProductModules::slugParaLabel((string)($p->produto_slug ?? '')) ?: 'Legado',
+			'ciclo'         => (string)($p->ciclo ?? 'mensal'),
 			'descricao'     => $p->descricao,
 			'descricao_detalhada' => PlanosAssinatura::temColunaDescricaoDetalhada()
 				? ($p->descricao_detalhada ?? null)
 				: null,
-			'valor_mensal'  => $valor,
-			'valor_br'      => number_format($valor, 2, ',', '.'),
+			'valor_mensal'  => $p->valorSugerido(),
+			'valor_sugerido'=> $p->valorSugerido(),
+			'valor_br'      => number_format($p->valorSugerido(), 2, ',', '.'),
+			'modular'       => ProductModules::ehModular((string)($p->produto_slug ?? '')),
 			'ativo'         => (int)$p->ativo ? 1 : 0,
 			'ordem'         => (int)$p->ordem,
 			'todos_modulos' => $p->temTodosModulos(),
 			'modulos'       => $p->temTodosModulos() ? [] : $p->getSlugs(),
-			'modulos_qtd'   => $p->temTodosModulos()
-				? count(ProductModules::getSlugs())
-				: count($p->getSlugs()),
+			'modulos_qtd'   => count($p->getSlugs()),
 		];
 	}
 
@@ -222,6 +245,22 @@ class Planos extends Page {
 			$s = str_replace(',', '.', $s);
 		}
 		return max(0, round((float)$s, 2));
+	}
+
+	/** @return string[] */
+	private static function parseSlugsProduto(string $produto, $raw): array {
+		$arr = is_array($raw) ? $raw : (json_decode((string)$raw, true) ?: []);
+		$validos = array_flip(\App\Model\Entity\ProdutoModulo::slugs($produto));
+		$out = [];
+		foreach ($arr as $s) {
+			$s = (string)$s;
+			if ($validos === [] || isset($validos[$s])) {
+				if ($s !== '') {
+					$out[$s] = true;
+				}
+			}
+		}
+		return array_keys($out);
 	}
 
 	/** @return string[] */

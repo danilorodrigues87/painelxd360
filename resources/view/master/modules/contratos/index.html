@@ -1,0 +1,82 @@
+<h1 class="mt-4">Contratos</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Contratos gravados com os clientes</li>
+</ol>
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+		<div class="row g-2 align-items-end">
+			<div class="col-md-4">
+				<label class="form-label" for="filtro-q">Busca</label>
+				<input type="search" class="form-control" id="filtro-q" placeholder="Cliente, plano ou produto">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="filtro-status">Status</label>
+				<select class="form-select" id="filtro-status">
+					<option value="">Todos</option>
+					<option value="vigente">Vigente</option>
+					<option value="encerrado">Encerrado</option>
+					<option value="cancelado">Cancelado</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<label class="form-label" for="filtro-aceite">Aceite</label>
+				<select class="form-select" id="filtro-aceite">
+					<option value="">Todos</option>
+					<option value="pendente">Pendente</option>
+					<option value="aceito">Aceito</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="filtro-produto">Produto</label>
+				<select class="form-select" id="filtro-produto">
+					<option value="">Todos</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary w-100" id="btn-filtrar-contratos">Filtrar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover mb-0 align-middle">
+				<thead class="table-light">
+					<tr>
+						<th>Cliente</th>
+						<th>Produto / plano</th>
+						<th>Valor</th>
+						<th>Vigência</th>
+						<th>Status</th>
+						<th>Aceite</th>
+						<th class="text-end">Ações</th>
+					</tr>
+				</thead>
+				<tbody id="lista-contratos">
+					<tr><td colspan="6" class="text-center text-muted py-4">Carregando...</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalVerContrato" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Contrato do cliente</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+			</div>
+			<div class="modal-body" id="corpo-ver-contrato"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+window.CONTRATOS_PRODUTOS = {{produtos_json}};
+window.CONTRATOS_TABELA = '{{tabela_ok}}';
+</script>
+<script src="{{URL}}/resources/js/master-contratos.js?v=20260925c"></script>

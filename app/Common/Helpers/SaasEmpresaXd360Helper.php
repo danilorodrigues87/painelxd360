@@ -24,19 +24,30 @@ class SaasEmpresaXd360Helper {
 		return substr($d, 0, 3).'.'.substr($d, 3, 3).'.'.substr($d, 6, 3).'-'.substr($d, 9, 2);
 	}
 
+	public static function cidadeUfTexto(?SaasEmpresaXd360 $emp): string {
+		if (!$emp instanceof SaasEmpresaXd360) {
+			return '';
+		}
+		$cidadeNome = trim((string)($emp->cidade_nome ?? ''));
+		$uf = strtoupper(trim((string)($emp->uf ?? '')));
+		if ($cidadeNome !== '' || $uf !== '') {
+			return trim($cidadeNome.($uf !== '' ? '/'.$uf : ''));
+		}
+		return ContratoVariaveisBuilder::resolverCidadeUf(
+			(int)($emp->cidade ?? 0),
+			(int)($emp->estado ?? 0)
+		);
+	}
+
 	public static function resolverEndereco(?SaasEmpresaXd360 $emp): string {
 		if (!$emp instanceof SaasEmpresaXd360) {
 			return 'endereço não informado';
 		}
-		$cidadeUf = ContratoVariaveisBuilder::resolverCidadeUf(
-			(int)($emp->cidade ?? 0),
-			(int)($emp->estado ?? 0)
-		);
 		return ContratoVariaveisBuilder::montarEnderecoEscola([
 			'endereco' => $emp->endereco ?? '',
 			'numero'   => $emp->numero ?? '',
 			'bairro'   => $emp->bairro ?? '',
-		], $cidadeUf);
+		], self::cidadeUfTexto($emp));
 	}
 
 	public static function resolverForo(?SaasEmpresaXd360 $emp): string {
@@ -47,10 +58,7 @@ class SaasEmpresaXd360Helper {
 		if ($foro !== '') {
 			return $foro;
 		}
-		$cidadeUf = ContratoVariaveisBuilder::resolverCidadeUf(
-			(int)($emp->cidade ?? 0),
-			(int)($emp->estado ?? 0)
-		);
+		$cidadeUf = self::cidadeUfTexto($emp);
 		return $cidadeUf !== '' ? $cidadeUf : 'comarca da sede da LICENCIANTE';
 	}
 

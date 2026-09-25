@@ -2,6 +2,12 @@ const MASTER_ASSINATURAS_URL = 'master/assinaturas';
 const pixCache = {};
 const pixQrCache = {};
 
+function compBr(c){
+	const s = String(c || '');
+	const m = s.match(/^(\d{4})-(\d{2})/);
+	return m ? (m[2]+'/'+m[1]) : (s || '—');
+}
+
 function esc(s){
 	return $('<div>').text(s == null ? '' : String(s)).html();
 }
@@ -48,9 +54,9 @@ function renderLista(faturas){
 		$tb.append(
 			'<tr>'
 			+'<td><strong>'+esc(f.escola_nome)+'</strong><br><small class="text-muted">#'+f.id_admin+'</small></td>'
-			+'<td>'+esc(f.competencia)+'</td>'
+			+'<td>'+esc(compBr(f.competencia))+'</td>'
 			+'<td>R$ '+esc(f.valor_br)+'</td>'
-			+'<td>'+esc(f.vencimento)+'</td>'
+			+'<td>'+esc(f.vencimento_br || f.vencimento)+'</td>'
 			+'<td>'+badgeStatus(f.status)+'</td>'
 			+'<td class="text-end">'+acoes.join('')+'</td>'
 			+'</tr>'

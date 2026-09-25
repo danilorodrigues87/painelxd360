@@ -12,7 +12,6 @@ class SystemModules {
 		'dados_cliente' => 'Dados da empresa',
 		'assinatura'    => 'Assinatura',
 		'produtos'      => 'Meus Produtos',
-		'funcionarios'  => 'Funcionários',
 		'suporte'       => 'Suporte',
 	];
 
@@ -125,10 +124,6 @@ class SystemModules {
 						[
 							'label' => 'Dados da empresa',
 							'link'  => $base.'/painel/config/empresa',
-						],
-						[
-							'label' => 'Funcionários',
-							'link'  => $base.'/painel/user',
 						],
 					],
 				],

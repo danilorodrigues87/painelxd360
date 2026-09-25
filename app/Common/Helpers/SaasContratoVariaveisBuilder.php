@@ -86,7 +86,7 @@ class SaasContratoVariaveisBuilder {
 			'licenciante'                => self::htmlLicenciante($emp),
 			'representante_licenciante'  => self::htmlRepresentanteLicenciante($emp),
 			'licenciada'                 => self::htmlLicenciada($escola, $cidadeUf),
-			'representante_licenciada'   => self::htmlRepresentanteLicenciada($diretor),
+			'representante_licenciada'   => self::htmlRepresentanteLicenciada($diretor, $escola),
 			'plano_resumo'               => self::htmlPlanoResumo($escola, $plano),
 			'plano_descricao'            => self::htmlPlanoDescricao($plano),
 			'modulos_contratados'        => self::htmlModulos($escola, $plano),
@@ -185,13 +185,18 @@ class SaasContratoVariaveisBuilder {
 
 	private static function htmlLicenciada(ClientesAssinantes $escola, string $cidadeUf): string {
 		$nome = htmlspecialchars((string)$escola->nome, ENT_QUOTES, 'UTF-8');
-		$cnpjRaw = preg_replace('/\D+/', '', (string)($escola->cpf_cnpj ?? ''));
-		$cnpj = htmlspecialchars(
-			strlen($cnpjRaw) === 14 ? SaasEmpresaXd360Helper::formatCnpj($cnpjRaw)
-				: (trim((string)($escola->cpf_cnpj ?? '')) ?: '—'),
-			ENT_QUOTES,
-			'UTF-8'
-		);
+		$docRaw = preg_replace('/\D+/', '', (string)($escola->cpf_cnpj ?? ''));
+		if (strlen($docRaw) === 11) {
+			$docLabel = 'pessoa física, inscrita no CPF sob nº';
+			$docFmt = SaasEmpresaXd360Helper::formatCpf($docRaw);
+		} elseif (strlen($docRaw) === 14) {
+			$docLabel = 'pessoa jurídica (empresa ou MEI), inscrita no CNPJ sob nº';
+			$docFmt = SaasEmpresaXd360Helper::formatCnpj($docRaw);
+		} else {
+			$docLabel = 'inscrita no CPF/CNPJ sob nº';
+			$docFmt = trim((string)($escola->cpf_cnpj ?? '')) ?: '—';
+		}
+		$cnpj = htmlspecialchars($docFmt, ENT_QUOTES, 'UTF-8');
 		$email = htmlspecialchars(trim((string)($escola->email ?? '')) ?: '—', ENT_QUOTES, 'UTF-8');
 		$tel = htmlspecialchars(trim((string)($escola->telefone ?? '')) ?: '—', ENT_QUOTES, 'UTF-8');
 		$end = htmlspecialchars(
@@ -201,24 +206,42 @@ class SaasContratoVariaveisBuilder {
 		);
 
 		return '<p><strong>LICENCIADA:</strong> '.$nome
-			.', inscrita no CNPJ/CPF sob nº <strong>'.$cnpj
+			.', '.$docLabel.' <strong>'.$cnpj
 			.'</strong>, com endereço em '.$end
 			.', e-mail '.$email.', telefone '.$tel.'.</p>';
 	}
 
-	private static function htmlRepresentanteLicenciada(?EntityUser $diretor): string {
+	private static function htmlRepresentanteLicenciada(?EntityUser $diretor, ClientesAssinantes $escola): string {
 		if (!$diretor instanceof EntityUser) {
-			return '<p><em>Representante legal da LICENCIADA: cadastre um administrador ativo no cliente.</em></p>';
+			return '<p><em>Quem assina pela LICENCIADA: cadastre o responsável no cliente.</em></p>';
 		}
 		$nome = htmlspecialchars(trim((string)$diretor->nome), ENT_QUOTES, 'UTF-8');
 		$cpf = htmlspecialchars(SaasEmpresaXd360Helper::formatCpf($diretor->cpf ?? ''), ENT_QUOTES, 'UTF-8');
 		$email = htmlspecialchars(trim((string)($diretor->email ?? '')), ENT_QUOTES, 'UTF-8');
-
-		return '<p><strong>Representante legal da LICENCIADA:</strong> '.$nome
-			.', CPF '.$cpf.', e-mail '.$email.', na qualidade de Administrador(a) do cliente.</p>';
+		$doc = preg_replace('/\D+/', '', (string)($escola->cpf_cnpj ?? ''));
+		if (strlen($doc) === 11) {
+			return '<p><strong>Assinatura:</strong> '.$nome
+				.', CPF '.$cpf.', e-mail '.$email.', assina em nome próprio.</p>';
+		}
+		return '<p><strong>Responsável que assina pela LICENCIADA:</strong> '.$nome
+			.', CPF '.$cpf.', e-mail '.$email.'.</p>';
 	}
 
 	private static function htmlPlanoResumo(ClientesAssinantes $escola, ?PlanosAssinatura $plano): string {
+		$contratos = \App\Model\Entity\SaasContrato::vigentesDoCliente((int)$escola->id);
+		if (!empty($contratos)) {
+			$html = '';
+			foreach ($contratos as $c) {
+				$fmt = SaasContratoService::formatar($c);
+				$html .= '<p><strong>Plano contratado:</strong> '.htmlspecialchars($fmt['plano_nome'], ENT_QUOTES, 'UTF-8')
+					.' ('.htmlspecialchars($fmt['produto_label'], ENT_QUOTES, 'UTF-8').')<br>'
+					.'<strong>Valor da parcela:</strong> R$ '.$fmt['valor_br']
+					.' <em>(valor gravado neste contrato; alteração posterior do catálogo não o modifica)</em>.<br>'
+					.'<strong>Vigência:</strong> '.htmlspecialchars((string)($fmt['inicio_br'] ?: $fmt['inicio']), ENT_QUOTES, 'UTF-8')
+					.' a '.htmlspecialchars((string)($fmt['fim_br'] ?: $fmt['fim']), ENT_QUOTES, 'UTF-8').'</p>';
+			}
+			return $html;
+		}
 		$valor = SaasAssinaturaService::resolverValorMensal($escola);
 		$valorBr = $valor > 0 ? 'R$ '.number_format($valor, 2, ',', '.') : 'conforme proposta comercial';
 		$custom = ClientesAssinantes::temColunaValorMensalCustom()
@@ -306,6 +329,21 @@ class SaasContratoVariaveisBuilder {
 	}
 
 	private static function htmlModulos(?ClientesAssinantes $escola, ?PlanosAssinatura $plano): string {
+		if ($escola instanceof ClientesAssinantes) {
+			$contratos = \App\Model\Entity\SaasContrato::vigentesDoCliente((int)$escola->id);
+			if (!empty($contratos)) {
+				$items = '';
+				foreach ($contratos as $c) {
+					$fmt = SaasContratoService::formatar($c);
+					$extra = '';
+					if (!empty($fmt['modulos'])) {
+						$extra = ' — módulos: '.htmlspecialchars(implode(', ', $fmt['modulos']), ENT_QUOTES, 'UTF-8');
+					}
+					$items .= '<li>'.htmlspecialchars($fmt['produto_label'].' / '.$fmt['plano_nome'], ENT_QUOTES, 'UTF-8').$extra.'</li>';
+				}
+				return '<p><strong>Produtos e módulos contratados:</strong></p><ul>'.$items.'</ul>';
+			}
+		}
 		$slugs = [];
 		if ($plano instanceof PlanosAssinatura) {
 			if ($plano->temTodosModulos()) {
@@ -341,6 +379,21 @@ class SaasContratoVariaveisBuilder {
 	}
 
 	private static function htmlCondicoesFinanceiras(ClientesAssinantes $escola, ?PlanosAssinatura $plano): string {
+		$contratos = \App\Model\Entity\SaasContrato::vigentesDoCliente((int)$escola->id);
+		if (!empty($contratos)) {
+			$lis = '';
+			foreach ($contratos as $c) {
+				$fmt = SaasContratoService::formatar($c);
+				$lis .= '<li><strong>'.htmlspecialchars($fmt['plano_nome'], ENT_QUOTES, 'UTF-8').':</strong> '
+					.$fmt['qtd_parcelas'].' parcela(s) de R$ '.$fmt['valor_br']
+					.', duração '.$fmt['duracao_meses'].' mês(es), ciclo '.htmlspecialchars($fmt['ciclo'], ENT_QUOTES, 'UTF-8').'.</li>';
+			}
+			return '<p>As condições abaixo são as gravadas no contrato. Mudança de preço no catálogo vale só para contratos novos ou para renovação em que a XD360 optar pelo valor atual do catálogo.</p>'
+				.'<ul>'.$lis
+				.'<li><strong>Pagamento de cada parcela:</strong> Pix, cartão de crédito ou boleto, no Checkout Transparente Mercado Pago da área Assinatura.</li>'
+				.'<li><strong>Tolerância:</strong> '.SaasAssinaturaService::GRACE_DIAS.' dias após o vencimento antes da suspensão.</li>'
+				.'</ul>';
+		}
 		$valor = SaasAssinaturaService::resolverValorMensal($escola);
 		$valorBr = $valor > 0 ? 'R$ '.number_format($valor, 2, ',', '.') : 'valor definido em proposta';
 		$dia = ClientesAssinantes::temColunasAssinatura()

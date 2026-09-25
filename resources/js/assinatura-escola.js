@@ -2,6 +2,12 @@ const ASSINATURA_ESCOLA_URL = 'painel/assinatura';
 let faturaAbertaId = null;
 let faturaPagina = 1;
 
+function compBr(c){
+	const s = String(c || '');
+	const m = s.match(/^(\d{4})-(\d{2})/);
+	return m ? (m[2]+'/'+m[1]) : (s || '—');
+}
+
 function esc(s){
 	return $('<div>').text(s == null ? '' : String(s)).html();
 }
@@ -52,7 +58,7 @@ function setAberta(f){
 	$('#box-sem-aberta').addClass('d-none');
 	$('#box-com-aberta').removeClass('d-none');
 	$('#badge-fatura-status').attr('class', 'badge bg-'+(f.status === 'vencida' ? 'danger' : 'warning')).text(f.status);
-	$('#fat-competencia').text(f.competencia || '—');
+	$('#fat-competencia').text(compBr(f.competencia));
 	$('#fat-valor').text('R$ '+(f.valor_br || '0,00'));
 	$('#fat-vencimento').text(f.vencimento_br || f.vencimento || '—');
 	const pix = f.pix_copia_cola || '';
@@ -69,7 +75,16 @@ function setAberta(f){
 	}
 	$('#btn-copiar-pix-escola').prop('disabled', !pix);
 	$('#btn-atualizar-pix').prop('disabled', false);
+	$('#btn-gerar-boleto').prop('disabled', false);
 	$('#btn-verificar-pag').prop('disabled', !f.mp_payment_id && !pix);
+	if(f.boleto_url){
+		$('#box-boleto').removeClass('d-none');
+		$('#boleto-url').attr('href', f.boleto_url);
+		$('#boleto-linha').text(f.boleto_linha || '—');
+	} else {
+		$('#box-boleto').addClass('d-none');
+	}
+	montarCartao(f);
 }
 
 function renderHistorico(faturas){
@@ -81,7 +96,7 @@ function renderHistorico(faturas){
 	faturas.forEach(function(f){
 		$tb.append(
 			'<tr>'
-			+'<td>'+esc(f.competencia)+'</td>'
+			+'<td>'+esc(compBr(f.competencia))+'</td>'
 			+'<td>R$ '+esc(f.valor_br)+'</td>'
 			+'<td>'+esc(f.vencimento_br || f.vencimento)+'</td>'
 			+'<td>'+badgeStatus(f.status)+'</td>'
@@ -107,8 +122,17 @@ function carregar(page){
 		}
 
 		const r = res.resumo || {};
+		const contratos = r.contratos || [];
+		if(contratos.length){
+			const vig = contratos.filter(function(c){ return c.status === 'vigente'; });
+			$('#ass-plano-nome').text(vig.map(function(c){ return c.plano_nome; }).join(' · ') || r.plano_nome || '—');
+			const soma = vig.reduce(function(a,c){ return a + (parseFloat(c.valor_parcela)||0); }, 0);
+			$('#ass-valor-mensal').text(soma ? ('R$ '+soma.toFixed(2).replace('.', ',')+' / parcela') : '—');
+		} else {
 		$('#ass-plano-nome').text(r.plano_nome || 'Personalizado / sem plano');
 		$('#ass-valor-mensal').text(r.valor_mensal_br ? ('R$ '+r.valor_mensal_br) : '—');
+		}
+		window.MP_PUBLIC_KEY = r.mp_public_key || '';
 		$('#ass-dia-venc').text(r.dia_vencimento || '—');
 
 		if(r.em_trial){
@@ -152,6 +176,58 @@ function carregar(page){
 	});
 }
 
+let cardForm = null;
+function montarCartao(f){
+	const key = window.MP_PUBLIC_KEY || '';
+	if(!key || typeof MercadoPago === 'undefined' || !f){
+		$('#form-checkout').addClass('d-none');
+		$('#cartao-sem-chave').removeClass('d-none');
+		return;
+	}
+	$('#cartao-sem-chave').addClass('d-none');
+	$('#form-checkout').removeClass('d-none');
+	if(cardForm) return;
+	const mp = new MercadoPago(key, { locale: 'pt-BR' });
+	cardForm = mp.cardForm({
+		amount: String(f.valor || 0),
+		iframe: true,
+		form: {
+			id: 'form-checkout',
+			cardNumber: { id: 'form-checkout__cardNumber', placeholder: 'Número do cartão' },
+			expirationDate: { id: 'form-checkout__expirationDate', placeholder: 'MM/AA' },
+			securityCode: { id: 'form-checkout__securityCode', placeholder: 'CVV' },
+			cardholderName: { id: 'form-checkout__cardholderName', placeholder: 'Nome impresso' },
+			issuer: { id: 'form-checkout__issuer', placeholder: 'Banco' },
+			installments: { id: 'form-checkout__installments', placeholder: 'Parcelas' },
+			identificationType: { id: 'form-checkout__identificationType', placeholder: 'Documento' },
+			identificationNumber: { id: 'form-checkout__identificationNumber', placeholder: 'Número' },
+			cardholderEmail: { id: 'form-checkout__cardholderEmail', placeholder: 'E-mail' }
+		},
+		callbacks: {
+			onFormMounted: function(error){
+				if(error) console.error(error);
+			},
+			onSubmit: function(event){
+				event.preventDefault();
+				const data = cardForm.getCardFormData();
+				$.post(url_base + ASSINATURA_ESCOLA_URL, {
+					acao: 'pagar_cartao',
+					id: faturaAbertaId,
+					token: data.token,
+					payment_method_id: data.paymentMethodId,
+					issuer_id: data.issuerId,
+					email: data.cardholderEmail,
+					doc_type: data.identificationType,
+					doc_number: data.identificationNumber
+				}, function(res){
+					Swal.fire(res && res.success ? 'Pagamento' : 'Atenção', (res && res.message) || 'Falha.', res && res.success ? 'success' : 'warning');
+					carregar();
+				}, 'json');
+			}
+		}
+	});
+}
+
 $(function(){
 	carregar();
 
@@ -176,6 +252,23 @@ $(function(){
 				return;
 			}
 			Swal.fire('OK', res.message, 'success');
+			carregar();
+		}, 'json').fail(function(){
+			$btn.prop('disabled', false);
+			Swal.fire('Erro', 'Falha de comunicação.', 'error');
+		});
+	});
+
+	$('#btn-gerar-boleto').on('click', function(){
+		if(!faturaAbertaId) return;
+		const $btn = $(this).prop('disabled', true);
+		$.post(url_base + ASSINATURA_ESCOLA_URL, { acao: 'pagar_boleto', id: faturaAbertaId }, function(res){
+			$btn.prop('disabled', false);
+			if(!res || !res.success){
+				Swal.fire('Erro', (res && res.message) || 'Falha.', 'error');
+				return;
+			}
+			Swal.fire('Boleto', res.message, 'success');
 			carregar();
 		}, 'json').fail(function(){
 			$btn.prop('disabled', false);

@@ -18,6 +18,8 @@ class SaasEmpresaXd360 {
 	public $cep;
 	public $estado;
 	public $cidade;
+	public $uf;
+	public $cidade_nome;
 	public $email;
 	public $telefone;
 	public $site;
@@ -44,6 +46,26 @@ class SaasEmpresaXd360 {
 			$cache = false;
 		}
 		return $cache;
+	}
+
+	public static function temColuna(string $coluna): bool {
+		static $cache = [];
+		$coluna = preg_replace('/[^a-z0-9_]/i', '', $coluna) ?: '';
+		if ($coluna === '' || !self::tabelaExiste()) {
+			return false;
+		}
+		if (array_key_exists($coluna, $cache)) {
+			return $cache[$coluna];
+		}
+		try {
+			$row = (new Database(self::TABELA))->execute(
+				"SHOW COLUMNS FROM ".self::TABELA." LIKE '{$coluna}'"
+			)->fetch(\PDO::FETCH_ASSOC);
+			$cache[$coluna] = !empty($row);
+		} catch (\Throwable $e) {
+			$cache[$coluna] = false;
+		}
+		return $cache[$coluna];
 	}
 
 	public static function temColunaRepLegalUsuarioId(): bool {
@@ -96,6 +118,13 @@ class SaasEmpresaXd360 {
 			'rep_cargo'     => trim((string)($dados->rep_cargo ?? '')) ?: 'Administrador',
 			'foro_comarca'  => (string)($dados->foro_comarca ?? ''),
 		];
+		if (self::temColuna('uf')) {
+			$uf = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($dados->uf ?? '')), 0, 2));
+			$payload['uf'] = $uf !== '' ? $uf : null;
+		}
+		if (self::temColuna('cidade_nome')) {
+			$payload['cidade_nome'] = trim((string)($dados->cidade_nome ?? '')) ?: null;
+		}
 		if (self::temColunaRepLegalUsuarioId()) {
 			$uid = (int)($dados->rep_legal_usuario_id ?? 0);
 			$payload['rep_legal_usuario_id'] = $uid > 0 ? $uid : null;

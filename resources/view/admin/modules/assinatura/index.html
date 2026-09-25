@@ -44,16 +44,42 @@
 						<textarea class="form-control font-monospace" id="fat-pix" rows="6" readonly placeholder="PIX ainda não disponível"></textarea>
 					</div>
 				</div>
-				<div class="d-flex flex-wrap gap-2">
+				<div class="d-flex flex-wrap gap-2 mb-3">
 					<button type="button" class="btn btn-primary btn-sm" id="btn-copiar-pix-escola" disabled>
 						<i class="fas fa-copy"></i> Copiar PIX
 					</button>
 					<button type="button" class="btn btn-outline-primary btn-sm" id="btn-atualizar-pix" disabled>
-						<i class="fas fa-sync"></i> Atualizar PIX
+						<i class="fas fa-sync"></i> Gerar PIX
+					</button>
+					<button type="button" class="btn btn-outline-secondary btn-sm" id="btn-gerar-boleto" disabled>
+						<i class="fas fa-barcode"></i> Gerar boleto
 					</button>
 					<button type="button" class="btn btn-outline-success btn-sm" id="btn-verificar-pag" disabled>
 						<i class="fas fa-check"></i> Já paguei — verificar
 					</button>
+				</div>
+				<div id="box-boleto" class="d-none mb-3">
+					<a id="boleto-url" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="#">Abrir boleto</a>
+					<p class="small mt-2 mb-0">Linha digitável: <code id="boleto-linha"></code></p>
+					<p class="form-text mb-0">O boleto compensa em 1 a 3 dias úteis.</p>
+				</div>
+				<div id="box-cartao" class="border rounded p-3">
+					<h6 class="mb-2">Cartão de crédito</h6>
+					<p class="small text-muted" id="cartao-sem-chave">Informe MP_XD360_PUBLIC_KEY no .env para habilitar o cartão.</p>
+					<form id="form-checkout" class="d-none">
+						<div class="row g-2">
+							<div class="col-md-6"><input type="text" class="form-control" id="form-checkout__cardNumber" placeholder="Número do cartão"></div>
+							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__expirationDate" placeholder="MM/AA"></div>
+							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__securityCode" placeholder="CVV"></div>
+							<div class="col-md-6"><input type="text" class="form-control" id="form-checkout__cardholderName" placeholder="Nome impresso"></div>
+							<div class="col-md-3"><select class="form-select" id="form-checkout__identificationType"></select></div>
+							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__identificationNumber" placeholder="Documento"></div>
+							<div class="col-md-6"><select class="form-select" id="form-checkout__issuer"></select></div>
+							<div class="col-md-3"><select class="form-select" id="form-checkout__installments"></select></div>
+							<div class="col-md-3"><input type="email" class="form-control" id="form-checkout__cardholderEmail" placeholder="E-mail"></div>
+						</div>
+						<button type="submit" class="btn btn-dark btn-sm mt-2" id="btn-pagar-cartao">Pagar com cartão</button>
+					</form>
 				</div>
 				<div class="form-text mt-2">
 					Após o vencimento, há {{grace_dias}} dias de tolerância. Sem pagamento, o acesso da escola pode ser suspenso.
@@ -86,4 +112,5 @@
 	</div>
 </div>
 
-<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260729d"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260925c"></script>

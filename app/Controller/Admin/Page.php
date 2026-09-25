@@ -229,7 +229,6 @@ public static function getMenu($currentSessionMenu, $permittedModules) {
 			$allPermittedModules[] = 'Dados da empresa';
 			$allPermittedModules[] = 'Meus Produtos';
 			$allPermittedModules[] = 'Assinatura';
-			$allPermittedModules[] = 'Funcionários';
 			$allPermittedModules[] = 'Suporte';
 		}
 
