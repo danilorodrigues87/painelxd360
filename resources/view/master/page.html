@@ -19,7 +19,7 @@
   <meta name="theme-color" content="#6366f1">
   <link href="{{URL}}/resources/css/styles.css" rel="stylesheet" />
   <link href="{{URL}}/resources/css/panel-theme.css?v=20260901a" rel="stylesheet" />
-  <link href="{{URL}}/resources/css/xd360-brand.css?v=20260926i" rel="stylesheet" />
+  <link href="{{URL}}/resources/css/xd360-brand.css?v=20260926k" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css">
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -28,16 +28,14 @@
 </head>
 <body class="sb-nav-fixed">
   <nav class="sb-topnav navbar navbar-expand navbar-dark xd360-navbar">
-    <a class="navbar-brand ps-3 d-flex align-items-center gap-2" href="{{URL}}/master">
+    <a class="navbar-brand d-flex align-items-center" href="{{URL}}/master">
       <img class="xd360-logo-on-light" src="{{logo_light_url}}" alt="XD360">
       <img class="xd360-logo-on-dark" src="{{logo_dark_url}}" alt="">
-      <span class="xd360-brand-badge">Master</span>
     </a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-    <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0 small text-white-50" id="nav-master-nome">
-      {{user}}
-    </div>
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <button class="btn btn-link btn-sm" id="sidebarToggle" type="button"><i class="fas fa-bars"></i></button>
+    <div class="d-flex align-items-center ms-auto">
+      <div class="d-none d-md-inline small me-2 text-white-50" id="nav-master-nome">{{user}}</div>
+      <ul class="navbar-nav me-3 me-lg-4">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <img id="nav-master-foto" src="{{foto_url}}" alt="" width="28" height="28" class="rounded-circle" style="object-fit:cover;border:1px solid rgba(255,255,255,.35);">
@@ -50,6 +48,7 @@
         </ul>
       </li>
     </ul>
+    </div>
   </nav>
   <div id="layoutSidenav">
     {{menu}}

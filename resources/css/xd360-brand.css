@@ -117,30 +117,30 @@ html[data-bs-theme="light"] #nav-notif-wrap .nav-link {
 }
 
 .sb-topnav.xd360-navbar .navbar-brand {
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  width: auto;
-  max-width: 240px;
+  width: 225px;
+  max-width: 225px;
+  margin: 0;
+  padding-left: 0.85rem;
+  height: 56px;
+  flex: 0 0 225px;
+  overflow: hidden;
 }
 
 .sb-topnav.xd360-navbar .navbar-brand img {
-  height: 34px;
+  height: 88px;
   width: auto;
-  max-width: 210px;
+  max-width: none;
 }
 
-.sb-topnav.xd360-navbar .navbar-brand .xd360-brand-text {
-  color: #f8fafc;
-  font-size: 1.1rem;
+.sb-sidenav .sb-sidenav-menu > .nav {
+  padding-top: 0.75rem;
 }
 
-.sb-topnav.xd360-navbar .navbar-brand .xd360-brand-badge {
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #94a3b8;
-  margin-left: 0.35rem;
+.sb-topnav.xd360-navbar #sidebarToggle {
+  margin: 0 0.25rem 0 0.35rem;
+  padding-left: 0.65rem;
+  padding-right: 0.65rem;
+  align-self: center;
 }
 
 html[data-bs-theme="dark"] .sb-sidenav-dark {

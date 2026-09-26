@@ -63,7 +63,7 @@ class MasterMenuHelper {
 
 	public static function render(string $menuAtivo): string {
 		$grupoAtivo = self::grupoDoItem($menuAtivo);
-		$html = '<div class="nav"><div class="sb-sidenav-menu-heading">XD360 Master</div>';
+		$html = '<div class="nav">';
 
 		foreach (self::grupos() as $grupo) {
 			$gid = (string)$grupo['id'];
