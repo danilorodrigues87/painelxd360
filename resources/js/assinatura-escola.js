@@ -177,6 +177,29 @@ function carregar(page){
 }
 
 let cardForm = null;
+let cartaoRespondeu = false;
+
+function avisoCartao(texto){
+	cartaoRespondeu = true;
+	$('#cartao-feedback').removeClass('d-none').addClass('text-danger').text(texto);
+	Swal.fire('Cartão', texto, 'warning');
+}
+
+function textoErroMp(err){
+	if(!err) return '';
+	if(typeof err === 'string') return err;
+	const partes = [];
+	if(err.message) partes.push(String(err.message));
+	const causas = err.cause || (err.error && err.error.cause) || err.fieldErrors || [];
+	if(Array.isArray(causas)){
+		causas.forEach(function(c){
+			const t = c && (c.description || c.message || c.field || c.code);
+			if(t) partes.push(String(t));
+		});
+	}
+	return partes.join(' ');
+}
+
 function montarCartao(f){
 	const key = window.MP_PUBLIC_KEY || '';
 	if(!key || typeof MercadoPago === 'undefined' || !f){
@@ -187,70 +210,98 @@ function montarCartao(f){
 	$('#cartao-sem-chave').addClass('d-none');
 	$('#form-checkout').removeClass('d-none');
 	if(cardForm) return;
-	const mp = new MercadoPago(key, { locale: 'pt-BR' });
 	const valorCartao = Number(f.valor || 0);
-	if (!(valorCartao > 0)) {
-		Swal.fire('Cartão', 'Esta fatura não tem valor para cobrar no cartão.', 'warning');
+	if(!(valorCartao > 0)){
+		avisoCartao('Esta fatura não tem valor para cobrar no cartão.');
 		return;
 	}
-	cardForm = mp.cardForm({
-		amount: valorCartao.toFixed(2),
-		iframe: true,
-		form: {
-			id: 'form-checkout',
-			cardNumber: { id: 'form-checkout__cardNumber', placeholder: 'Número do cartão' },
-			expirationDate: { id: 'form-checkout__expirationDate', placeholder: 'MM/AA' },
-			securityCode: { id: 'form-checkout__securityCode', placeholder: 'CVV' },
-			cardholderName: { id: 'form-checkout__cardholderName', placeholder: 'Nome impresso' },
-			issuer: { id: 'form-checkout__issuer', placeholder: 'Banco' },
-			installments: { id: 'form-checkout__installments', placeholder: 'Parcelas' },
-			identificationType: { id: 'form-checkout__identificationType', placeholder: 'Documento' },
-			identificationNumber: { id: 'form-checkout__identificationNumber', placeholder: 'Número' },
-			cardholderEmail: { id: 'form-checkout__cardholderEmail', placeholder: 'E-mail' }
-		},
-		callbacks: {
-			onFormMounted: function(error){
-				if(error){
-					Swal.fire('Cartão', 'Não foi possível abrir o formulário do cartão. Recarregue a página.', 'error');
+	setTimeout(function(){
+		if(cardForm) return;
+		try {
+			const mp = new MercadoPago(key, { locale: 'pt-BR' });
+			cardForm = mp.cardForm({
+				amount: valorCartao.toFixed(2),
+				iframe: true,
+				form: {
+					id: 'form-checkout',
+					cardNumber: { id: 'form-checkout__cardNumber', placeholder: 'Número do cartão' },
+					expirationDate: { id: 'form-checkout__expirationDate', placeholder: 'MM/AA' },
+					securityCode: { id: 'form-checkout__securityCode', placeholder: 'CVV' },
+					cardholderName: { id: 'form-checkout__cardholderName', placeholder: 'Nome impresso' },
+					issuer: { id: 'form-checkout__issuer', placeholder: 'Banco' },
+					installments: { id: 'form-checkout__installments', placeholder: 'Parcelas' },
+					identificationType: { id: 'form-checkout__identificationType', placeholder: 'Documento' },
+					identificationNumber: { id: 'form-checkout__identificationNumber', placeholder: 'Número' },
+					cardholderEmail: { id: 'form-checkout__cardholderEmail', placeholder: 'E-mail' }
+				},
+				callbacks: {
+					onFormMounted: function(error){
+						if(error) avisoCartao(textoErroMp(error) || 'Não foi possível abrir o formulário do cartão. Recarregue a página.');
+					},
+					onValidityChange: function(error){
+						const t = textoErroMp(error);
+						if(t) $('#cartao-feedback').removeClass('d-none').addClass('text-danger').text(t);
+					},
+					onError: function(error){
+						avisoCartao(textoErroMp(error) || 'O Mercado Pago recusou os dados do cartão.');
+					},
+					onCardTokenReceived: function(errorData){
+						if(errorData) avisoCartao(textoErroMp(errorData) || 'Não foi possível validar o cartão.');
+						else cartaoRespondeu = true;
+					},
+					onFetching: function(){
+						cartaoRespondeu = true;
+						$('#cartao-feedback').removeClass('d-none text-danger').text('Validando o cartão...');
+					},
+					onSubmit: function(event){
+						if(event && event.preventDefault) event.preventDefault();
+						cartaoRespondeu = true;
+						let data = null;
+						try { data = cardForm.getCardFormData(); } catch (e) { data = null; }
+						if(!data || !data.token){
+							avisoCartao('Confira número, validade, CVV, nome, CPF e e-mail.');
+							return;
+						}
+						const $btn = $('#btn-pagar-cartao').prop('disabled', true);
+						$('#cartao-feedback').removeClass('d-none text-danger').text('Enviando pagamento...');
+						$.post(url_base + ASSINATURA_ESCOLA_URL, {
+							acao: 'pagar_cartao',
+							id: faturaAbertaId,
+							token: data.token,
+							payment_method_id: data.paymentMethodId,
+							issuer_id: data.issuerId,
+							email: data.cardholderEmail,
+							doc_type: data.identificationType,
+							doc_number: data.identificationNumber
+						}, function(res){
+							$btn.prop('disabled', false);
+							Swal.fire(res && res.success ? 'Pagamento' : 'Atenção', (res && res.message) || 'Falha.', res && res.success ? 'success' : 'warning');
+							carregar();
+						}, 'json').fail(function(){
+							$btn.prop('disabled', false);
+							avisoCartao('Falha de comunicação ao cobrar o cartão.');
+						});
+					}
 				}
-			},
-			onSubmit: function(event){
-				event.preventDefault();
-				let data;
-				try {
-					data = cardForm.getCardFormData();
-				} catch (e) {
-					data = null;
-				}
-				if(!data || !data.token){
-					Swal.fire('Cartão', 'Confira número, validade, CVV, nome, CPF e e-mail. O Mercado Pago não gerou a cobrança.', 'warning');
-					return;
-				}
-				const $btn = $('#btn-pagar-cartao').prop('disabled', true);
-				$.post(url_base + ASSINATURA_ESCOLA_URL, {
-					acao: 'pagar_cartao',
-					id: faturaAbertaId,
-					token: data.token,
-					payment_method_id: data.paymentMethodId,
-					issuer_id: data.issuerId,
-					email: data.cardholderEmail,
-					doc_type: data.identificationType,
-					doc_number: data.identificationNumber
-				}, function(res){
-					$btn.prop('disabled', false);
-					Swal.fire(res && res.success ? 'Pagamento' : 'Atenção', (res && res.message) || 'Falha.', res && res.success ? 'success' : 'warning');
-					carregar();
-				}, 'json').fail(function(){
-					$btn.prop('disabled', false);
-					Swal.fire('Erro', 'Falha de comunicação ao cobrar o cartão.', 'error');
-				});
-			}
+			});
+		} catch (e) {
+			cardForm = null;
+			avisoCartao('Não foi possível iniciar o cartão. Recarregue a página.');
 		}
-	});
+	}, 50);
 }
 
 $(function(){
 	carregar();
+
+	$(document).on('click', '#btn-pagar-cartao', function(){
+		cartaoRespondeu = false;
+		$('#cartao-feedback').removeClass('d-none text-danger').text('Conferindo o cartão...');
+		setTimeout(function(){
+			if(cartaoRespondeu) return;
+			avisoCartao('O Mercado Pago não enviou a cobrança. Preencha número, validade, CVV, nome, CPF, e-mail e espere a opção de parcelas aparecer.');
+		}, 1800);
+	});
 
 	$('#btn-copiar-pix-escola').on('click', function(){
 		const t = document.getElementById('fat-pix');
