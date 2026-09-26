@@ -62,8 +62,29 @@ class Client {
 			'status' => $status,
 			'body'   => is_array($decoded) ? $decoded : null,
 			'raw'    => $raw,
-			'error'  => $ok ? null : (is_array($decoded) ? ($decoded['message'] ?? $decoded['error'] ?? 'Erro HTTP '.$status) : 'Erro HTTP '.$status),
+			'error'  => $ok ? null : self::mensagemErro(is_array($decoded) ? $decoded : null, $status),
 		];
+	}
+
+	private static function mensagemErro(?array $decoded, int $status): string {
+		$msg = trim((string)($decoded['message'] ?? $decoded['error'] ?? ''));
+		if ($msg === 'Invalid transaction_amount') {
+			return 'O Mercado Pago recusou o valor. O boleto exige um valor com até 2 casas decimais e, em geral, no mínimo R$ 5,00.';
+		}
+		if ($msg === 'Invalid user identification number') {
+			return 'O Mercado Pago recusou o CPF ou CNPJ. Confira o documento do cliente.';
+		}
+		$cause = '';
+		if (isset($decoded['cause'][0]) && is_array($decoded['cause'][0])) {
+			$cause = trim((string)($decoded['cause'][0]['description'] ?? $decoded['cause'][0]['code'] ?? ''));
+		}
+		if ($msg !== '' && $cause !== '') {
+			return $msg.' — '.$cause;
+		}
+		if ($msg !== '') {
+			return $msg;
+		}
+		return 'Erro HTTP '.$status;
 	}
 
 	/** @return array{ok:bool,message:string,user_id?:int} */

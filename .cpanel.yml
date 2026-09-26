@@ -4,4 +4,4 @@ deployment:
     - export DEPLOYPATH=/home1/dncurs82/app.xd360.com.br/
     - /bin/cp -R * $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH/ 2>/dev/null || true
-    - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env 2>/dev/null || true
+    - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env 2>/dev/null || true 

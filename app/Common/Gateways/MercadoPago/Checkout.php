@@ -33,9 +33,13 @@ class Checkout {
 	/** @return array{id:string,url:?string,linha:?string}|null */
 	public function criarBoleto(array $dados): ?array {
 		self::$ultimoErro = null;
-		$valor = round((float)($dados['valor'] ?? 0), 2);
+		$valor = self::valorApi($dados['valor'] ?? 0);
 		if ($valor <= 0) {
 			self::$ultimoErro = 'Valor inválido.';
+			return null;
+		}
+		if ($valor < 5) {
+			self::$ultimoErro = 'O boleto do Mercado Pago não aceita valores abaixo de R$ 5,00. O valor desta fatura é R$ '.number_format($valor, 2, ',', '.').'.';
 			return null;
 		}
 		$doc = preg_replace('/\D/', '', (string)($dados['pagador_doc'] ?? $dados['pagador_cpf'] ?? ''));
@@ -130,10 +134,16 @@ class Checkout {
 		return ['id' => $id, 'url' => $url !== '' ? $url : null, 'linha' => $linha !== '' ? $linha : null];
 	}
 
+	/** Valor com exatamente 2 casas, no formato que o Mercado Pago aceita. */
+	private static function valorApi($valor): float {
+		$n = round((float)$valor, 2);
+		return (float) number_format($n, 2, '.', '');
+	}
+
 	/** @return array{id:string,status:string,status_detail:string}|null */
 	public function criarCartao(array $dados): ?array {
 		self::$ultimoErro = null;
-		$valor = round((float)($dados['valor'] ?? 0), 2);
+		$valor = self::valorApi($dados['valor'] ?? 0);
 		$token = trim((string)($dados['token'] ?? ''));
 		$method = trim((string)($dados['payment_method_id'] ?? ''));
 		if ($valor <= 0 || $token === '' || $method === '') {

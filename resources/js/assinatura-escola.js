@@ -188,8 +188,13 @@ function montarCartao(f){
 	$('#form-checkout').removeClass('d-none');
 	if(cardForm) return;
 	const mp = new MercadoPago(key, { locale: 'pt-BR' });
+	const valorCartao = Number(f.valor || 0);
+	if (!(valorCartao > 0)) {
+		Swal.fire('Cartão', 'Esta fatura não tem valor para cobrar no cartão.', 'warning');
+		return;
+	}
 	cardForm = mp.cardForm({
-		amount: String(f.valor || 0),
+		amount: valorCartao.toFixed(2),
 		iframe: true,
 		form: {
 			id: 'form-checkout',
@@ -205,11 +210,23 @@ function montarCartao(f){
 		},
 		callbacks: {
 			onFormMounted: function(error){
-				if(error) console.error(error);
+				if(error){
+					Swal.fire('Cartão', 'Não foi possível abrir o formulário do cartão. Recarregue a página.', 'error');
+				}
 			},
 			onSubmit: function(event){
 				event.preventDefault();
-				const data = cardForm.getCardFormData();
+				let data;
+				try {
+					data = cardForm.getCardFormData();
+				} catch (e) {
+					data = null;
+				}
+				if(!data || !data.token){
+					Swal.fire('Cartão', 'Confira número, validade, CVV, nome, CPF e e-mail. O Mercado Pago não gerou a cobrança.', 'warning');
+					return;
+				}
+				const $btn = $('#btn-pagar-cartao').prop('disabled', true);
 				$.post(url_base + ASSINATURA_ESCOLA_URL, {
 					acao: 'pagar_cartao',
 					id: faturaAbertaId,
@@ -220,9 +237,13 @@ function montarCartao(f){
 					doc_type: data.identificationType,
 					doc_number: data.identificationNumber
 				}, function(res){
+					$btn.prop('disabled', false);
 					Swal.fire(res && res.success ? 'Pagamento' : 'Atenção', (res && res.message) || 'Falha.', res && res.success ? 'success' : 'warning');
 					carregar();
-				}, 'json');
+				}, 'json').fail(function(){
+					$btn.prop('disabled', false);
+					Swal.fire('Erro', 'Falha de comunicação ao cobrar o cartão.', 'error');
+				});
 			}
 		}
 	});
