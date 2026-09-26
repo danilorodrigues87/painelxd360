@@ -10,8 +10,8 @@ use \App\Model\Entity\EstadoCidades;
 class TermosDeUso extends Page {
 
 	/** Versão vigente do termo (alterar força novo aceite quando colunas SQL existem). */
-	public const VERSAO = '2026-07';
-	public const DATA_VERSAO = '27/07/2026';
+	public const VERSAO = '2026-09';
+	public const DATA_VERSAO = '26/09/2026';
 
 	public static function index($request){
 		$content = View::render('admin/modules/termos_uso/index', [
@@ -109,9 +109,8 @@ class TermosDeUso extends Page {
 			$blocoStatus = '<div class="form-check my-4">'
 				.'<input onchange="ativaBtn()" class="form-check-input" type="checkbox" id="termo_uso">'
 				.'<label class="form-check-label" for="termo_uso">'
-				.'Declaro estar ciente e concordar com este Termo de Uso e Responsabilidade (versão '
-				.self::VERSAO.'), assumindo responsabilidade pelo uso adequado dos dados tratados no Painel CTI '
-				.'em nome da escola <strong>'.$escolaNome.'</strong>.'
+				.'Declaro estar ciente e concordar com estes Termos de Uso da XD360 (versão '
+				.self::VERSAO.') e com a Política de Privacidade, em nome de <strong>'.$escolaNome.'</strong>.'
 				.'</label></div>'
 				.'<button disabled onclick="termos()" id="btn-termo" class="btn btn-primary mb-3">Aceitar e continuar</button>';
 		}

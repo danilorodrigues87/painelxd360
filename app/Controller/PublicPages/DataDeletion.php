@@ -11,10 +11,10 @@ use App\Common\Helpers\BrandingHelper;
 class DataDeletion {
 
 	public static function index($request) {
-		$logoUrl = BrandingHelper::urlLogoCti();
-		$faviconUrl = BrandingHelper::urlFaviconCti();
-		$contato = 'ctieducacional@gmail.com';
-		$site = 'https://ctieducacional.com.br';
+		$logoUrl = BrandingHelper::urlLogoXd360();
+		$faviconUrl = BrandingHelper::urlFaviconXd360();
+		$contato = 'contato@xd360.com.br';
+		$site = 'https://xd360.com.br';
 		$urlBase = rtrim((string)URL, '/');
 		$status = '';
 
@@ -34,7 +34,7 @@ class DataDeletion {
 		]);
 
 		return View::render('login/page', [
-			'title' => 'Exclusão de dados — CTI Educacional',
+			'title' => 'Exclusão de dados — XD360',
 			'content' => $content,
 			'favicon_url' => $faviconUrl,
 		]);

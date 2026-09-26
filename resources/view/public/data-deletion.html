@@ -1,19 +1,18 @@
 <div class="col-lg-10 col-xl-9">
 	<div class="card shadow-lg border-0 rounded-lg mt-3 mb-4">
 		<div class="text-center my-3">
-			<img src="{{logo_url}}" width="140" alt="CTI Educacional">
+			<img src="{{logo_url}}" width="140" alt="XD360">
 		</div>
 		<div class="card-header">
 			<h1 class="h3 text-center font-weight-light mb-0">Exclusão de dados do usuário</h1>
-			<p class="text-center text-muted small mb-0 mt-2">Painel CTI Educacional · Meta / Facebook / Instagram</p>
+			<p class="text-center text-muted small mb-0 mt-2">XD360</p>
 		</div>
 		<div class="card-body" style="line-height:1.55;font-size:0.95rem;">
 			{{status}}
 
 			<p>
 				Esta página explica como solicitar a <strong>exclusão dos seus dados</strong>
-				relacionados ao Painel CTI e à integração com a Meta (Facebook e Instagram),
-				conforme exigências da plataforma Meta e da LGPD.
+				da sua conta na XD360, conforme a LGPD.
 			</p>
 			<p class="small text-muted">
 				URL pública:
@@ -24,36 +23,23 @@
 
 			<h2 class="h5 mt-4">1. O que pode ser excluído</h2>
 			<ul>
-				<li>Tokens e vínculo da conta Facebook/Instagram conectada ao painel da escola;</li>
-				<li>Posts e mídias agendados pela integração social (quando aplicável);</li>
-				<li>Dados de conta de usuário do painel (mediante solicitação e validação);</li>
-				<li>Outros dados pessoais tratados pela CTI na operação da plataforma, quando não houver obrigação legal de retenção.</li>
+				<li>Dados da conta de usuário do painel, depois de confirmarmos que a solicitação é sua.</li>
+				<li>Dados da empresa e chamados de suporte, quando não houver dever legal de guarda.</li>
 			</ul>
 			<p>
-				Dados de alunos/responsáveis cadastrados pela <strong>escola</strong> devem ser
-				solicitados prioritariamente à própria escola (ela é a controladora desses dados).
+				Contrato aceito, parcelas e registros de pagamento podem ser mantidos pelo prazo exigido em lei.
+				Dados que o cliente cadastrou dentro de um produto licenciado devem ser pedidos ao próprio contratante, que é o controlador desses dados.
 			</p>
 
-			<h2 class="h5 mt-4">2. Como a escola desconecta o Facebook/Instagram</h2>
-			<ol>
-				<li>Acesse o Painel CTI como Diretor;</li>
-				<li>Vá em <strong>Configurações → Conexão Meta</strong>;</li>
-				<li>Clique em <strong>Desconectar</strong> — isso remove tokens e desativa a publicação;</li>
-				<li>Opcionalmente, em facebook.com → Configurações → Aplicativos, remova o app da CTI.</li>
-			</ol>
-
-			<h2 class="h5 mt-4">3. Como solicitar exclusão à CTI</h2>
+			<h2 class="h5 mt-4">2. Como solicitar</h2>
 			<p>Você pode:</p>
 			<ul>
 				<li>Enviar e-mail para
-					<a href="mailto:{{contato_email}}?subject=Solicitacao%20exclusao%20de%20dados%20CTI">{{contato_email}}</a>
+					<a href="mailto:{{contato_email}}?subject=Solicitacao%20exclusao%20de%20dados%20XD360">{{contato_email}}</a>
 					com assunto “Exclusão de dados”, informando nome, e-mail da conta e o que deseja excluir; ou</li>
 				<li>Preencher o formulário abaixo.</li>
 			</ul>
-			<p>
-				Prazo de resposta: até <strong>30 dias</strong>. Após a exclusão dos dados da
-				integração Meta, a publicação automática deixa de funcionar até nova conexão.
-			</p>
+			<p>Prazo de resposta: até <strong>30 dias</strong>.</p>
 
 			<h2 class="h5 mt-4">4. Formulário de solicitação</h2>
 			<form method="post" action="{{url_exclusao}}" class="mt-3">
@@ -69,14 +55,14 @@
 				<div class="mb-3">
 					<label class="form-label">O que deseja excluir / detalhes</label>
 					<textarea name="detalhe" class="form-control" rows="4" required maxlength="2000"
-						placeholder="Ex.: desconectar Instagram da escola X; apagar meu usuário do painel; etc."></textarea>
+						placeholder="Ex.: apagar meu usuário do painel"></textarea>
 				</div>
 				<button type="submit" class="btn btn-primary">Enviar solicitação</button>
 			</form>
 
 			<h2 class="h5 mt-4">5. Contato</h2>
 			<p class="mb-0">
-				CTI Educacional ·
+				XD360 ·
 				<a href="mailto:{{contato_email}}">{{contato_email}}</a> ·
 				<a href="{{site_cti}}" target="_blank" rel="noopener noreferrer">{{site_cti}}</a>
 			</p>

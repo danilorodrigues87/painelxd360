@@ -30,6 +30,17 @@ class SaasContratoService {
 		if ($produto === '' || !isset(ProductModules::getCatalog()[$produto])) {
 			return ['ok' => false, 'message' => 'Selecione o produto.'];
 		}
+		$renovaId = (int)($post['renovado_de_id'] ?? 0);
+		foreach (SaasContrato::vigentesDoCliente($idAdmin) as $vig) {
+			if ((string)$vig->produto_slug !== $produto) {
+				continue;
+			}
+			if ($renovaId > 0 && (int)$vig->id === $renovaId) {
+				continue;
+			}
+			$label = ProductModules::slugParaLabel($produto) ?: $produto;
+			return ['ok' => false, 'message' => 'Já existe um contrato em andamento de '.$label.'. Cancele o atual para gerar outro.'];
+		}
 		$valor = self::parseValor($post['valor_parcela'] ?? 0);
 		if ($valor <= 0) {
 			return ['ok' => false, 'message' => 'Informe o valor da parcela.'];

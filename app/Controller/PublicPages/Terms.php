@@ -4,26 +4,24 @@ namespace App\Controller\PublicPages;
 
 use App\Utils\View;
 use App\Common\Helpers\BrandingHelper;
+use App\Controller\Admin\TermosDeUso;
 
-/**
- * Páginas públicas (sem login) — exigidas pelo Meta App Review etc.
- */
-class Privacy {
+class Terms {
 
 	public static function index($request) {
 		$urlBase = rtrim((string)URL, '/');
-		$content = View::render('public/privacy', [
+		$content = View::render('public/termos', [
 			'logo_url' => BrandingHelper::urlLogoXd360(),
-			'atualizado' => '26 de setembro de 2026',
+			'versao' => TermosDeUso::VERSAO,
+			'data_versao' => TermosDeUso::DATA_VERSAO,
 			'contato_email' => 'contato@xd360.com.br',
-			'site' => 'https://xd360.com.br',
-			'url_politica' => $urlBase.'/privacidade',
+			'url_privacidade' => $urlBase.'/privacidade',
 			'url_exclusao' => $urlBase.'/exclusao-de-dados',
 			'URL' => $urlBase,
 		]);
 
 		return View::render('login/page', [
-			'title' => 'Política de Privacidade — XD360',
+			'title' => 'Termos de Uso — XD360',
 			'content' => $content,
 			'favicon_url' => BrandingHelper::urlFaviconXd360(),
 		]);

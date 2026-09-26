@@ -1,0 +1,60 @@
+<div class="container-fluid px-4 mt-4 mb-5">
+	<h1 class="h3">Ajuda</h1>
+	<p class="text-muted">O que cada parte do painel do cliente faz.</p>
+
+	<div class="accordion" id="ajuda-painel">
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#aj-inicio">Início</button></h2>
+			<div id="aj-inicio" class="accordion-collapse collapse show" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">Resumo da conta: produtos liberados e o que precisa de atenção, como parcela em aberto ou contrato pendente de aceite.</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-produtos">Meus Produtos</button></h2>
+			<div id="aj-produtos" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">Lista os softwares incluídos no contrato vigente. O acesso a cada produto só aparece depois que o contrato está em andamento e, quando houver parcela, o pagamento estiver em dia.</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-ass">Assinatura</button></h2>
+			<div id="aj-ass" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">
+					Mostra o contrato, o aceite e as parcelas. Para aceitar, role o texto até o fim, informe o CPF de quem assina e marque a confirmação.
+					Cada parcela em aberto pode ser paga com PIX, boleto ou cartão. O cartão é processado pelo Mercado Pago: se a operadora recusar, a mensagem explica o motivo e a parcela continua em aberto.
+					O boleto usa o CPF ou CNPJ e o endereço preenchidos em Dados da empresa.
+				</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-empresa">Dados da empresa</button></h2>
+			<div id="aj-empresa" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">Nome, documento e endereço de quem contrata. O CEP preenche logradouro, bairro, cidade e UF. Esses dados entram no contrato e são exigidos para emitir boleto.</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-perfil">Perfil</button></h2>
+			<div id="aj-perfil" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">Seus dados de usuário: nome, contato, endereço e senha. No contrato de empresa ou MEI, o CPF daqui é o da pessoa que assina.</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-sup">Suporte</button></h2>
+			<div id="aj-sup" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">Abre um chamado, acompanha as respostas e anexa arquivos. O status “Aguardando cliente” significa que a XD360 espera um retorno seu.</div>
+			</div>
+		</div>
+		<div class="accordion-item">
+			<h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aj-termos">Termos e privacidade</button></h2>
+			<div id="aj-termos" class="accordion-collapse collapse" data-bs-parent="#ajuda-painel">
+				<div class="accordion-body">
+					O primeiro acesso pede o aceite dos termos de uso. Você pode reler quando quiser.
+					<p class="mb-0 mt-2">
+						<a href="{{url_termos}}">Termos de uso no painel</a>
+						·
+						<a href="{{url_privacidade}}" target="_blank" rel="noopener noreferrer">Política de privacidade</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -133,6 +133,11 @@ class SystemModules {
 				'link'  => $base.'/painel/suporte',
 				'icon'  => 'fas fa-headset',
 			],
+			'Ajuda' => [
+				'label' => 'Ajuda',
+				'link'  => $base.'/painel/ajuda',
+				'icon'  => 'fas fa-circle-question',
+			],
 		];
 	}
 

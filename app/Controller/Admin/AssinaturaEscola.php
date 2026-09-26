@@ -503,8 +503,27 @@ class AssinaturaEscola extends Page {
 		}
 		$msg = $pag['status'] === 'in_process'
 			? 'Pagamento em análise. A parcela continua em aberto até a confirmação.'
-			: 'Pagamento não aprovado ('.$pag['status_detail'].'). A parcela continua em aberto.';
+			: self::mensagemRecusaCartao((string)$pag['status_detail']);
 		return json_encode(['success' => false, 'message' => $msg, 'fatura' => SaasAssinaturaService::formatar($fat)], JSON_UNESCAPED_UNICODE);
+	}
+
+	private static function mensagemRecusaCartao(string $detail): string {
+		$map = [
+			'cc_rejected_bad_filled_security_code' => 'O código de segurança (CVV) não confere. Confira os dígitos no verso do cartão.',
+			'cc_rejected_bad_filled_date' => 'A validade do cartão está incorreta.',
+			'cc_rejected_bad_filled_card_number' => 'O número do cartão está incorreto.',
+			'cc_rejected_bad_filled_other' => 'Algum dado do cartão está incorreto. Confira número, validade, CVV e nome.',
+			'cc_rejected_insufficient_amount' => 'O cartão não tem limite disponível para este valor.',
+			'cc_rejected_card_disabled' => 'Este cartão está bloqueado ou desativado. Use outro cartão ou fale com o banco.',
+			'cc_rejected_high_risk' => 'O pagamento foi recusado por segurança. Tente outro cartão ou pague com PIX ou boleto.',
+			'cc_rejected_blacklist' => 'O pagamento foi recusado. Use outro cartão.',
+			'cc_rejected_call_for_authorize' => 'O banco precisa autorizar esta compra. Ligue para o banco ou use outro cartão.',
+			'cc_rejected_duplicated_payment' => 'Já existe uma tentativa igual há pouco. Aguarde alguns minutos se a parcela continuar em aberto.',
+			'cc_rejected_max_attempts' => 'Houve muitas tentativas seguidas. Espere um pouco antes de tentar de novo.',
+			'cc_rejected_other_reason' => 'O banco recusou o pagamento. Tente outro cartão ou pague com PIX ou boleto.',
+		];
+		$txt = $map[$detail] ?? 'O pagamento não foi aprovado. Confira os dados do cartão ou escolha PIX ou boleto.';
+		return $txt.' A parcela continua em aberto.';
 	}
 
 	private static function verificar(array $post): string {

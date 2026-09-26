@@ -9,7 +9,7 @@ use App\Model\Entity\PlatformHelpArtigo;
 class Ajuda extends Page {
 
 	public static function index($request) {
-		$content = self::renderLista(true);
+		$content = self::conteudoPainel();
 		return parent::getPanel('Ajuda', $content, 'Ajuda', $request);
 	}
 
@@ -20,25 +20,33 @@ class Ajuda extends Page {
 
 	/** Lista pública (sem layout do painel). */
 	public static function indexPublico($request) {
-		$inner = self::renderLista(false);
-		return self::wrapPublico('Central de Ajuda — CTI Educacional', $inner);
+		$inner = self::conteudoPainel();
+		return self::wrapPublico('Ajuda — XD360', $inner);
 	}
 
 	public static function artigoPublico($request, $slug) {
 		$inner = self::renderArtigo((string)$slug, false);
-		return self::wrapPublico('Ajuda — CTI Educacional', $inner);
+		return self::wrapPublico('Ajuda — XD360', $inner);
 	}
 
 	private static function wrapPublico(string $title, string $inner): string {
 		$content = View::render('public/ajuda-card', [
-			'logo_url' => \App\Common\Helpers\BrandingHelper::urlLogoCti(),
+			'logo_url' => \App\Common\Helpers\BrandingHelper::urlLogoXd360(),
 			'content' => $inner,
 			'URL' => rtrim((string)URL, '/'),
 		]);
 		return View::render('login/page', [
 			'title' => $title,
 			'content' => $content,
-			'favicon_url' => \App\Common\Helpers\BrandingHelper::urlFaviconCti(),
+			'favicon_url' => \App\Common\Helpers\BrandingHelper::urlFaviconXd360(),
+		]);
+	}
+
+	private static function conteudoPainel(): string {
+		$base = rtrim((string)URL, '/');
+		return View::render('admin/modules/ajuda/index', [
+			'url_termos' => $base.'/painel/termos-de-uso',
+			'url_privacidade' => $base.'/privacidade',
 		]);
 	}
 

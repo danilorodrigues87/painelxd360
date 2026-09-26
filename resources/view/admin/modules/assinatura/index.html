@@ -68,9 +68,9 @@
 					<p class="small text-muted" id="cartao-sem-chave">Informe MP_XD360_PUBLIC_KEY no .env para habilitar o cartão.</p>
 					<form id="form-checkout" class="d-none" novalidate>
 						<div class="row g-2">
-							<div class="col-md-6"><div id="form-checkout__cardNumber" class="mp-field"></div></div>
-							<div class="col-md-3"><div id="form-checkout__expirationDate" class="mp-field"></div></div>
-							<div class="col-md-3"><div id="form-checkout__securityCode" class="mp-field"></div></div>
+							<div class="col-md-6"><div id="form-checkout__cardNumber"></div></div>
+							<div class="col-md-3"><div id="form-checkout__expirationDate"></div></div>
+							<div class="col-md-3"><div id="form-checkout__securityCode"></div></div>
 							<div class="col-md-6"><input type="text" class="form-control" id="form-checkout__cardholderName" placeholder="Nome impresso"></div>
 							<div class="col-md-3"><select class="form-select" id="form-checkout__identificationType"></select></div>
 							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__identificationNumber" placeholder="Documento"></div>
@@ -82,7 +82,6 @@
 						<p id="cartao-feedback" class="small mt-2 mb-0 d-none"></p>
 					</form>
 					<style>
-						.mp-field{height:40px;border:1px solid #ced4da;border-radius:.375rem;background:#fff;overflow:hidden}
 						#boleto-url{background:#f5c518!important;color:#111!important;border:2px solid #111!important}
 						#boleto-url:hover{background:#ffe56a!important;color:#111!important}
 					</style>

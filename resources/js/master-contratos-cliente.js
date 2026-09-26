@@ -26,6 +26,7 @@ function carregarContratosCliente(id){
 			});
 		}
 		filtrarPlanosContrato();
+		window.CT_VIGENTES = {};
 		const $box = $('#lista-contratos-cliente').empty();
 		const lista = (res && res.contratos) || [];
 		if(!lista.length){
@@ -33,6 +34,7 @@ function carregarContratosCliente(id){
 			return;
 		}
 		lista.forEach(function(c){
+			if(c.status === 'vigente' && c.produto_slug) window.CT_VIGENTES[c.produto_slug] = true;
 			const btn = c.status === 'vigente'
 				? ' <button type="button" class="btn btn-link btn-sm p-0 btn-renovar-ct" data-id="'+c.id+'">Renovar</button>'
 				: '';
@@ -84,6 +86,10 @@ $(function(){
 		}
 		if(!$('#ct_plano').val()){
 			Swal.fire('Atenção', 'Este produto ainda não tem plano. Cadastre em Planos.', 'warning');
+			return;
+		}
+		if(window.CT_VIGENTES && window.CT_VIGENTES[$('#ct_produto').val()]){
+			Swal.fire('Contrato em andamento', 'Este produto já tem um contrato vigente. Cancele o atual para gerar outro, ou use Renovar.', 'warning');
 			return;
 		}
 		$.post(url_base + MASTER_ESCOLAS_URL, {

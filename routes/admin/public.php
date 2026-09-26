@@ -4,6 +4,18 @@ use App\Http\Response;
 use App\Controller\PublicPages;
 
 // Política de privacidade — pública (Meta App Review / Facebook)
+$obRouter->get('/termos', [
+	function ($request) {
+		return new Response(200, PublicPages\Terms::index($request));
+	}
+]);
+
+$obRouter->get('/termos-de-uso', [
+	function ($request) {
+		return new Response(200, PublicPages\Terms::index($request));
+	}
+]);
+
 $obRouter->get('/privacidade', [
 	function ($request) {
 		return new Response(200, PublicPages\Privacy::index($request));
