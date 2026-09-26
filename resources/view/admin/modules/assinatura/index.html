@@ -78,13 +78,9 @@
 							<div class="col-md-3"><select class="form-select" id="form-checkout__installments"></select></div>
 							<div class="col-md-3"><input type="email" class="form-control" id="form-checkout__cardholderEmail" placeholder="E-mail"></div>
 						</div>
-						<button type="submit" class="btn btn-dark btn-sm mt-3 position-relative" id="btn-pagar-cartao" style="z-index:2">Pagar com cartão</button>
+						<button type="button" class="btn btn-dark btn-sm mt-3" id="btn-pagar-cartao">Pagar com cartão</button>
 						<p id="cartao-feedback" class="small mt-2 mb-0 d-none"></p>
 					</form>
-					<style>
-						#form-checkout iframe{height:38px!important;max-height:42px;position:static!important;display:block}
-						#btn-pagar-cartao{position:relative;z-index:2}
-					</style>
 				</div>
 				<div class="form-text mt-2">
 					Após o vencimento, há {{grace_dias}} dias de tolerância. Sem pagamento, o acesso da escola pode ser suspenso.
@@ -118,4 +114,4 @@
 </div>
 
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260926e"></script>
+<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260926f"></script>

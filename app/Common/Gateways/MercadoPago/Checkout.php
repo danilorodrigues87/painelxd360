@@ -66,35 +66,42 @@ class Checkout {
 			],
 		];
 		$rua = trim((string)($dados['pagador_endereco'] ?? ''));
+		$numero = trim((string)($dados['pagador_numero'] ?? ''));
+		$bairro = trim((string)($dados['pagador_bairro'] ?? ''));
+		$cidade = trim((string)($dados['pagador_cidade'] ?? ''));
+		$uf = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($dados['pagador_uf'] ?? '')), 0, 2));
 		$cep = preg_replace('/\D/', '', (string)($dados['pagador_cep'] ?? ''));
-		if ($rua !== '' || strlen($cep) === 8) {
-			$addr = [];
-			if ($rua !== '') {
-				$addr['street_name'] = mb_substr($rua, 0, 256);
-			}
-			$numero = trim((string)($dados['pagador_numero'] ?? ''));
-			if ($numero !== '') {
-				$addr['street_number'] = mb_substr($numero, 0, 20);
-			}
-			$bairro = trim((string)($dados['pagador_bairro'] ?? ''));
-			if ($bairro !== '') {
-				$addr['neighborhood'] = mb_substr($bairro, 0, 100);
-			}
-			$cidade = trim((string)($dados['pagador_cidade'] ?? ''));
-			if ($cidade !== '') {
-				$addr['city'] = mb_substr($cidade, 0, 100);
-			}
-			$uf = trim((string)($dados['pagador_uf'] ?? ''));
-			if ($uf !== '') {
-				$addr['federal_unit'] = mb_substr($uf, 0, 2);
-			}
-			if (strlen($cep) === 8) {
-				$addr['zip_code'] = $cep;
-			}
-			if ($addr !== []) {
-				$payer['address'] = $addr;
-			}
+		$faltando = [];
+		if (strlen($cep) !== 8) {
+			$faltando[] = 'CEP';
 		}
+		if ($rua === '') {
+			$faltando[] = 'rua';
+		}
+		if ($numero === '') {
+			$faltando[] = 'número';
+		}
+		if ($bairro === '') {
+			$faltando[] = 'bairro';
+		}
+		if ($cidade === '') {
+			$faltando[] = 'cidade';
+		}
+		if (strlen($uf) !== 2) {
+			$faltando[] = 'UF';
+		}
+		if ($faltando !== []) {
+			self::$ultimoErro = 'Para gerar o boleto, complete em Dados da empresa: '.implode(', ', $faltando).'.';
+			return null;
+		}
+		$payer['address'] = [
+			'zip_code'      => $cep,
+			'street_name'   => mb_substr($rua, 0, 256),
+			'street_number' => mb_substr($numero, 0, 20),
+			'neighborhood'  => mb_substr($bairro, 0, 100),
+			'city'          => mb_substr($cidade, 0, 100),
+			'federal_unit'  => $uf,
+		];
 
 		$external = trim((string)($dados['external_reference'] ?? ''));
 		$body = [

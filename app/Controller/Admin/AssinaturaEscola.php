@@ -433,6 +433,8 @@ class AssinaturaEscola extends Page {
 			'pagador_endereco' => (string)$escola->endereco,
 			'pagador_numero'   => (string)$escola->numero,
 			'pagador_bairro'   => (string)$escola->bairro,
+			'pagador_cidade'   => (string)($escola->cidade_nome ?? ''),
+			'pagador_uf'       => (string)($escola->uf ?? ''),
 			'pagador_cep'      => (string)$escola->cep,
 		];
 	}

@@ -177,6 +177,7 @@ function carregar(page){
 }
 
 let cardForm = null;
+let cartaoPronto = false;
 let cartaoRespondeu = false;
 
 function avisoCartao(texto){
@@ -236,7 +237,12 @@ function montarCartao(f){
 				},
 				callbacks: {
 					onFormMounted: function(error){
-						if(error) avisoCartao(textoErroMp(error) || 'Não foi possível abrir o formulário do cartão. Recarregue a página.');
+						if(error){
+							cartaoPronto = false;
+							avisoCartao(textoErroMp(error) || 'Não foi possível abrir o formulário do cartão. Recarregue a página.');
+							return;
+						}
+						cartaoPronto = true;
 					},
 					onValidityChange: function(error){
 						const t = textoErroMp(error);
@@ -295,11 +301,17 @@ $(function(){
 	carregar();
 
 	$(document).on('click', '#btn-pagar-cartao', function(){
+		if(!cartaoPronto || !cardForm){
+			avisoCartao('O formulário do cartão ainda está carregando. Aguarde os campos aparecerem e tente de novo.');
+			return;
+		}
 		cartaoRespondeu = false;
 		$('#cartao-feedback').removeClass('d-none text-danger').text('Conferindo o cartão...');
+		const form = document.getElementById('form-checkout');
+		if(form && typeof form.requestSubmit === 'function') form.requestSubmit();
 		setTimeout(function(){
 			if(cartaoRespondeu) return;
-			avisoCartao('O Mercado Pago não enviou a cobrança. Preencha número, validade, CVV, nome, CPF, e-mail e espere a opção de parcelas aparecer.');
+			avisoCartao('Preencha número, validade, CVV, nome, CPF e e-mail. A opção de parcelas aparece depois do número do cartão.');
 		}, 1800);
 	});
 
