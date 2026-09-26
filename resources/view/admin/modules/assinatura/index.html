@@ -59,7 +59,7 @@
 					</button>
 				</div>
 				<div id="box-boleto" class="d-none mb-3">
-					<a id="boleto-url" class="btn btn-sm btn-outline-dark" target="_blank" rel="noopener" href="#">Abrir boleto</a>
+					<a id="boleto-url" class="btn btn-sm fw-semibold" target="_blank" rel="noopener" href="#">Abrir boleto</a>
 					<p class="small mt-2 mb-0">Linha digitável: <code id="boleto-linha"></code></p>
 					<p class="form-text mb-0">O boleto compensa em 1 a 3 dias úteis.</p>
 				</div>
@@ -68,9 +68,9 @@
 					<p class="small text-muted" id="cartao-sem-chave">Informe MP_XD360_PUBLIC_KEY no .env para habilitar o cartão.</p>
 					<form id="form-checkout" class="d-none" novalidate>
 						<div class="row g-2">
-							<div class="col-md-6"><input type="text" class="form-control" id="form-checkout__cardNumber" placeholder="Número do cartão"></div>
-							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__expirationDate" placeholder="MM/AA"></div>
-							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__securityCode" placeholder="CVV"></div>
+							<div class="col-md-6"><div id="form-checkout__cardNumber" class="mp-field"></div></div>
+							<div class="col-md-3"><div id="form-checkout__expirationDate" class="mp-field"></div></div>
+							<div class="col-md-3"><div id="form-checkout__securityCode" class="mp-field"></div></div>
 							<div class="col-md-6"><input type="text" class="form-control" id="form-checkout__cardholderName" placeholder="Nome impresso"></div>
 							<div class="col-md-3"><select class="form-select" id="form-checkout__identificationType"></select></div>
 							<div class="col-md-3"><input type="text" class="form-control" id="form-checkout__identificationNumber" placeholder="Documento"></div>
@@ -81,6 +81,11 @@
 						<button type="button" class="btn btn-dark btn-sm mt-3" id="btn-pagar-cartao">Pagar com cartão</button>
 						<p id="cartao-feedback" class="small mt-2 mb-0 d-none"></p>
 					</form>
+					<style>
+						.mp-field{height:40px;border:1px solid #ced4da;border-radius:.375rem;background:#fff;overflow:hidden}
+						#boleto-url{background:#f5c518!important;color:#111!important;border:2px solid #111!important}
+						#boleto-url:hover{background:#ffe56a!important;color:#111!important}
+					</style>
 				</div>
 				<div class="form-text mt-2">
 					Após o vencimento, há {{grace_dias}} dias de tolerância. Sem pagamento, o acesso da escola pode ser suspenso.
@@ -114,4 +119,4 @@
 </div>
 
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260926f"></script>
+<script src="{{URL}}/resources/js/assinatura-escola.js?v=20260926g"></script>
