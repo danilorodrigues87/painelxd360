@@ -19,6 +19,26 @@ class User{
 	$recCode,
 	$acesso;
 
+	public static function temColuna(string $coluna): bool {
+		static $cache = [];
+		$coluna = preg_replace('/[^a-z0-9_]/i', '', $coluna) ?: '';
+		if ($coluna === '') {
+			return false;
+		}
+		if (array_key_exists($coluna, $cache)) {
+			return $cache[$coluna];
+		}
+		try {
+			$row = (new Database('usuarios'))->execute(
+				"SHOW COLUMNS FROM usuarios LIKE '{$coluna}'"
+			)->fetch(\PDO::FETCH_ASSOC);
+			$cache[$coluna] = !empty($row);
+		} catch (\Throwable $e) {
+			$cache[$coluna] = false;
+		}
+		return $cache[$coluna];
+	}
+
 	public static function temColunaFoto(): bool {
 		static $cache = null;
 		if ($cache !== null) {
@@ -179,6 +199,16 @@ class User{
 			'uf' => (int)($this->uf ?: 0),
 			'cidade' => (int)($this->cidade ?: 0)
 		];
+		if (self::temColuna('cep')) {
+			$dados['cep'] = preg_replace('/\D+/', '', (string)($this->cep ?? '')) ?: null;
+		}
+		if (self::temColuna('cidade_nome')) {
+			$dados['cidade_nome'] = trim((string)($this->cidade_nome ?? '')) ?: null;
+		}
+		if (self::temColuna('uf_sigla')) {
+			$sigla = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($this->uf_sigla ?? '')), 0, 2));
+			$dados['uf_sigla'] = $sigla !== '' ? $sigla : null;
+		}
 		if (self::temColunaFoto()) {
 			$dados['foto'] = $this->foto ?: null;
 		}

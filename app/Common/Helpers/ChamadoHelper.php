@@ -19,7 +19,7 @@ class ChamadoHelper {
 	public const STATUS = [
 		'aberto'            => 'Aberto',
 		'em_andamento'      => 'Em andamento',
-		'aguardando_escola' => 'Aguardando escola',
+		'aguardando_escola' => 'Aguardando cliente',
 		'resolvido'         => 'Resolvido',
 		'fechado'           => 'Fechado',
 	];

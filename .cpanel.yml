@@ -1,10 +1,7 @@
 ---
-# Git → cPanel: confira DEPLOYPATH (só esta app!). Não aponte para pasta de outro site.
 deployment:
   tasks:
     - export DEPLOYPATH=/home1/dncurs82/app.xd360.com.br/
     - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp .htaccess $DEPLOYPATH/
-    - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env
-    - cd $DEPLOYPATH && (test -f composer.phar || /usr/local/bin/ea-php81 -r "copy('https://getcomposer.org/installer','composer-setup.php');" && /usr/local/bin/ea-php81 composer-setup.php --install-dir=. --filename=composer.phar && rm -f composer-setup.php)
-    - cd $DEPLOYPATH && /usr/local/bin/ea-php81 composer.phar install --no-dev --no-interaction 2>/dev/null || true
+    - /bin/cp .htaccess $DEPLOYPATH/ 2>/dev/null || true
+    - test -f $DEPLOYPATH/.env || /bin/cp .env.example $DEPLOYPATH/.env 2>/dev/null || true

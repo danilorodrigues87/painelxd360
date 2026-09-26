@@ -4,7 +4,7 @@ Painel multi-tenant para licenciar e gerenciar os produtos HTML do [topapps](../
 
 Projeto **independente** (MVC PHP). Inspira-se na arquitetura do painel-cti, mas com escopo XD360: clientes, planos, assinaturas e produtos topapps.
 
-Documentação: [ARCHITECTURE_XD360.md](ARCHITECTURE_XD360.md)
+Documentação: [ARCHITECTURE_XD360.md](ARCHITECTURE_XD360.md) · Banco: [docs/BANCO.md](docs/BANCO.md)
 
 ## Requisitos
 
@@ -15,7 +15,7 @@ Documentação: [ARCHITECTURE_XD360.md](ARCHITECTURE_XD360.md)
 ## Instalação local
 
 1. Banco `xd360` criado no phpMyAdmin
-2. Importar schema: `database/xd360_init.sql`
+2. Importar schema: `database/xd360/01_init.sql`
 3. Copiar `.env.example` → `.env` (já configurado para localhost)
 4. `composer install`
 

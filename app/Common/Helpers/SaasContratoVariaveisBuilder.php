@@ -135,6 +135,11 @@ class SaasContratoVariaveisBuilder {
 	}
 
 	private static function cidadeUfEscola(ClientesAssinantes $escola): string {
+		$nome = trim((string)($escola->cidade_nome ?? ''));
+		$uf = strtoupper(trim((string)($escola->uf ?? '')));
+		if ($nome !== '' && $uf !== '') {
+			return $nome.'/'.$uf;
+		}
 		return ContratoVariaveisBuilder::resolverCidadeUf(
 			(int)($escola->cidade ?? 0),
 			(int)($escola->estado ?? 0)

@@ -27,11 +27,12 @@ Arquivos de módulos escola (matrículas, EAD, CRM, WhatsApp) **não estão nas 
 ## DB local
 
 - Banco: `xd360`
-- Init: `database/xd360_init.sql`
+- Init: `database/xd360/01_init.sql`
+- Atualizações e o que falta no servidor online: `docs/BANCO.md`
 
 ## Produtos com backend (DoceFlow)
 
 - Repo: `../doceflow` — API + app em `/doceflow/` (Opção A); ponte local `xd360/doceflow/index.php`
 - Launch: `/painel/produtos/abrir/{slug}` → token → `DOCEFLOW_PUBLIC_URL/?launch=`
 - Exchange: `POST /api/v1/produtos/launch/exchange` (secret `PRODUCT_LAUNCH_SECRET`)
-- SQL tokens: `database/xd360_produto_launch.sql`
+- SQL tokens: `database/xd360/14_produto_launch.sql`

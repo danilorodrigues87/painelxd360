@@ -143,10 +143,17 @@ $obRouter->get('/master/perfil', [
 	}
 ]);
 
-$obRouter->post('/master/perfil', [
+$obRouter->post('/master/perfil/salvar', [
 	'middlewares' => ['required-master-login'],
 	function ($request) {
-		return new Response(200, Master\Perfil::getInfo($request));
+		return new Response(200, Master\Perfil::salvar($request), 'application/json');
+	}
+]);
+
+$obRouter->post('/master/perfil/senha', [
+	'middlewares' => ['required-master-login'],
+	function ($request) {
+		return new Response(200, Master\Perfil::alterarSenha($request), 'application/json');
 	}
 ]);
 

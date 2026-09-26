@@ -59,7 +59,7 @@ class Assinaturas extends Page {
 		if (!SaasFatura::tabelaExiste()) {
 			return json_encode([
 				'success' => false,
-				'message' => 'Execute database/saas_assinatura.sql no phpMyAdmin.',
+				'message' => 'Execute database/xd360/07_saas_assinatura.sql no phpMyAdmin.',
 			]);
 		}
 

@@ -412,10 +412,10 @@ Menu lateral **Marketing** (`SystemModules` → slug `marketing`):
 
 ### 5.11 Chamados de suporte (escola ↔ Master)
 
-- SQL: `database/chamados_suporte.sql` (`chamados`, `chamado_mensagens`).
+- SQL: `database/xd360/15_chamados_suporte.sql` (`chamados`, `chamado_mensagens`).
 - Número: `CHM-{ano}-{id}` (ex.: `CHM-2026-00042`).
 - Categorias fixas: dúvida, erro/bug, financeiro, acesso/login, sugestão, outro.
-- Status: aberto → em_andamento → aguardando_escola → resolvido / fechado.
+- Status: aberto → em_andamento → aguardando_escola (rótulo: Aguardando cliente) → resolvido / fechado.
 - Escola: menu padrão **Suporte** (`/painel/suporte`) — abrir chamado, histórico, thread, anexo (print imagem ≤5 MB em `uploads/chamados/{id_admin}/`).
 - Master: **Chamados** (`/master/chamados`) — fila global com filtros (escola, status, categoria), resposta, mudança de status.
 - Anexos só por rota autenticada: `/painel/suporte/anexo/{id}` e `/master/chamados/anexo/{id}`.
@@ -691,7 +691,7 @@ ALTER TABLE whatsapp_conversas ADD COLUMN assigned_at DATETIME NULL;
 
 > Agenda v2, CRM, etc. têm SQLs próprios já aplicados em ambientes de desenvolvimento — conferir banco antes de recriar.
 
-**Chamados de suporte (novo):** colar `database/chamados_suporte.sql`.
+**Chamados de suporte (novo):** colar `database/xd360/15_chamados_suporte.sql`.
 
 **Assistente Telegram nativo:** colar `database/agent_escola_config.sql` + `database/telegram_agent_nativo.sql`. Liberar slug `assistente_ia` no plano das escolas.
 
@@ -729,7 +729,7 @@ ALTER TABLE whatsapp_conversas ADD COLUMN assigned_at DATETIME NULL;
 | Webhook MP: validação `x-signature` quando secret configurado | Feito |
 | CRM: mensagem WA automática ao mudar status (novo / em atendimento / matriculado) | Feito (Fase 5 enxuta) |
 | CRM: templates editáveis de automação WA por escola | Feito (Fase 5+) — SQL `database/crm_automacao_wa.sql`, UI `/painel/crm/automacao` |
-| **Master fase 2 — cobrança SaaS** (PIX conta CTI, faturas, webhook, worker, grace 5 dias) | Feito (MVP) — SQL `database/saas_assinatura.sql` |
+| **Master fase 2 — cobrança SaaS** (PIX conta CTI, faturas, webhook, worker, grace 5 dias) | Feito (MVP) — SQL `database/xd360/07_saas_assinatura.sql` |
 
 ### Master fase 2 — Assinaturas SaaS (FEITO — MVP operacional)
 Dois Mercado Pago distintos:
@@ -738,7 +738,7 @@ Dois Mercado Pago distintos:
 
 | Peça | Onde |
 |------|------|
-| SQL | `database/saas_assinatura.sql` + `database/saas_faturas_pix_qr.sql` (coluna QR se tabela já existia) |
+| SQL | `database/xd360/07_saas_assinatura.sql` + `database/xd360/08_saas_faturas_pix_qr.sql` (coluna QR se tabela já existia) |
 | Service | `app/Common/Helpers/SaasAssinaturaService.php` |
 | MP CTI | `app/Common/Helpers/MercadoPagoCtiHelper.php` |
 | Entity | `app/Model/Entity/SaasFatura.php` |
@@ -756,7 +756,7 @@ Dois Mercado Pago distintos:
 - Escola inativa (`ativo=n`): login **permitido**, mas acesso **só** a `/painel/assinatura` (Diretor paga PIX e reativa)
 - E-mail de cobrança: SMTP sistema (`Email::sistema`) 1× por fatura (`email_enviado_em`); Master pode reenviar
 
-**SQL fase 2+:** `database/saas_fase2plus.sql` (`valor_mensal_custom`, `trial_ate`, `email_enviado_em`)
+**SQL fase 2+:** `database/xd360/09_saas_fase2plus.sql` (`valor_mensal_custom`, `trial_ate`, `email_enviado_em`)
 
 **Dashboard Master:** cards Ativas / Trial / Suspensas / Abertas / Vencidas / Receita do mês em `/master/assinaturas`
 
@@ -770,7 +770,7 @@ Dois Mercado Pago distintos:
 **Armadilha Response JSON:** `App\Http\Response` com `application/json` **não** deve re-encodar string já JSON (corrigido: se `is_string`, echo direto). Controllers Master/Admin costumam já devolver `json_encode(...)`.
 
 ### Checklist deploy (produção)
-1. Subir código; rodar SQLs: `escolas_modelo_contrato.sql`, `escola_integracoes_mercadopago.sql`, `saas_assinatura.sql`, `saas_faturas_pix_qr.sql`, **`saas_fase2plus.sql`**
+1. Subir código; rodar SQLs: `escolas_modelo_contrato.sql`, `escola_integracoes_mercadopago.sql`, `database/xd360/07_saas_assinatura.sql`, `database/xd360/08_saas_faturas_pix_qr.sql`, **`database/xd360/09_saas_fase2plus.sql`**
 2. Liberar no plano: `pagamentos`, `contratos`, `dados_escola`, `ead` (ou “Todos os módulos”)
 3. HTTPS; webhook MP escola + webhook SaaS CTI
 4. `.env`: `MP_CTI_ACCESS_TOKEN`, opcional secret/token/payer email; cron `worker/saas.php` 1x/dia
@@ -798,7 +798,7 @@ Detalhe: `database/LMS_CHECKLIST_PRODUCAO.md`
 | **Fase 3c** | Multi-números na UI + distribuição avançada | Schema `whatsapp_numeros` pronto |
 | **Fase 5+** | Templates editáveis de automação CRM por escola | Feito — `/painel/crm/automacao` |
 | **Conecta Jovem** | Portal empregabilidade (fases 1–6) | Feito — `docs/CONECT_ROADMAP.md` |
-| **Master fase 2+** | Dashboard SaaS, e-mail cobrança, trial 14d, valor por escola, login só Assinatura se inativa | Feito — `database/saas_fase2plus.sql` |
+| **Master fase 2+** | Dashboard SaaS, e-mail cobrança, trial 14d, valor por escola, login só Assinatura se inativa | Feito — `database/xd360/09_saas_fase2plus.sql` |
 | **Master RBAC** | CRUD `/master/usuarios` + permissões por slug (`ead_cursos`, …); instrutores editam catálogo CTI | Futuro — `EditorAuthHelper::canEditCatalogCti` já é ponto de extensão |
 | **Master RBAC** | CRUD `/master/usuarios` + permissões por slug (`ead_cursos`, …); instrutores editam catálogo CTI | Futuro — `EditorAuthHelper::canEditCatalogCti` já é ponto de extensão |
 

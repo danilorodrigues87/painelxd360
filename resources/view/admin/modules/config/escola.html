@@ -71,17 +71,13 @@
 				<label class="form-label" for="escola_bairro">Bairro</label>
 				<input type="text" class="form-control" id="escola_bairro">
 			</div>
-			<div class="col-md-4">
-				<label class="form-label" for="escola_estado">Estado</label>
-				<select class="form-select" id="escola_estado">
-					<option value="">Selecione</option>
-				</select>
-			</div>
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<label class="form-label" for="escola_cidade">Cidade</label>
-				<select class="form-select" id="escola_cidade">
-					<option value="">Selecione o estado</option>
-				</select>
+				<input type="text" class="form-control" id="escola_cidade">
+			</div>
+			<div class="col-md-3">
+				<label class="form-label" for="escola_uf">UF</label>
+				<input type="text" class="form-control" id="escola_uf" maxlength="2" placeholder="SP">
 			</div>
 
 			<div class="col-md-6">
@@ -121,4 +117,4 @@ window.CONFIG_ESCOLA_TEM_MODELO_CERT = {{tem_modelo_cert}};
 window.CONFIG_ESCOLA_MODELO_CERT_PADRAO = {{modelo_cert_padrao_json}};
 window.CONFIG_ESCOLA_LOGO_PADRAO = {{logo_padrao_json}};
 </script>
-<script src="{{URL}}/resources/js/config-escola.js?v=20260718a"></script>
+<script src="{{URL}}/resources/js/config-escola.js?v=20260926a"></script>

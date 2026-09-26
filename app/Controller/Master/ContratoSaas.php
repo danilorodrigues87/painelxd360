@@ -27,7 +27,7 @@ class ContratoSaas extends Page {
 		if (!SaasContratoModelo::tabelaExiste()) {
 			return json_encode([
 				'success' => false,
-				'message' => 'Execute database/saas_contrato.sql no phpMyAdmin.',
+				'message' => 'Execute database/xd360/10_saas_contrato.sql no phpMyAdmin.',
 			]);
 		}
 

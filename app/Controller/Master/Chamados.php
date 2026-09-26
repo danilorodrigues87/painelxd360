@@ -46,7 +46,7 @@ class Chamados extends Page {
 			return json_encode([
 				'success' => false,
 				'sql_ok'  => false,
-				'message' => 'Execute database/chamados_suporte.sql no phpMyAdmin.',
+				'message' => 'Execute database/xd360/15_chamados_suporte.sql no phpMyAdmin.',
 			], JSON_UNESCAPED_UNICODE);
 		}
 

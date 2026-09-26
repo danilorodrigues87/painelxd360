@@ -92,7 +92,7 @@ O comando `cp -R *` **ignora** arquivos que começam com `.`. O `.cpanel.yml` at
 
 ### 4. MySQL
 
-Usuário cPanel precisa estar **associado** ao banco (`dncurs82_xd360`). Importe o dump ou rode `database/xd360_init.sql`.
+Usuário cPanel precisa estar **associado** ao banco (`dncurs82_xd360`). Importe o dump ou rode `database/xd360/01_init.sql`. Atualizações posteriores: [BANCO.md](BANCO.md).
 
 ### 5. Permissões
 

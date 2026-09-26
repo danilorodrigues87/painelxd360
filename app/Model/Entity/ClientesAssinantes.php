@@ -24,6 +24,8 @@ class ClientesAssinantes {
 	public $bairro;
 	public $estado;
 	public $cidade;
+	public $uf;
+	public $cidade_nome;
 	public $cep;
 	public $modulos_liberados;
 	public $plan_id;
@@ -78,6 +80,10 @@ class ClientesAssinantes {
 
 	public static function temColunaCatalogoCti(): bool {
 		return self::temColuna('catalogo_cti');
+	}
+
+	public static function temColunaEnderecoTexto(): bool {
+		return self::temColuna('uf') && self::temColuna('cidade_nome');
 	}
 
 	private static function temColuna(string $coluna): bool {
@@ -324,6 +330,11 @@ class ClientesAssinantes {
 			'cidade'    => (int)($this->cidade ?: 0),
 			'cep'       => (string)($this->cep ?? ''),
 		];
+		if (self::temColunaEnderecoTexto()) {
+			$uf = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($this->uf ?? '')), 0, 2));
+			$dados['uf'] = $uf !== '' ? $uf : null;
+			$dados['cidade_nome'] = trim((string)($this->cidade_nome ?? '')) ?: null;
+		}
 		if (self::temColunaModeloCertificado()) {
 			$dados['modelo_certificado'] = $this->modelo_certificado ?: null;
 		}

@@ -168,7 +168,7 @@ class SaasAssinaturaService {
 	 */
 	public static function gerarFaturaEscola(int $idAdmin, ?string $competencia = null, bool $forcarEmail = false): array {
 		if (!SaasFatura::tabelaExiste()) {
-			return ['ok' => false, 'message' => 'Execute database/saas_assinatura.sql'];
+			return ['ok' => false, 'message' => 'Execute database/xd360/07_saas_assinatura.sql'];
 		}
 		$escola = ClientesAssinantes::getEscolaById($idAdmin);
 		if (!$escola instanceof ClientesAssinantes) {

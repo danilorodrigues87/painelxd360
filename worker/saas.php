@@ -15,7 +15,7 @@ use App\Common\Helpers\SaasAssinaturaService;
 use App\Model\Entity\SaasFatura;
 
 if (!SaasFatura::tabelaExiste()) {
-	fwrite(STDERR, "Tabela saas_faturas não existe. Execute database/saas_assinatura.sql\n");
+	fwrite(STDERR, "Tabela saas_faturas não existe. Execute database/xd360/07_saas_assinatura.sql\n");
 	exit(1);
 }
 

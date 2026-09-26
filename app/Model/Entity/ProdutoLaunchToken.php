@@ -32,7 +32,7 @@ class ProdutoLaunchToken {
 
 	public static function criar(int $tenantId, int $idUsuario, string $produtoSlug): string {
 		if (!self::tabelaExiste()) {
-			throw new \RuntimeException('Tabela produto_launch_tokens não existe. Execute database/xd360_produto_launch.sql.');
+			throw new \RuntimeException('Tabela produto_launch_tokens não existe. Execute database/xd360/14_produto_launch.sql.');
 		}
 		$produtoSlug = trim($produtoSlug);
 		if ($produtoSlug === '') {

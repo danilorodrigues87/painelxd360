@@ -48,15 +48,17 @@
 					<label class="form-label">Bairro</label>
 					<input type="text" name="bairro" class="form-control" value="{{bairro}}" required>
 				</div>
-				<div class="col-md-4">
-					<label class="form-label">Estado</label>
-					<select class="form-control" id="estado" name="estado" onchange="selectEstado({{cidade_id}})">
-						{{opt_estado}}
-					</select>
+				<div class="col-md-3">
+					<label class="form-label" for="perfil_cep">CEP</label>
+					<input type="text" name="cep" id="perfil_cep" class="form-control" value="{{cep}}" placeholder="00000-000">
 				</div>
-				<div class="col-md-4">
-					<label class="form-label">Cidade</label>
-					<div id="cidades"></div>
+				<div class="col-md-5">
+					<label class="form-label" for="perfil_cidade">Cidade</label>
+					<input type="text" name="cidade_nome" id="perfil_cidade" class="form-control" value="{{cidade_nome}}">
+				</div>
+				<div class="col-md-2">
+					<label class="form-label" for="perfil_uf">UF</label>
+					<input type="text" name="uf_sigla" id="perfil_uf" class="form-control" value="{{uf_sigla}}" maxlength="2" placeholder="SP">
 				</div>
 				<div class="col-12">
 					<button type="button" class="btn btn-primary" id="btn-salvar-perfil">
@@ -69,8 +71,28 @@
 </div>
 
 <script>
+function buscarCepPerfil(){
+	const cep = String($('#perfil_cep').val() || '').replace(/\D/g, '');
+	if (cep.length !== 8) return;
+	$.getJSON('https://viacep.com.br/ws/' + cep + '/json/')
+		.done(function (data) {
+			if (!data || data.erro) {
+				Swal.fire('CEP', 'CEP não encontrado.', 'warning');
+				return;
+			}
+			if (data.logradouro) $('input[name="endereco"]').val(data.logradouro);
+			if (data.bairro) $('input[name="bairro"]').val(data.bairro);
+			if (data.localidade) $('#perfil_cidade').val(data.localidade);
+			if (data.uf) $('#perfil_uf').val(String(data.uf).toUpperCase());
+			$('input[name="numero"]').trigger('focus');
+		})
+		.fail(function () {
+			Swal.fire('CEP', 'Não foi possível consultar o CEP agora.', 'error');
+		});
+}
+
 $(function(){
-	selectEstado({{cidade_id}});
+	$('#perfil_cep').on('blur', buscarCepPerfil);
 	$('#btn-salvar-perfil').on('click', function(){
 		const $btn = $(this).prop('disabled', true);
 		const fd = new FormData(document.getElementById('form-perfil-page'));

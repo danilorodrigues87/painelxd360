@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Utils\View;
 use App\Session\User\Login as SessionUser;
 use App\Model\Entity\User as EntityUser;
-use App\Model\Entity\EstadoCidades;
 use App\Common\Helpers\EmailValidator;
 use App\Common\Helpers\UserFotoHelper;
 
@@ -23,13 +22,6 @@ class Perfil extends Page {
 			? ''
 			: '<div class="alert alert-warning small">Execute no phpMyAdmin: <code>ALTER TABLE usuarios ADD COLUMN foto VARCHAR(255) NULL;</code></div>';
 
-		$results = EstadoCidades::getEstados();
-		$optEstado = '';
-		while ($ob = $results->fetchObject(EstadoCidades::class)) {
-			$sel = ((int)($dados->uf ?? 0) === (int)$ob->id) ? 'selected' : '';
-			$optEstado .= '<option '.$sel.' value="'.(int)$ob->id.'">'.htmlspecialchars($ob->nome, ENT_QUOTES, 'UTF-8').'</option>';
-		}
-
 		$content = View::render('admin/modules/perfil/index', [
 			'alert_sql'   => $alertSql,
 			'foto_html'   => UserFotoHelper::htmlCampoFormulario($dados->foto ?? null, 'input-foto-perfil'),
@@ -43,8 +35,9 @@ class Perfil extends Page {
 			'endereco'    => htmlspecialchars((string)($dados->endereco ?? ''), ENT_QUOTES, 'UTF-8'),
 			'numero'      => htmlspecialchars((string)($dados->numero ?? ''), ENT_QUOTES, 'UTF-8'),
 			'bairro'      => htmlspecialchars((string)($dados->bairro ?? ''), ENT_QUOTES, 'UTF-8'),
-			'opt_estado'  => $optEstado,
-			'cidade_id'   => (int)($dados->cidade ?? 0),
+			'cep'         => htmlspecialchars((string)($dados->cep ?? ''), ENT_QUOTES, 'UTF-8'),
+			'cidade_nome' => htmlspecialchars((string)($dados->cidade_nome ?? ''), ENT_QUOTES, 'UTF-8'),
+			'uf_sigla'    => htmlspecialchars((string)($dados->uf_sigla ?? ''), ENT_QUOTES, 'UTF-8'),
 			'id'          => (int)$dados->id,
 		]);
 
@@ -70,8 +63,9 @@ class Perfil extends Page {
 		$endereco = trim((string)($postVars['endereco'] ?? ''));
 		$numero = trim((string)($postVars['numero'] ?? ''));
 		$bairro = trim((string)($postVars['bairro'] ?? ''));
-		$estado = (int)($postVars['estado'] ?? 0);
-		$cidade = (int)($postVars['cidade'] ?? 0);
+		$cep = preg_replace('/\D+/', '', (string)($postVars['cep'] ?? ''));
+		$cidadeNome = trim((string)($postVars['cidade_nome'] ?? ''));
+		$ufSigla = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($postVars['uf_sigla'] ?? '')), 0, 2));
 
 		if ($nome === '') {
 			return json_encode(['success' => false, 'message' => 'Informe o nome.']);
@@ -105,10 +99,17 @@ class Perfil extends Page {
 		$ob->endereco = $endereco;
 		$ob->numero = $numero;
 		$ob->bairro = $bairro;
-		$ob->uf = $estado;
-		$ob->cidade = $cidade;
+		$ob->uf = (int)($atual instanceof EntityUser ? ($atual->uf ?: 0) : 0);
+		$ob->cidade = (int)($atual instanceof EntityUser ? ($atual->cidade ?: 0) : 0);
+		$ob->cep = $cep;
+		$ob->cidade_nome = $cidadeNome;
+		$ob->uf_sigla = $ufSigla;
 		$ob->foto = $foto;
-		$ob->atualizaPerfil();
+		try {
+			$ob->atualizaPerfil();
+		} catch (\Throwable $e) {
+			return json_encode(['success' => false, 'message' => 'Não foi possível salvar o endereço. Confira CEP, cidade e UF.']);
+		}
 
 		return json_encode([
 			'success'  => true,

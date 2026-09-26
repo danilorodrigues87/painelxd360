@@ -6,32 +6,24 @@ function esc(s){
 	return $('<div>').text(s == null ? '' : String(s)).html();
 }
 
-function popularEstados(selected){
-	const $sel = $('#escola_estado').empty();
-	$sel.append('<option value="">Selecione</option>');
-	(window.CONFIG_ESCOLA_ESTADOS || []).forEach(function(e){
-		const label = e.sigla ? (e.sigla + ' — ' + e.nome) : e.nome;
-		$sel.append('<option value="'+e.id+'">'+esc(label)+'</option>');
-	});
-	if(selected) $sel.val(String(selected));
-}
-
-function carregarCidades(estadoId, cidadeSelected){
-	const $cid = $('#escola_cidade').empty();
-	if(!estadoId){
-		$cid.append('<option value="">Selecione o estado</option>');
-		return;
-	}
-	$cid.append('<option value="">Carregando...</option>');
-	$.post(url_base + CONFIG_ESCOLA_URL, { acao: 'cidades', estado: estadoId }, function(res){
-		$cid.empty().append('<option value="">Selecione</option>');
-		((res && res.cidades) || []).forEach(function(c){
-			$cid.append('<option value="'+c.id+'">'+esc(c.nome)+'</option>');
+function buscarCepEmpresa(){
+	const cep = String($('#escola_cep').val() || '').replace(/\D/g, '');
+	if (cep.length !== 8) return;
+	$.getJSON('https://viacep.com.br/ws/' + cep + '/json/')
+		.done(function (data) {
+			if (!data || data.erro) {
+				Swal.fire('CEP', 'CEP não encontrado.', 'warning');
+				return;
+			}
+			if (data.logradouro) $('#escola_endereco').val(data.logradouro);
+			if (data.bairro) $('#escola_bairro').val(data.bairro);
+			if (data.localidade) $('#escola_cidade').val(data.localidade);
+			if (data.uf) $('#escola_uf').val(String(data.uf).toUpperCase());
+			$('#escola_numero').trigger('focus');
+		})
+		.fail(function () {
+			Swal.fire('CEP', 'Não foi possível consultar o CEP agora.', 'error');
 		});
-		if(cidadeSelected) $cid.val(String(cidadeSelected));
-	}, 'json').fail(function(){
-		$cid.empty().append('<option value="">Falha ao carregar</option>');
-	});
 }
 
 function carregarEscola(){
@@ -54,8 +46,8 @@ function carregarEscola(){
 		$('#escola_endereco').val(e.endereco || '');
 		$('#escola_numero').val(e.numero || '');
 		$('#escola_bairro').val(e.bairro || '');
-		popularEstados(e.estado || '');
-		carregarCidades(e.estado || '', e.cidade || '');
+		$('#escola_cidade').val(e.cidade_nome || '');
+		$('#escola_uf').val(e.uf || '');
 		$('#preview-escola-logo').attr('src', e.logo_url || LOGO_PADRAO);
 		$('#preview-modelo-cert').attr('src', e.modelo_certificado_url || MODELO_CERT_PADRAO);
 		if(String(window.CONFIG_ESCOLA_TEM_MODELO_CERT) !== '1'){
@@ -78,8 +70,8 @@ function salvarEscola(){
 	fd.append('endereco', $('#escola_endereco').val() || '');
 	fd.append('numero', $('#escola_numero').val() || '');
 	fd.append('bairro', $('#escola_bairro').val() || '');
-	fd.append('estado', $('#escola_estado').val() || '');
-	fd.append('cidade', $('#escola_cidade').val() || '');
+	fd.append('cidade_nome', $('#escola_cidade').val() || '');
+	fd.append('uf', $('#escola_uf').val() || '');
 	const logo = $('#escola_logo')[0] && $('#escola_logo')[0].files[0];
 	if(logo) fd.append('logo', logo);
 	const modelo = $('#escola_modelo_certificado')[0] && $('#escola_modelo_certificado')[0].files[0];
@@ -110,10 +102,7 @@ function salvarEscola(){
 }
 
 $(function(){
-	popularEstados('');
 	carregarEscola();
-	$('#escola_estado').on('change', function(){
-		carregarCidades($(this).val() || '', '');
-	});
+	$('#escola_cep').on('blur', buscarCepEmpresa);
 	$('#btn-salvar-escola').on('click', salvarEscola);
 });

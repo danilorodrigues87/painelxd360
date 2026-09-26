@@ -87,16 +87,25 @@ class AssinaturaEscola extends Page {
 		if (!self::assertDiretor($request, true)) {
 			return json_encode(['success' => false, 'message' => 'Apenas o diretor pode aceitar o contrato.']);
 		}
-		$inicio = (int)($_SESSION['contrato_leitura_inicio'] ?? 0);
-		if ($inicio <= 0 || (time() - $inicio) < 15) {
-			return json_encode(['success' => false, 'message' => 'Leia o contrato até o final antes de aceitar.']);
-		}
 		$post = $request->getPostVars();
 		$user = SessionUser::getUserLogedData();
 		$uid = (int)($user['usuario']['id'] ?? 0);
 		$obUser = $uid > 0 ? \App\Model\Entity\User::getUserById($uid) : null;
 		$nome = $obUser instanceof \App\Model\Entity\User ? (string)$obUser->nome : (string)($user['usuario']['nome'] ?? '');
-		$cpf = $obUser instanceof \App\Model\Entity\User ? (string)($obUser->cpf ?? '') : '';
+		$cpfPost = preg_replace('/\D+/', '', (string)($post['cpf'] ?? ''));
+		$cpf = strlen($cpfPost) === 11
+			? $cpfPost
+			: ($obUser instanceof \App\Model\Entity\User ? (string)($obUser->cpf ?? '') : '');
+		if ($obUser instanceof \App\Model\Entity\User && strlen($cpfPost) === 11 && preg_replace('/\D+/', '', (string)$obUser->cpf) !== $cpfPost) {
+			$obUser->cpf = $cpfPost;
+			$obUser->nascimento = $obUser->nascimento ?: null;
+			$obUser->uf = (int)($obUser->uf ?: 0);
+			$obUser->cidade = (int)($obUser->cidade ?: 0);
+			try {
+				$obUser->atualizaPerfil();
+			} catch (\Throwable $e) {
+			}
+		}
 		$ip = (string)($_SERVER['REMOTE_ADDR'] ?? '');
 		$r = SaasContratoService::aceitar(
 			TenantHelper::getIdAdmin(),
@@ -132,15 +141,25 @@ class AssinaturaEscola extends Page {
 		if (!$diretor) {
 			$barra = '<div id="barra-aceite">Apenas o diretor pode aceitar este contrato. Leia o texto e peça a ele para assinar.</div>';
 		} elseif ($vigentes !== [] && !$pendente) {
-			$barra = '<div id="barra-aceite">Contrato aceito em '.htmlspecialchars($quando, ENT_QUOTES, 'UTF-8').'.</div>';
+			$quandoBr = self::dataBrAceite($quando);
+			$barra = '<div id="barra-aceite"><label><input type="checkbox" checked disabled> Contrato aceito em '
+				.htmlspecialchars($quandoBr, ENT_QUOTES, 'UTF-8').'.</label></div>';
 		} elseif ($vigentes === []) {
 			$barra = '';
 		} else {
+			$cpfAtual = '';
+			$uidBarra = (int)($user['usuario']['id'] ?? 0);
+			if ($uidBarra > 0) {
+				$obCpf = \App\Model\Entity\User::getUserById($uidBarra);
+				if ($obCpf instanceof \App\Model\Entity\User) {
+					$cpfAtual = htmlspecialchars((string)($obCpf->cpf ?? ''), ENT_QUOTES, 'UTF-8');
+				}
+			}
 			$barra = '<div id="barra-aceite">'.$aviso
 				.'<p id="aviso-leitura">Role até o final do contrato para poder aceitar.</p>'
 				.'<form method="post" action="'.URL.'/painel/assinatura/contrato/aceitar" id="form-aceite">'
-				.'<input type="hidden" name="leu" value="1">'
-				.'<label><input type="checkbox" id="chk-li" disabled> Li o contrato até o final e aceito os termos.</label> '
+				.'<label>CPF de quem assina <input type="text" name="cpf" value="'.$cpfAtual.'" required maxlength="14" style="margin:0 8px"></label> '
+				.'<label><input type="checkbox" name="leu" value="1" id="chk-li" disabled> Li o contrato até o final e aceito os termos.</label> '
 				.'<button type="submit" id="btn-aceitar" disabled>Aceitar contrato</button>'
 				.'</form></div>'
 				.'<script>
@@ -179,6 +198,14 @@ class AssinaturaEscola extends Page {
 			return str_ireplace('</body>', $css.$barra.'</body>', $html);
 		}
 		return $html.$css.$barra;
+	}
+
+	private static function dataBrAceite(string $iso): string {
+		$iso = trim($iso);
+		if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}:\d{2}))?/', $iso, $m)) {
+			return $iso;
+		}
+		return $m[3].'/'.$m[2].'/'.$m[1].(isset($m[4]) ? ' '.$m[4] : '');
 	}
 
 	public static function getInfo($request) {

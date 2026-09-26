@@ -40,7 +40,7 @@ class DadosXd360 extends Page {
 		if (!SaasEmpresaXd360::tabelaExiste()) {
 			return json_encode([
 				'success' => false,
-				'message' => 'Execute database/saas_empresaxd360.sql no phpMyAdmin.',
+				'message' => 'Execute database/xd360/11_saas_empresaxd360.sql no phpMyAdmin.',
 			]);
 		}
 

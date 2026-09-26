@@ -101,6 +101,8 @@ class ConfigEscola extends Page {
 				'bairro'     => (string)($e->bairro ?? ''),
 				'estado'     => (int)($e->estado ?? 0),
 				'cidade'     => (int)($e->cidade ?? 0),
+				'uf'         => (string)($e->uf ?? ''),
+				'cidade_nome'=> (string)($e->cidade_nome ?? ''),
 				'logo_url'   => BrandingHelper::urlLogoEscola($e->logo ?? null),
 				'tem_logo'   => trim((string)($e->logo ?? '')) !== '',
 				'modelo_certificado_url' => BrandingHelper::urlModeloCertificado(
@@ -132,8 +134,10 @@ class ConfigEscola extends Page {
 		$e->endereco = trim((string)($post['endereco'] ?? ''));
 		$e->numero = trim((string)($post['numero'] ?? ''));
 		$e->bairro = trim((string)($post['bairro'] ?? ''));
-		$e->estado = (int)($post['estado'] ?? 0);
-		$e->cidade = (int)($post['cidade'] ?? 0);
+		$e->estado = (int)($e->estado ?: 0);
+		$e->cidade = (int)($e->cidade ?: 0);
+		$e->uf = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', (string)($post['uf'] ?? '')), 0, 2));
+		$e->cidade_nome = trim((string)($post['cidade_nome'] ?? ''));
 
 		$e->logo = BrandingHelper::processarUploadLogo($files['logo'] ?? null, $e->logo ?? null) ?: '';
 		if (ClientesAssinantes::temColunaModeloCertificado()) {

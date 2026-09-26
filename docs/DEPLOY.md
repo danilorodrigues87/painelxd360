@@ -26,8 +26,10 @@ composer install --no-dev
 
 ## MySQL
 
-Importar banco xd360 (dump local ou xd360_init.sql).
-Obrigatório: `mysql -u USER -p xd360 < database/xd360_produto_launch.sql`
+Importar banco xd360 (dump local ou `database/xd360/01_init.sql`).
+Obrigatório: `mysql -u USER -p xd360 < database/xd360/14_produto_launch.sql`
+
+Banco que já está no ar: aplicar só o arquivo pendente em [BANCO.md](BANCO.md). Hoje: `database/xd360/16_aceite_cep_chamados.sql`.
 
 ## `.env` produção
 

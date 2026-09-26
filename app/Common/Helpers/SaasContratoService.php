@@ -349,7 +349,7 @@ class SaasContratoService {
 		}
 		$cpf = preg_replace('/\D+/', '', $cpf);
 		if (strlen($cpf) !== 11) {
-			return ['ok' => false, 'message' => 'Cadastre o CPF do diretor no Perfil antes de aceitar o contrato.'];
+			return ['ok' => false, 'message' => 'Informe o CPF de quem assina (11 dígitos).'];
 		}
 		$vigentes = SaasContrato::vigentesDoCliente($idAdmin);
 		if ($vigentes === []) {
@@ -370,6 +370,9 @@ class SaasContratoService {
 			}
 			$html = (string)($c->html_snapshot ?? '');
 			if ($html === '') {
+				$html = self::htmlVisualizacao((int)$c->id);
+			}
+			if ($html === '' || strpos($html, 'não encontrado') !== false) {
 				return ['ok' => false, 'message' => 'O texto do contrato ainda não está disponível.'];
 			}
 			$c->registrarAceite($usuarioId, $nome, $cpf, $ip, hash('sha256', $html));
