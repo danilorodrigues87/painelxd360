@@ -4,6 +4,11 @@
 .cursor/
 .vscode/
 resources/assets/img/*
+!resources/assets/img/brand/
+resources/assets/img/brand/*
+!resources/assets/img/brand/logo-light.png
+!resources/assets/img/brand/logo-dark.png
+!resources/assets/img/brand/favicon.png
 !resources/assets/img/icons/
 !resources/assets/img/icons/icone.png
 !resources/assets/img/icons/logo-2.png

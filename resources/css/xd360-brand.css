@@ -89,24 +89,44 @@ body.xd360-login .card-header {
 }
 
 body.xd360-login .xd360-login-logo {
-  max-width: 180px;
+  max-width: 240px;
   height: auto;
 }
 
-/* Navbar Master + Cliente */
+/* Navbar Master + Cliente — escura no tema escuro, clara no tema claro */
 .sb-topnav.xd360-navbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+html[data-bs-theme="dark"] .sb-topnav.xd360-navbar {
   background: var(--xd360-nav) !important;
   border-bottom: 1px solid var(--xd360-nav-border);
+}
+
+.xd360-logo-on-dark { display: none; }
+html[data-bs-theme="dark"] .xd360-logo-on-light { display: none; }
+html[data-bs-theme="dark"] .xd360-logo-on-dark { display: inline; }
+
+html[data-bs-theme="light"] .sb-topnav.xd360-navbar .nav-link,
+html[data-bs-theme="light"] .sb-topnav.xd360-navbar .btn-link,
+html[data-bs-theme="light"] .sb-topnav.xd360-navbar #sidebarToggle,
+html[data-bs-theme="light"] .sb-topnav.xd360-navbar #nav-master-nome,
+html[data-bs-theme="light"] #nav-notif-wrap .nav-link {
+  color: #0f172a !important;
 }
 
 .sb-topnav.xd360-navbar .navbar-brand {
   font-weight: 700;
   letter-spacing: -0.02em;
+  width: auto;
+  max-width: 240px;
 }
 
 .sb-topnav.xd360-navbar .navbar-brand img {
-  height: 36px;
+  height: 34px;
   width: auto;
+  max-width: 210px;
 }
 
 .sb-topnav.xd360-navbar .navbar-brand .xd360-brand-text {

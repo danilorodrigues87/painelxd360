@@ -19,6 +19,11 @@
   function apply(theme) {
     var t = theme === 'dark' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-bs-theme', t);
+    document.querySelectorAll('.xd360-navbar').forEach(function (nav) {
+      var dark = t === 'dark';
+      nav.classList.toggle('navbar-dark', dark);
+      nav.classList.toggle('navbar-light', !dark);
+    });
     try {
       localStorage.setItem(KEY, t);
     } catch (e) {}

@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var CACHE_VERSION = 'painel-xd360-v1';
+var CACHE_VERSION = 'painel-xd360-v2';
 var STATIC_PATHS = [
 	'resources/css/styles.css',
 	'resources/css/panel-theme.css',
@@ -14,7 +14,9 @@ var STATIC_PATHS = [
 	'resources/js/panel-theme.js',
 	'resources/pwa/icon-192.png',
 	'resources/pwa/icon-512.png',
-	'resources/assets/img/brand/xd360-icon.svg',
+	'resources/assets/img/brand/favicon.png',
+	'resources/assets/img/brand/logo-light.png',
+	'resources/assets/img/brand/logo-dark.png',
 ];
 
 function basePath() {

@@ -88,6 +88,8 @@ class Page {
 			'banner_impersonate' => $bannerImpersonate,
 			'foto_url' => $fotoUser,
 			'logo_url' => BrandingHelper::urlLogoXd360(true),
+			'logo_light_url' => BrandingHelper::urlLogoXd360(false),
+			'logo_dark_url' => BrandingHelper::urlLogoXd360(true),
 			'favicon_url' => BrandingHelper::urlFaviconXd360(),
 			'pwa_apple_icon_url' => \App\Common\Helpers\PwaHelper::appleTouchIconUrl(),
 			'onesignal_head' => \App\Common\Helpers\OneSignalHelper::htmlHeadSnippet(),

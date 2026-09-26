@@ -9,9 +9,11 @@ use App\Common\Upload;
  */
 class BrandingHelper {
 
-	public const LOGO_XD360 = 'resources/assets/img/brand/xd360-logo.svg';
-	public const LOGO_XD360_DARK = 'resources/assets/img/brand/xd360-logo-dark.svg';
-	public const ICONE_XD360 = 'resources/assets/img/brand/xd360-icon.svg';
+	/** Logo para fundo claro (tema claro). */
+	public const LOGO_XD360 = 'resources/assets/img/brand/logo-light.png';
+	/** Logo para fundo escuro (tema escuro). */
+	public const LOGO_XD360_DARK = 'resources/assets/img/brand/logo-dark.png';
+	public const ICONE_XD360 = 'resources/assets/img/brand/favicon.png';
 	/** @deprecated use LOGO_XD360 */
 	public const LOGO_CTI = self::LOGO_XD360;
 	/** @deprecated use ICONE_XD360 */

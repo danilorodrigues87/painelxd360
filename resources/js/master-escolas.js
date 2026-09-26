@@ -1,6 +1,6 @@
 const MASTER_ESCOLAS_URL = 'master/clientes';
 const XD360_BASE_DOMAIN = window.XD360_BASE_DOMAIN || 'xd360.com.br';
-const LOGO_PADRAO = (typeof url_base !== 'undefined' ? url_base : '/') + 'resources/assets/img/brand/xd360-icon.svg';
+const LOGO_PADRAO = (typeof url_base !== 'undefined' ? url_base : '/') + 'resources/assets/img/brand/logo-light.png';
 const MODELO_CERT_PADRAO = window.MASTER_MODELO_CERT_PADRAO
 	|| ((typeof url_base !== 'undefined' ? url_base : '/') + 'uploads/img/certificado/modelo_cert.png');
 let masterEscolasCache = [];

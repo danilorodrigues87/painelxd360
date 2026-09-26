@@ -33,6 +33,8 @@ class Page {
 			'user'     => $nome,
 			'foto_url' => $fotoUrl,
 			'logo_url' => BrandingHelper::urlLogoXd360(true),
+			'logo_light_url' => BrandingHelper::urlLogoXd360(false),
+			'logo_dark_url' => BrandingHelper::urlLogoXd360(true),
 			'favicon_url' => BrandingHelper::urlFaviconXd360(),
 		]);
 	}
